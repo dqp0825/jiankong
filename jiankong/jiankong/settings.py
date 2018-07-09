@@ -168,7 +168,7 @@ CACHES = {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': 'redis://:%(password)s@%(host)s:%(port)s/6' % {
             'password': '',
-            'host': '127.0.0.1',
+            'host': '10.192.129.151',
             'port': 6379,
         }
     }

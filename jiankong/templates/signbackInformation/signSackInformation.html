@@ -32,6 +32,7 @@
 		</style>
 	</head>
 	<body>
+
 	{% csrf_token %}
 	<div id="form_box" style="display: none;"style="overflow-x: hidden;">
 	</div>
@@ -52,8 +53,8 @@
 							<!--<option value="{{g.id}}">{{g.Group_Name}}</option>-->
 	                        <!--&lt;!&ndash;<option value="">主机组</option>&ndash;&gt;-->
 							<!--{% endfor %}-->
-                            {% for shebei_group in shebei_gurop_list %}
-                            <option value="{{ shebei_group.id }}"> {{ shebei_group.Group_Name }} </option>
+                            {% for shebei_group in shebei_group_list %}
+                            <option value="{{ shebei_group.id }}"> {{ shebei_group.name }} </option>
                             {% endfor %}
 
 	                    </select>

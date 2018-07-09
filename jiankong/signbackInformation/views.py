@@ -5,6 +5,7 @@ import time
 import uuid
 import xlwt
 import pickle
+from functools import reduce
 
 from io import StringIO, BytesIO
 from pyzabbix import ZabbixAPI
@@ -18,11 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse,HttpResponse
 
-# from dashBoard.models import JK_Shebei_Group, Jk_Mt_Information, Jk_pass, CloudDeviceToZabbix, ResourceHostToZabbix, \
-#     StorageToZabbix, NetworkDeviceToZabbix, ServerToZabbix, Jk_Resource_Host, Jk_Server, Jk_Cloud_Device, Jk_Storage, \
-#     Jk_Switches, Jk_Routing, Jk_Fw, Jk_Fz
 
-# 修改
 from dashBoard.models import DeviceGroup, MTInformation, ZabbixPass, CloudDeviceToZabbix, ResourceHostToZabbix,\
     StorageToZabbix, NetworkDeviceToZabbix, ServerToZabbix, ResourceHost, Server, CloudDevice, Storage,\
     Switches, Routing, Fw, Fz
@@ -32,6 +29,11 @@ from users.models import User
 
 
 def get_ip_list(user, appname=None):
+
+    ip_list = cache.get('get_ip_list:user:{}'.format(user.role))
+    if ip_list:
+        return pickle.loads(ip_list)
+
     if user.role == 'Admin':
         username_list = [dic['username'] for dic in
                          User.objects.all().values('username')]
@@ -41,22 +43,22 @@ def get_ip_list(user, appname=None):
     else:
         username_list = [str(user.username)]
     content = (Q(user__in=username_list) & Q(app_name=appname)) if appname else Q(user__in=username_list)
-    serverip = ServerToZabbix.objects.filter(content)
-    cloudip = CloudDeviceToZabbix.objects.filter(content)
-    resourceip = ResourceHostToZabbix.objects.filter(content)
-    storageip = StorageToZabbix.objects.filter(content)
-    networkip = NetworkDeviceToZabbix.objects.filter(content)
+    serverip = ServerToZabbix.objects.filter(content).all()
+    cloudip = CloudDeviceToZabbix.objects.filter(content).all()
+    resourceip = ResourceHostToZabbix.objects.filter(content).all()
+    storageip = StorageToZabbix.objects.filter(content).all()
+    networkip = NetworkDeviceToZabbix.objects.filter(content).all()
     ip_list = {shebei.host_ip: shebei.app_name
-                  for shebei_list in [serverip, cloudip, resourceip, storageip, networkip]
-                  for shebei in shebei_list
-                   }
+                for shebei_list in [serverip, cloudip, resourceip, storageip, networkip]
+                    for shebei in shebei_list
+                }
+    cache.set('get_ip_list:user:{}'.format(user.role), pickle.dumps(ip_list), 60)
     return ip_list
 
 
 def get_zabbix_token(zabbix_id):
     if zabbix_id:
         zabbix_id = int(zabbix_id)
-    # zabbix = Jk_pass.objects.get(zabbix_id=zabbix_id) # 修改
     zabbix = Pass.objects.get(zabbix_id=zabbix_id)
     url = zabbix.url
     pwd = base64.b64decode(zabbix.pwd.encode('utf-8')).decode("utf8")
@@ -79,7 +81,6 @@ def m_type(Oc_time, End_time):
 def get_sign_out(ip):
     now = int(time.time())
     try:
-    # information_list = Jk_Mt_Information.objects.filter(IP=ip, Oc_time__lt=now, End_time__gt=now)  # 修改
         information_list = MTInformation.objects.filter(ip=ip, oc_time__lt=now, end_time__gt=now)
     except Exception as e:
         print(e)
@@ -106,6 +107,7 @@ def to_localtime(data_time):
 
 
 # ------以上是通用方法------- #
+
 @csrf_exempt
 @login_required
 def signbackInformation(request):
@@ -113,8 +115,9 @@ def signbackInformation(request):
 
         device_group_list = DeviceGroup.objects.all()
         data_content = {
-            'shebei_gurop_list': device_group_list,
+            'shebei_group_list': device_group_list,
         }
+
         return render(request, 'signbackInformation/signSackInformation.html', data_content)
 
     elif request.method == 'POST':
@@ -127,15 +130,13 @@ def signbackInformation(request):
         pageSize = int(request.POST.get('limit', ''))
         login_user = request.user
         ip_list = get_ip_list(login_user)
-        print(ip_list)
 
         information_list = MTInformation.objects.filter(ip__in=ip_list)
-        print(to_localtime(str(endTime)))
-        print(information_list.all())
+
         if host_ip:
             information_list = information_list.filter(ip=host_ip)
         if group != '':
-            information_list = information_list.filter(groupid__id=int(group))
+            information_list = information_list.filter(id=int(group))
         if startTime and endTime:
 
             information_list = information_list.filter(
@@ -153,128 +154,138 @@ def signbackInformation(request):
 
         if not information_list and mt_type == '0':
 
-            if startTime and endTime:
-                information_ips = information_list.filter(
-                    Q(oc_time__lt=to_localtime(str(endTime)), oc_time__gt=to_localtime(str(startTime))) |
-                    Q(oc_time__lt=to_localtime(str(startTime)), end_time__gt=to_localtime(str(startTime))) |
-                    Q(oc_time__lt=to_localtime(str(endTime)), end_time__gt=to_localtime(str(endTime))) |
-                    Q(end_time__lt=to_localtime(str(endTime)), end_time__gt=to_localtime(str(startTime)))
-                ).values_list("ip")
-                ip_list = list(set(ip_list).difference(set([ips[0] for ips in information_ips])))
+            # if startTime and endTime:
+            #     information_ips = information_list.filter(
+            #         Q(oc_time__lt=to_localtime(str(endTime)), oc_time__gt=to_localtime(str(startTime))) |
+            #         Q(oc_time__lt=to_localtime(str(startTime)), end_time__gt=to_localtime(str(startTime))) |
+            #         Q(oc_time__lt=to_localtime(str(endTime)), end_time__gt=to_localtime(str(endTime))) |
+            #         Q(end_time__lt=to_localtime(str(endTime)), end_time__gt=to_localtime(str(startTime)))
+            #     ).values_list("ip")
+            #     ip_list = list(set(ip_list).difference(set([ips[0] for ips in information_ips])))
+            #     print(ip_list)
             res = []
-            # resource_host = Jk_Resource_Host.objects.filter(Ip__in=ip_list) # 修改
-            resource_host = ResourceHost.objects.filter(ip__in=ip_list)
+            k_ = ['resource_host', 'server', 'cloud_device', 'storage', 'switches', 'routing', 'fw', 'fz']
+            v_ = [ResourceHost, Server, CloudDevice, Storage, Switches, Routing, Fw, Fz]
+            host_dic = dict(zip(k_, v_))
+            host_dic = {k: v.objects.filter(ip__in=ip_list) for k, v in host_dic.items()}
 
-            # server = Jk_Server.objects.filter(IP__in=ip_list) # 修改
-            server = Server.objects.filter(ip__in=ip_list)
-
-            # cloud_device = Jk_Cloud_Device.objects.filter(Ip__in=ip_list) # 修改
-            cloud_device = CloudDevice.objects.filter(ip__in=ip_list)
-
-            # storage = Jk_Storage.objects.filter(Ip__in=ip_list) # 修改
-            storage = Storage.objects.filter(ip__in=ip_list)
-
-            # switches = Jk_Switches.objects.filter(Ip__in=ip_list) # 修改
-            switches = Switches.objects.filter(ip__in=ip_list)
-
-            # routing = Jk_Routing.objects.filter(Ip__in=ip_list) # 修改
-            routing = Routing.objects.filter(ip__in=ip_list)
-
-            # fw = Jk_Fw.object.filter(Ip__in=ip_list) # 修改
-            fw = Fw.objects.filter(ip__in=ip_list)
-
-            # fz = Jk_Fz.objects.filter(Ip__in=ip_list) # 修改
-            fz = Fz.objects.filter(ip__in=ip_list)
+            # resource_host = ResourceHost.objects.filter(ip__in=ip_list)
+            #
+            # server = Server.objects.filter(ip__in=ip_list)
+            #
+            # cloud_device = CloudDevice.objects.filter(ip__in=ip_list)
+            #
+            # storage = Storage.objects.filter(ip__in=ip_list)
+            #
+            # switches = Switches.objects.filter(ip__in=ip_list)
+            #
+            # routing = Routing.objects.filter(ip__in=ip_list)
+            #
+            # fw = Fw.objects.filter(ip__in=ip_list)
+            #
+            # fz = Fz.objects.filter(ip__in=ip_list)
             if host_ip:
-                resource_host = resource_host.filter(ip=host_ip)
-                server = server.filter(ip=host_ip)
-                cloud_device = cloud_device.filter(ip=host_ip)
-                storage = storage.filter(ip=host_ip)
-                switches = switches.filter(ip=host_ip)
-                routing = routing.filter(ip=host_ip)
-                fw = fw.filter(ip=host_ip)
-                fz = fz.filter(ip=host_ip)
+                host_dic = {k: v.filter(ip=host_ip) for k, v in host_dic.items()}
+                # resource_host = resource_host.filter(ip=host_ip)
+                # server = server.filter(ip=host_ip)
+                # cloud_device = cloud_device.filter(ip=host_ip)
+                # storage = storage.filter(ip=host_ip)
+                # switches = switches.filter(ip=host_ip)
+                # routing = routing.filter(ip=host_ip)
+                # fw = fw.filter(ip=host_ip)
+                # fz = fz.filter(ip=host_ip)
             if group != '':
-                resource_host = resource_host.filter(group__id=int(group))
-                server = server.filter(group__id=int(group))
-                cloud_device = cloud_device.filter(group__id=int(group))
-                storage = storage.filter(group__id=int(group))
-                switches = switches.filter(group__id=int(group))
-                routing = routing.filter(group__id=int(group))
-                fw = fw.filter(group__id=int(group))
-                fz = fz.filter(group__id=int(group))
-            if resource_host:
-                for p in resource_host:
-                    res.append({"name": '', "IP": p.ip, "Oc_time": '',
-                        "End_time": '', "groupname": p.group.group_Name, "Zabbix_id": p.group.zabbix_id,
-                        "DESC": p.desc, 'type': '正常', 'id': p.resource_id, 'maintenanceid': '',
-                        'hostid': p.hostid})
-            if server:
-                for p in server:
-                    res.append({"name": '', "IP": p.ip, "Oc_time": '',
-                        "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
-                        "DESC": p.desc, 'type': '正常', 'id': p.server_id, 'maintenanceid': '',
-                        'hostid': p.hostid})
+                host_dic = {k: v.filter(group__id=int(group)) for k, v in host_dic.items()}
+                # resource_host = resource_host.filter(group__id=int(group))
+                # server = server.filter(group__id=int(group))
+                # cloud_device = cloud_device.filter(group__id=int(group))
+                # storage = storage.filter(group__id=int(group))
+                # switches = switches.filter(group__id=int(group))
+                # routing = routing.filter(group__id=int(group))
+                # fw = fw.filter(group__id=int(group))
+                # fz = fz.filter(group__id=int(group))
 
-            if cloud_device:
-                for p in cloud_device:
-                    res.append({"name": '', "IP": p.ip, "Oc_time": '',
-                        "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
-                        "DESC": p.desc, 'type': '正常', 'id': p.cloud_Id, 'maintenanceid': '',
-                        'hostid': p.hostid})
+            host_list = []
+            for v in host_dic.values():
+                host_list.extend(v)
 
-            if storage:
-                for p in storage:
+            if host_list:
+                for p in host_list:
                     res.append({"name": '', "IP": p.ip, "Oc_time": '',
-                        "End_time": '', "groupname": p.group.group_Name, "Zabbix_id": p.group.zabbix_id,
-                        "DESC": p.desc, 'type': '正常', 'id': p.storage_Id, 'maintenanceid': '',
-                        'hostid': p.hostid})
-
-            if switches:
-                for p in switches:
-                    res.append({"name": '', "IP": p.ip, "Oc_time": '',
-                        "End_time": '', "groupname": p.Group.group_Name, "Zabbix_id": p.group.zabbix_id,
-                        "DESC": p.desc, 'type': '正常', 'id': p.switches_id, 'maintenanceid': '',
-                        'hostid': p.hostid})
-            if routing:
-                for p in routing:
-                    res.append({"name": '', "IP": p.ip, "Oc_time": '',
-                        "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
-                        "DESC": p.desc, 'type': '正常', 'id': p.routing_id, 'maintenanceid': '',
-                        'hostid': p.hostid})
-            if fw:
-                for p in fw:
-                    res.append({"name": '', "IP": p.ip, "Oc_time": '',
-                        "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
-                        "DESC": p.desc, 'type': '正常', 'id': p.fw_id, 'maintenanceid': '',
-                        'hostid': p.hostid})
-            if fz:
-                for p in fz:
-                    res.append({"name": '', "IP": p.ip, "Oc_time": '',
-                        "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
-                        "DESC": p.desc, 'type': '正常', 'id': p.fz_id, 'maintenanceid': '',
-                        'hostid': p.hostid})
+                                "End_time": '', "groupname": p.group.name, "Zabbix_id": p.group.zabbix_id,
+                                "DESC": p.desc, 'type': '正常', 'id': p.id, 'maintenanceid': '',
+                                'hostid': p.hostid})
+            #
+            # if resource_host:
+            #     try:
+            #         for p in resource_host:
+            #             res.append({"name": '', "IP": p.ip, "Oc_time": '',
+            #                 "End_time": '', "groupname": p.group.name, "Zabbix_id": p.group.zabbix_id,
+            #                 "DESC": p.desc, 'type': '正常', 'id': p.id, 'maintenanceid': '',
+            #                 'hostid': p.hostid})
+            #     except Exception as e:
+            #         print(e)
+            # if server:
+            #     for p in server:
+            #         res.append({"name": '', "IP": p.ip, "Oc_time": '',
+            #             "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
+            #             "DESC": p.desc, 'type': '正常', 'id': p.server_id, 'maintenanceid': '',
+            #             'hostid': p.hostid})
+            #
+            # if cloud_device:
+            #     for p in cloud_device:
+            #         res.append({"name": '', "IP": p.ip, "Oc_time": '',
+            #             "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
+            #             "DESC": p.desc, 'type': '正常', 'id': p.cloud_Id, 'maintenanceid': '',
+            #             'hostid': p.hostid})
+            #
+            # if storage:
+            #     for p in storage:
+            #         res.append({"name": '', "IP": p.ip, "Oc_time": '',
+            #             "End_time": '', "groupname": p.group.group_Name, "Zabbix_id": p.group.zabbix_id,
+            #             "DESC": p.desc, 'type': '正常', 'id': p.storage_Id, 'maintenanceid': '',
+            #             'hostid': p.hostid})
+            #
+            # if switches:
+            #     for p in switches:
+            #         res.append({"name": '', "IP": p.ip, "Oc_time": '',
+            #             "End_time": '', "groupname": p.Group.group_Name, "Zabbix_id": p.group.zabbix_id,
+            #             "DESC": p.desc, 'type': '正常', 'id': p.switches_id, 'maintenanceid': '',
+            #             'hostid': p.hostid})
+            # if routing:
+            #     for p in routing:
+            #         res.append({"name": '', "IP": p.ip, "Oc_time": '',
+            #             "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
+            #             "DESC": p.desc, 'type': '正常', 'id': p.routing_id, 'maintenanceid': '',
+            #             'hostid': p.hostid})
+            # if fw:
+            #     for p in fw:
+            #         res.append({"name": '', "IP": p.ip, "Oc_time": '',
+            #             "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
+            #             "DESC": p.desc, 'type': '正常', 'id': p.fw_id, 'maintenanceid': '',
+            #             'hostid': p.hostid})
+            # if fz:
+            #     for p in fz:
+            #         res.append({"name": '', "IP": p.ip, "Oc_time": '',
+            #             "End_time": '', "groupname": p.group.group_name, "Zabbix_id": p.group.zabbix_id,
+            #             "DESC": p.desc, 'type': '正常', 'id': p.fz_id, 'maintenanceid': '',
+            #             'hostid': p.hostid})
             res_content = {
                 "code": 0,
                 "msg": "正常",
                 "count": len(res),
                 "data": res[(pageIndex-1)*pageSize:pageIndex*pageSize]
             }
-            print(res_content, '123')
             return HttpResponse(json.dumps(res_content), content_type='application/json')
 
         res = []
-        print(information_list, '999')
         for p in information_list[(pageIndex-1)*pageSize:pageIndex*pageSize]:
-            print(p.ip)
-            print(to_strtime(p.oc_time))
-            try:
-                res.append({"name": p.name, "IP": p.ip, "Oc_time": to_strtime(p.oc_time), "End_time": to_strtime(p.end_time),
-                            "Zabbix_id":p.group.zabbix_id, "groupid": p.group.id,
-                            "groupname": p.group.name, 'maintenanceid': p.maintenanceid,
-                            "DESC": p.desc, 'type': m_type(p.oc_time, p.end_time), 'id': '111', 'hostid': p.hostid})
-            except Exception as e:
-                print(e)
+
+            res.append({"name": p.name, "IP": p.ip, "Oc_time": to_strtime(p.oc_time), "End_time": to_strtime(p.end_time),
+                        "Zabbix_id": p.group.zabbix_id, "groupid": p.group.id,
+                        "groupname": p.group.name, 'maintenanceid': p.maintenanceid,
+                        "DESC": p.desc, 'type': m_type(p.oc_time, p.end_time), 'id': '111', 'hostid': p.hostid})
+
         res_content = {
             "code": 0,
             "msg": "",
@@ -372,12 +383,12 @@ def maintenance_export(request):
                 'hostid','maintenanceid'
             ]
         ]
-        print(fields, 'fields')
+
         # 表名
         filename = '{}-information.xls'.format(
             time.strftime("%Y-%m-%d", time.localtime(time.time()))
         )
-        print(filename)
+
         def _map_header(field_name):
             header_dic = {
                 'id': '维护信息ID',
@@ -431,15 +442,14 @@ def maintenance_export(request):
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename="{}"'.format(filename)
         print(response['Content-Disposition'])
-        return response #HttpResponse(','.join([field.name for field in fields]))
+        return response  # HttpResponse(','.join([field.name for field in fields]))
 
     elif request.method == 'POST':
         try:
             informations = json.loads(request.body)
-            print(informations, 'aaaaa')
         except ValueError:
             return HttpResponse('Json object not valid', status=400)
-        maintenances_id =informations.get('maintenances_id', [])
+        maintenances_id =informations.get('maintenances_id', '')
         host_ip =informations.get('host_ip', '')
         group = informations.get('group', '')
         mt_type = informations.get('type', '')
@@ -478,10 +488,8 @@ def maintenance_export(request):
                 information_list = information_list.filter(oc_time__lte=time.time(), end_time__gte=time.time())
 
         spm = uuid.uuid4().hex
-        print(information_list)
-        try:
-            cache.set(spm, pickle.dumps(information_list), 300)
-        except Exception as e:
-            print(e)
+
+        cache.set(spm, pickle.dumps(information_list), 300)
+
         url = reverse_lazy('signbackInformation:maintenance_export') + '?spm=%s' % spm
         return JsonResponse({'redirect': url})
