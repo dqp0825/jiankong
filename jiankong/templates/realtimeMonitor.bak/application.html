@@ -1,0 +1,259 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+        <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+        <!-- NProgress -->
+        <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+        <!-- bootstrap-daterangepicker -->
+        <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+    
+        <!-- Custom Theme Style -->
+        <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+        <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+        <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+	</head>
+	<body>
+	<div class="title_left">
+        <h3 style="margin: 10px auto;">&nbsp;&nbsp;<small>应用</small></h3>
+    </div>
+    <div class="container" style="width: 100%; overflow-x: hidden;">
+    	
+    	<div class="row">
+    		
+    			<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">应用告警</h5>
+					<div id="content1" style="height:400px; width:90%; margin:0  auto;"></div>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">告警超时率</h5>
+					<div id="content2" style="height:400px; width:90%; margin:0  auto;"></div>
+				</div>
+    		
+    	</div>
+    	<div class="row">
+    		<div style="height: 40px; line-height:40px;width:98%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">
+    			<h5 style="line-height: 40px; display: inline-block;">应用监控详情</h5>
+    			<button type="submit" class="btn btn-success" style="float: right;  display: inline-block;">导出</button>
+    		</div>
+    		
+    	</div>
+    	<div class="row">
+    		<div style="width: 98%; margin: 0 auto;">
+    			<table class="layui-hide" id="test"></table>
+    		</div>
+    		
+    	</div>
+    </div>
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'production/build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>  
+    <script type="text/javascript">
+    	require.config({
+			paths: {
+                'echarts': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/'%}",
+                'echarts/chart/line': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/line'%}",
+                'echarts/chart/pie': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/pie'%}",
+                'echarts/chart/bar': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/bar'%}",
+                'echarts/chart/gauge':"{% static 'production/plugins/echarts-2.2.7/build/dist/chart/gauge'%}",
+			}
+		});
+//		应用告警
+		require(
+                [
+                    'echarts',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('content1'));
+                    var option = {
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+
+
+
+
+
+                        toolbox: {
+                            show : true,
+                        },
+                        calculable : false,
+                        series : [
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                selectedMode: 'single',
+                                radius : [0, 70],
+
+                                // for funnel
+                                x: '20%',
+                                width: '40%',
+                                funnelAlign: 'right',
+                                max: 1548,
+
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            position : 'inner'
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    }
+                                },
+                                data:[
+                                    {value:4, name:'重大'},
+                                    {value:4, name:'严重'},
+                                    {value:4, name:'一般', selected:true},
+                                    {value:4, name:'其它'},
+                                    {value:0, name:'正常'}
+                                ]
+                            },
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                radius : [100, 140],
+
+                                // for funnel
+                                x: '60%',
+                                width: '35%',
+                                funnelAlign: 'left',
+                                max: 1048,
+
+                                data:[
+                                    {value:1, name:'应用一'},
+                                    {value:1, name:'应用二'},
+                                    {value:1, name:'应用三'},
+                                    {value:1, name:'应用四'},
+                                     {value:1, name:'应用一'},
+                                    {value:1, name:'应用二'},
+                                    {value:1, name:'应用三'},
+                                    {value:1, name:'应用四'},
+                                     {value:1, name:'应用一'},
+                                    {value:1, name:'应用二'},
+                                    {value:1, name:'应用三'},
+                                    {value:1, name:'应用四'},
+                                     {value:1, name:'应用一'},
+                                    {value:1, name:'应用二'},
+                                    {value:1, name:'应用三'},
+                                    {value:1, name:'应用四'},
+                                ]
+                            }
+                        ]
+                    };
+
+                    myChart1.setOption(option);
+                }
+            );
+//		告警超时率
+		require(
+                [
+                    'echarts',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('content2'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        x : 'center',
+                        y : 'bottom',
+                        data:['超时','未超时']
+                    },
+                    calculable : true,
+                    series : [
+
+                        {
+                            name:'面积模式',
+                            type:'pie',
+                            radius : [30, 110],
+                            center : ['55%', 200],
+                            roseType : 'area',
+                            x: '50%',               // for funnel
+                            max: 40,                // for funnel
+                            sort : 'ascending',     // for funnel
+                            data:[
+                                {value:2, name:'超时',
+                                    itemStyle: {
+                                        normal: {
+                                            color: 'red'
+                                        }
+                                    }
+                                },
+                                {value:3, name:'未超时',
+                                    itemStyle: {
+                                        normal: {
+                                            color: '#5BD75B'
+                                        }
+                                    }
+                                },
+                            ]
+                        }
+                    ]
+                };
+
+                    myChart1.setOption(option);
+                }
+            );
+    </script>
+    <script>
+    	layui.use('table', function(){
+		  var table = layui.table;
+		  
+		  table.render({
+		    elem: '#test'
+		    ,url:'/demo/table/user/'
+		    ,cols: [[
+		      {field:'id',  title: '应用名称', sort: true}
+		      ,{field:'city', title: '应用级别',sort: true}
+		      ,{field:'username',  title: '重大',sort: true}
+		      ,{field:'sex', title: '严重', sort: true}
+		      ,{field:'city',  title: '一般',sort: true}
+		      ,{field:'city',  title: '其他',sort: true}
+		     
+		    ]]
+		    ,page: true
+		  });
+		});
+    </script>
+	</body>
+</html>

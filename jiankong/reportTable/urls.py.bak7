@@ -1,0 +1,11 @@
+from django.conf.urls import url
+
+from . import views
+urlpatterns = [
+    url(r'reportTable',views.reportTable,name='reportTable'),
+    url(r'serverrpt',views.ServerRpt,name='serverrpt'),
+    url(r'resourcehostrpt',views.ResourceHostRpt,name='resourcehostrpt'),
+    url(r'cloudrpt',views.CloudRpt,name='cloudrpt'),
+    url(r'fwrpt',views.FwRpt,name='fwrpt'),
+    # url(r'getgroup',views.getgroup,name='getgroup'),
+]

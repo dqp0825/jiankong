@@ -1,0 +1,140 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+	    <!-- Font Awesome -->
+	    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+	    <!-- NProgress -->
+	    <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+	    <!-- bootstrap-daterangepicker -->
+	    <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+	
+	    <!-- Custom Theme Style -->
+	    <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+	    <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+	    <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+	</head>
+	<body>
+	<div class="title_left">
+    	<h3 style="margin: 10px auto;">&nbsp;&nbsp;<small>应用详情</small></h3>
+	</div>
+	<div class="row" style="margin-top: 30px;">
+		<div class="col-md-10 col-ls-10 col-xs-10 col-md-offset-1">				  
+		  <div style="height: 40px; line-height:40px;width:100%; margin:0  auto;background:#E0FFFF;padding-left: 20px; margin-top: 20px;">
+				<h5 style="line-height: 40px; display: inline-block;">应用一</h5>
+		  </div>
+		  <div class="row" style="margin-bottom: 20px; padding-top: 10px;">
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px 5px">应用名称:</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用级别</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用管理部门:</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用维护部门:</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">数据中心:</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">机房:</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用管理人:</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用维护人:</div>
+		  </div>
+		  
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-10 col-ls-10 col-xs-10 col-md-offset-1">				  
+		  <div style="height: 40px; line-height:40px;width:100%; margin:0  auto;background:#E0FFFF;padding-left: 20px; margin-top: 20px;">
+				<h5 style="line-height: 40px; display: inline-block;">应用进程</h5>
+		  </div>
+		  <table class="layui-hide" id="test"></table>
+		</div>
+	</div>
+	<div class="row" style="margin-top: 30px;">
+		<div class="col-md-10 col-ls-10 col-xs-10 col-md-offset-1">				  
+		  <div style="height: 40px; line-height:40px;width:100%; margin:0  auto;background:#E0FFFF;padding-left: 20px; margin-top: 20px;">
+				<h5 style="line-height: 40px; display: inline-block;">应用详情</h5>
+				<button type="submit" class="btn btn-success" style="float: right;  display: inline-block; margin-top: 3px;">导出</button>
+		  </div>
+		  <table class="layui-hide" id="test2"></table>
+		</div>
+	</div>
+              
+          
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'production/build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>  
+	
+	<table class="layui-hide" id="test"></table>	 
+	<script>
+	layui.use('table', function(){
+	  var table = layui.table;
+	  
+	  table.render({
+	    elem: '#test'
+	    ,url:'/demo/table/user/'
+	    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+	    ,cols: [[
+	      {field:'id',title: '应用'}
+	      ,{field:'id',title: 'ip	'}
+	      ,{field:'id',title: 'Mysql'}
+	      ,{field:'id',title: 'Oracle'}
+	      ,{field:'id',title: 'informix'}
+	      ,{field:'id',title: 'Redis'}
+	      ,{field:'id',title: 'Mongodb'}
+	      ,{field:'id',title: 'Memcache'}
+	      ,{field:'id',title: 'Tomcat'}
+	      
+	    ]]
+	  });
+	});
+	layui.use('table', function(){
+	  var table = layui.table;
+	  
+	  table.render({
+	    elem: '#test2'
+	    ,url:'/demo/table/user/'
+	    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+	    ,cols: [[
+	      {field:'id',title: '告警等级'}
+	      ,{field:'id',title: '告警设备'}
+	      ,{field:'id',title: '监控项'}
+	      ,{field:'id',title: '告警内容'}
+	      ,{field:'id',title: '发生时间'}
+	      ,{field:'id',title: '告警时长'}
+	      ,{field:'id',title: '详情'}
+	      
+	    ]]
+	  });
+	});
+	</script>
+
+	</body>
+</html>

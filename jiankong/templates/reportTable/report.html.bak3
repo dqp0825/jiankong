@@ -1,0 +1,613 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+
+
+            <link rel="stylesheet" type="text/css" href="{% static 'EasyUI/easyui.css' %}"/>
+            <script type="text/javascript" src="{% static 'EasyUI/jquery.min.js' %}"></script>
+            <script type="text/javascript" src="{% static 'EasyUI/jquery.easyui.min.js' %}"></script>
+            <link rel="stylesheet" href="{% static "production/plugins/layui-v2.2.5/layui/css/layui.css" %}"  media="all">
+            	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+{#  <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>#}
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>
+		<style>
+			.hide{
+				display: none;
+			}
+			
+			caption{
+				font-size: 30px;
+				font-weight: bold;
+				margin-bottom: 20px;
+			}
+		</style>
+                      <script type="text/javascript">
+        $(function () {
+            $('#group').combotree({
+                valueField: "id", //Value字段
+                textField: "text", //Text字段
+                multiple: true,
+                data: [{
+                    "id": 0,
+                    "text": "All",
+                    "children": {{ grouplist|safe }}
+                }]
+                ,
+                //                url: "tree_data2.json", //数据源
+                onCheck: function (node, checked) {
+                    //让全选不显示
+                    $("#group").combotree("setText", $("#group").combobox("getText").toString().replace("全选,", ""));
+                },
+                onClick: function (node, checked) {
+                    //让全选不显示
+                    $("#group").combotree("setText", $("#group").combobox("getText").toString().replace("全选,", ""));
+                }
+            });
+
+               $('#host').combotree({
+                valueField: "id", //Value字段
+                textField: "text", //Text字段
+                multiple: true,
+                data: [{
+                    "id": 1,
+                    "text": "All",
+                    "children": [{'id': '上传俄国', 'text': 'host1'}, {'id': '23296', 'text': 'host2'}, {
+                        'id': '23295',
+                        'text': 'host3'
+                    }, {'id': '23294', 'text': 'host4'}]
+                }]
+                ,
+                //                url: "tree_data2.json", //数据源
+                onCheck: function (node, checked) {
+                    //让全选不显示
+                    $("#host").combotree("setText", $("#host").combobox("getText").toString().replace("全选,", ""));
+                },
+                onClick: function (node, checked) {
+                    //让全选不显示
+                    $("#host").combotree("setText", $("#host").combobox("getText").toString().replace("全选,", ""));
+                }
+            });
+
+
+        })
+    </script>
+		<script>
+			$(function(){
+				var $div_li = $(".tab_menu option");
+				$div_li.click(function(){
+					$(this).addClass("selected").siblings().removeClass("selected");
+					var index = $div_li.index(this);
+					$(".tab_box > table").eq(index).show().siblings().hide();
+				}).hover(function(){
+				$(this).addClass("hover");
+			},function(){
+				$(this).removeClass("hover");
+			})
+			})
+		</script>
+
+	</head>
+	<body>
+		<div class="layui-row" style="margin: 40px;">
+
+            <div class="form-inline" style="text-align: center;margin-top: 20px;margin-left: 31%">
+                <div class="form-group" style="float: left;">
+                    <label for="exampleInputName2">群组</label>
+                    <select id="group" class="form-control" style="width: 205px; height: 24px;">
+                    </select>
+                </div>
+                <div class="form-group" style="float: left;margin-left: 30px">
+                    <label for="exampleInputEmail2">设备名</label>
+{#                    <select id="host" class="form-control" style="width: 205px; height: 24px;" onclick="alert('111');">#}
+                    <input type="text" style="border: 1px solid #b2dba1;border-radius: 3px;height: 22px">
+                    </select>
+                </div>
+
+   		</div>
+
+            <div class="layui-row"  style="margin-left:-3%;">
+                <div class="col-md-3 col-sm-3 col-xs-3" style="float: left">
+                    <input placeholder="发生时间" class="laydate-icon"
+                           onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3" style="float: left">
+                    <input placeholder="结束时间" class="laydate-icon"
+                           onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+                </div>
+{#            </div>#}
+{#   		<div class="layui-row" style="height: 40px;line-height: 50px;">#}
+            <span>设备类型：</span>
+   			<select class="tab_menu" style="font-size: 12px;width: 150px">
+                <option type="radio" id="btn1" name="radio" value="物理机" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;">物理机</option>
+                <option type="radio" id="btn2" name="radio" value="宿主机" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">宿主机</option>
+                <option type="radio" id="btn3" name="radio" value="云主机" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">云主机</option>
+                <option type="radio" id="btn4" name="radio" value="交换机" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">交换机</option>
+                <option type="radio" id="btn4" name="radio" value="防火墙" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">防火墙</option>
+                <option type="radio" id="btn4" name="radio" value="路由器" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">路由器</option>
+                <option type="radio" id="btn4" name="radio" value="负载均衡" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">负载均衡</option>
+            </select>
+
+{#            <select class="form-group" style="margin-top: 5px;width: 50px">#}
+{#                <option value="1">日报</option>#}
+{#                <option value="2">周报</option>#}
+{#                <option value="3">月报</option>#}
+{#            </select>#}
+                <button type="submit" class="layui-btn layui-btn-sm layui-btn-normal" style="height: 25px;width: 40px; color: #fff;margin-left: 5%" onclick="cx();">查询</button>
+                <button type="submit" class="layui-btn layui-btn-sm layui-btn-normal" style="height: 25px;width: 40px; color: #fff;margin-left: 5%">导出</button>
+   		</div>
+
+        </div>
+        <div class="tab_box">
+        <table class="layui-hide" id="test1" lay-filter="user"></table>
+{#        <table class="layui-hide" id="test2" lay-filter="user" style="display: none"></table>#}
+{#        <table class="layui-hide" id="test3" lay-filter="user" style="display: none"></table>#}
+{#        <table class="layui-hide" id="test4" lay-filter="user" style="display: none"></table>#}
+{#        <table class="layui-hide" id="test5" lay-filter="user" style="display: none"></table>#}
+{#        <table class="layui-hide" id="test6" lay-filter="user" style="display: none"></table>#}
+{#        <table class="layui-hide" id="test7" lay-filter="user" style="display: none"></table>#}
+        </div>
+
+        <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js' %}" charset="utf-8"></script>
+
+        <script>
+            layui.use('table', function(){
+            var table = layui.table;
+
+            //方法级渲染
+            table.render({
+            elem: '#test1'
+            ,url: '{{ url }}'
+            ,cols: [[
+            {checkbox: true, fixed: true}
+            ,{field:'host_ip', title: '设备ip', sort: true, fixed: true}
+            ,{field:'hostname', title: '设备名'}
+            ,{field:'app_name', title: '所属应用'}
+            ,{field:'max_cpu', title: 'CPU最大利用率'}
+            ,{field:'min_cpu', title: 'CPU最小利用率'}
+            ,{field:'avg_cpu', title: 'CPU平均利用率'}
+            ,{field:'max_mem', title: '内存最大利用率'}
+            ,{field:'min_mem', title: '内存最小利用率'}
+            ,{field:'avg_mem', title: '内存平均利用率'}
+            ,{field:'now_disk', title: '磁盘使用率'}
+            ]]
+            ,id: 'testReload'
+            ,page: true
+            ,height: 315
+            });
+
+            var $ = layui.$, active = {
+            reload: function(){
+            var demoReload = $('#demoReload');
+
+            //执行重载
+            table.reload('testReload', {
+            page: {
+            curr: 1 //重新从第 1 页开始
+            }
+            ,where: {
+            key: {
+            id: demoReload.val()
+            }
+            }
+            });
+            }
+            };
+
+            $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+            });
+            });
+            </script>
+        <script>
+            function cx() {
+{#                $.ajax({#}
+{#                type: 'post',#}
+{#                url: '',#}
+{#                data: {data: data},#}
+{#                cache: false,#}
+{#                dataType: 'json',#}
+{#                success: function (data) {#}
+{#                }#}
+{#            });#}
+                var groups = $('#group').combobox('getValues')
+                console.log(groups)
+            }
+        </script>
+{#    <script>#}
+{#            layui.use('table', function(){#}
+{#            var table = layui.table;#}
+{##}
+{#            //方法级渲染#}
+{#            table.render({#}
+{#            elem: '#test2'#}
+{#            ,url: '/demo/table/user/'#}
+{#            ,cols: [[#}
+{#            {checkbox: true, fixed: true}#}
+{#            ,{field:'id', title: 'ID', width:80, sort: true, fixed: true}#}
+{#            ,{field:'username', title: '用户名', width:80}#}
+{#            ,{field:'sex', title: '性别', width:80, sort: true}#}
+{#            ,{field:'city', title: '城市', width:80}#}
+{#            ,{field:'sign', title: '签名'}#}
+{#            ,{field:'experience', title: '积分', sort: true, width:80}#}
+{#            ,{field:'score', title: '评分', sort: true, width:80}#}
+{#            ,{field:'classify', title: '职业', width:80}#}
+{#            ,{field:'wealth', title: '财富', sort: true, width:135}#}
+{#            ]]#}
+{#            ,id: 'testReload'#}
+{#            ,page: true#}
+{#            ,height: 315#}
+{#            });#}
+{##}
+{#            var $ = layui.$, active = {#}
+{#            reload: function(){#}
+{#            var demoReload = $('#demoReload');#}
+{##}
+{#            //执行重载#}
+{#            table.reload('testReload', {#}
+{#            page: {#}
+{#            curr: 1 //重新从第 1 页开始#}
+{#            }#}
+{#            ,where: {#}
+{#            key: {#}
+{#            id: demoReload.val()#}
+{#            }#}
+{#            }#}
+{#            });#}
+{#            }#}
+{#            };#}
+{##}
+{#            $('.demoTable .layui-btn').on('click', function(){#}
+{#            var type = $(this).data('type');#}
+{#            active[type] ? active[type].call(this) : '';#}
+{#            });#}
+{#            });#}
+{#            </script>#}
+{##}
+{##}
+{#    <script>#}
+{#            layui.use('table', function(){#}
+{#            var table = layui.table;#}
+{##}
+{#            //方法级渲染#}
+{#            table.render({#}
+{#            elem: '#test3'#}
+{#            ,url: '/demo/table/user/'#}
+{#            ,cols: [[#}
+{#            {checkbox: true, fixed: true}#}
+{#            ,{field:'id', title: 'ID', width:80, sort: true, fixed: true}#}
+{#            ,{field:'username', title: '用户名', width:80}#}
+{#            ,{field:'sex', title: '性别', width:80, sort: true}#}
+{#            ,{field:'city', title: '城市', width:80}#}
+{#            ,{field:'sign', title: '签名'}#}
+{#            ,{field:'experience', title: '积分', sort: true, width:80}#}
+{#            ,{field:'score', title: '评分', sort: true, width:80}#}
+{#            ,{field:'classify', title: '职业', width:80}#}
+{#            ,{field:'wealth', title: '财富', sort: true, width:135}#}
+{#            ]]#}
+{#            ,id: 'testReload'#}
+{#            ,page: true#}
+{#            ,height: 315#}
+{#            });#}
+{##}
+{#            var $ = layui.$, active = {#}
+{#            reload: function(){#}
+{#            var demoReload = $('#demoReload');#}
+{##}
+{#            //执行重载#}
+{#            table.reload('testReload', {#}
+{#            page: {#}
+{#            curr: 1 //重新从第 1 页开始#}
+{#            }#}
+{#            ,where: {#}
+{#            key: {#}
+{#            id: demoReload.val()#}
+{#            }#}
+{#            }#}
+{#            });#}
+{#            }#}
+{#            };#}
+{##}
+{#            $('.demoTable .layui-btn').on('click', function(){#}
+{#            var type = $(this).data('type');#}
+{#            active[type] ? active[type].call(this) : '';#}
+{#            });#}
+{#            });#}
+{#            </script>#}
+{##}
+{##}
+{#    <script>#}
+{#            layui.use('table', function(){#}
+{#            var table = layui.table;#}
+{##}
+{#            //方法级渲染#}
+{#            table.render({#}
+{#            elem: '#test4'#}
+{#            ,url: '/demo/table/user/'#}
+{#            ,cols: [[#}
+{#            {checkbox: true, fixed: true}#}
+{#            ,{field:'id', title: 'ID', width:80, sort: true, fixed: true}#}
+{#            ,{field:'username', title: '用户名', width:80}#}
+{#            ,{field:'sex', title: '性别', width:80, sort: true}#}
+{#            ,{field:'city', title: '城市', width:80}#}
+{#            ,{field:'sign', title: '签名'}#}
+{#            ,{field:'experience', title: '积分', sort: true, width:80}#}
+{#            ,{field:'score', title: '评分', sort: true, width:80}#}
+{#            ,{field:'classify', title: '职业', width:80}#}
+{#            ,{field:'wealth', title: '财富', sort: true, width:135}#}
+{#            ]]#}
+{#            ,id: 'testReload'#}
+{#            ,page: true#}
+{#            ,height: 315#}
+{#            });#}
+{##}
+{#            var $ = layui.$, active = {#}
+{#            reload: function(){#}
+{#            var demoReload = $('#demoReload');#}
+{##}
+{#            //执行重载#}
+{#            table.reload('testReload', {#}
+{#            page: {#}
+{#            curr: 1 //重新从第 1 页开始#}
+{#            }#}
+{#            ,where: {#}
+{#            key: {#}
+{#            id: demoReload.val()#}
+{#            }#}
+{#            }#}
+{#            });#}
+{#            }#}
+{#            };#}
+{##}
+{#            $('.demoTable .layui-btn').on('click', function(){#}
+{#            var type = $(this).data('type');#}
+{#            active[type] ? active[type].call(this) : '';#}
+{#            });#}
+{#            });#}
+{#            </script>#}
+{##}
+{##}
+{#    <script>#}
+{#            layui.use('table', function(){#}
+{#            var table = layui.table;#}
+{##}
+{#            //方法级渲染#}
+{#            table.render({#}
+{#            elem: '#test5'#}
+{#            ,url: '/demo/table/user/'#}
+{#            ,cols: [[#}
+{#            {checkbox: true, fixed: true}#}
+{#            ,{field:'id', title: 'ID', width:80, sort: true, fixed: true}#}
+{#            ,{field:'username', title: '用户名', width:80}#}
+{#            ,{field:'sex', title: '性别', width:80, sort: true}#}
+{#            ,{field:'city', title: '城市', width:80}#}
+{#            ,{field:'sign', title: '签名'}#}
+{#            ,{field:'experience', title: '积分', sort: true, width:80}#}
+{#            ,{field:'score', title: '评分', sort: true, width:80}#}
+{#            ,{field:'classify', title: '职业', width:80}#}
+{#            ,{field:'wealth', title: '财富', sort: true, width:135}#}
+{#            ]]#}
+{#            ,id: 'testReload'#}
+{#            ,page: true#}
+{#            ,height: 315#}
+{#            });#}
+{##}
+{#            var $ = layui.$, active = {#}
+{#            reload: function(){#}
+{#            var demoReload = $('#demoReload');#}
+{##}
+{#            //执行重载#}
+{#            table.reload('testReload', {#}
+{#            page: {#}
+{#            curr: 1 //重新从第 1 页开始#}
+{#            }#}
+{#            ,where: {#}
+{#            key: {#}
+{#            id: demoReload.val()#}
+{#            }#}
+{#            }#}
+{#            });#}
+{#            }#}
+{#            };#}
+{##}
+{#            $('.demoTable .layui-btn').on('click', function(){#}
+{#            var type = $(this).data('type');#}
+{#            active[type] ? active[type].call(this) : '';#}
+{#            });#}
+{#            });#}
+{#            </script>#}
+{##}
+{##}
+{#    <script>#}
+{#            layui.use('table', function(){#}
+{#            var table = layui.table;#}
+{##}
+{#            //方法级渲染#}
+{#            table.render({#}
+{#            elem: '#test6'#}
+{#            ,url: '/demo/table/user/'#}
+{#            ,cols: [[#}
+{#            {checkbox: true, fixed: true}#}
+{#            ,{field:'id', title: 'ID', width:80, sort: true, fixed: true}#}
+{#            ,{field:'username', title: '用户名', width:80}#}
+{#            ,{field:'sex', title: '性别', width:80, sort: true}#}
+{#            ,{field:'city', title: '城市', width:80}#}
+{#            ,{field:'sign', title: '签名'}#}
+{#            ,{field:'experience', title: '积分', sort: true, width:80}#}
+{#            ,{field:'score', title: '评分', sort: true, width:80}#}
+{#            ,{field:'classify', title: '职业', width:80}#}
+{#            ,{field:'wealth', title: '财富', sort: true, width:135}#}
+{#            ]]#}
+{#            ,id: 'testReload'#}
+{#            ,page: true#}
+{#            ,height: 315#}
+{#            });#}
+{##}
+{#            var $ = layui.$, active = {#}
+{#            reload: function(){#}
+{#            var demoReload = $('#demoReload');#}
+{##}
+{#            //执行重载#}
+{#            table.reload('testReload', {#}
+{#            page: {#}
+{#            curr: 1 //重新从第 1 页开始#}
+{#            }#}
+{#            ,where: {#}
+{#            key: {#}
+{#            id: demoReload.val()#}
+{#            }#}
+{#            }#}
+{#            });#}
+{#            }#}
+{#            };#}
+{##}
+{#            $('.demoTable .layui-btn').on('click', function(){#}
+{#            var type = $(this).data('type');#}
+{#            active[type] ? active[type].call(this) : '';#}
+{#            });#}
+{#            });#}
+{#            </script>#}
+{##}
+{#    <script>#}
+{#            layui.use('table', function(){#}
+{#            var table = layui.table;#}
+{##}
+{#            //方法级渲染#}
+{#            table.render({#}
+{#            elem: '#test7'#}
+{#            ,url: '/demo/table/user/'#}
+{#            ,cols: [[#}
+{#            {checkbox: true, fixed: true}#}
+{#            ,{field:'id', title: 'ID', width:80, sort: true, fixed: true}#}
+{#            ,{field:'username', title: '用户名', width:80}#}
+{#            ,{field:'sex', title: '性别', width:80, sort: true}#}
+{#            ,{field:'city', title: '城市', width:80}#}
+{#            ,{field:'sign', title: '签名'}#}
+{#            ,{field:'experience', title: '积分', sort: true, width:80}#}
+{#            ,{field:'score', title: '评分', sort: true, width:80}#}
+{#            ,{field:'classify', title: '职业', width:80}#}
+{#            ,{field:'wealth', title: '财富', sort: true, width:135}#}
+{#            ]]#}
+{#            ,id: 'testReload'#}
+{#            ,page: true#}
+{#            ,height: 315#}
+{#            });#}
+{##}
+{#            var $ = layui.$, active = {#}
+{#            reload: function(){#}
+{#            var demoReload = $('#demoReload');#}
+{##}
+{#            //执行重载#}
+{#            table.reload('testReload', {#}
+{#            page: {#}
+{#            curr: 1 //重新从第 1 页开始#}
+{#            }#}
+{#            ,where: {#}
+{#            key: {#}
+{#            id: demoReload.val()#}
+{#            }#}
+{#            }#}
+{#            });#}
+{#            }#}
+{#            };#}
+{##}
+{#            $('.demoTable .layui-btn').on('click', function(){#}
+{#            var type = $(this).data('type');#}
+{#            active[type] ? active[type].call(this) : '';#}
+{#            });#}
+{#            });#}
+{#            </script>#}
+
+	<script type="text/javascript">
+			!function(){
+				laydate.skin('molv');//切换皮肤，请查看skins下面皮肤库
+				laydate({elem: '#demo'});//绑定元素
+			}();
+
+			//日期范围限制
+			var start = {
+			    elem: '#start',
+			    format: 'YYYY-MM-DD',
+			    min: laydate.now(), //设定最小日期为当前日期
+			    max: '2099-06-16', //最大日期
+			    istime: true,
+			    istoday: false,
+			    choose: function(datas){
+			         end.min = datas; //开始日选好后，重置结束日的最小日期
+			         end.start = datas //将结束日的初始值设定为开始日
+			    }
+			};
+
+			var end = {
+			    elem: '#end',
+			    format: 'YYYY-MM-DD',
+			    min: laydate.now(),
+			    max: '2099-06-16',
+			    istime: true,
+			    istoday: false,
+			    choose: function(datas){
+			        start.max = datas; //结束日选好后，充值开始日的最大日期
+			    }
+			};
+			laydate(start);
+			laydate(end);
+
+			//自定义日期格式
+			laydate({
+			    elem: '#test1',
+			    format: 'YYYY年MM月DD日',
+			    festival: true, //显示节日
+			    choose: function(datas){ //选择日期完毕的回调
+			        alert('得到：'+datas);
+			    }
+			});
+
+			//日期范围限定在昨天到明天
+			laydate({
+			    elem: '#hello3',
+			    min: laydate.now(-1), //-1代表昨天，-2代表前天，以此类推
+			    max: laydate.now(+1) //+1代表明天，+2代表后天，以此类推
+			});
+			//签退
+			$('#btn-Signout').on('click',function(){
+//				msg=;
+
+				window.parent.alarmhtml()
+
+			})
+</script>
+	</body>
+</html>

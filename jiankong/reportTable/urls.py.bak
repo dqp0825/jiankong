@@ -1,0 +1,6 @@
+from django.conf.urls import url
+
+from . import views
+urlpatterns = [
+    url(r'reportTable',views.reportTable,name='reportTable')
+]

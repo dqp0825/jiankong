@@ -1,0 +1,752 @@
+# coding:utf-8
+import json
+import time
+import os
+
+
+from django.db.models import Q
+from django.http import FileResponse,JsonResponse
+from django.http import StreamingHttpResponse
+from django.shortcuts import render,HttpResponse
+
+# Create your views here.
+from django.views.decorators.csrf import csrf_exempt
+from dashBoard.models import ServerToZabbix, CloudDeviceToZabbix, ResourceHostToZabbix
+from dashBoard.models import StorageToZabbix,NetworkDeviceToZabbix,ServerToZabbix
+from dashBoard.models import Jk_Server,Jk_Fcpu,Jk_Fmem,Jk_Fdisk
+from dashBoard.models import Jk_Resource_Host,Jk_Scpu,Jk_Smem
+from dashBoard.models import JK_Shebei_Group,Jk_User
+from dashBoard.models import Jk_Cloud_Device,Jk_Ycpu,Jk_Ymem
+from dashBoard.models import Jk_Fw,Jk_Fwcpu,Jk_FwSes,Jk_Fwmem,Jk_Fwping_Pf_Ids
+
+import xlsxwriter
+
+
+user = "Admin"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+#获取用户的资源
+def getips(user):
+    serverip = ServerToZabbix.objects.filter(user=user)
+    cloudip = CloudDeviceToZabbix.objects.filter(user=user)
+    resourceip = ResourceHostToZabbix.objects.filter(user=user)
+    storageip = StorageToZabbix.objects.filter(user=user)
+    networkip = NetworkDeviceToZabbix.objects.filter(user=user)
+    iplist = []
+    for server in serverip:
+        iplist.append((server.host_ip).replace('\t',''))
+    for cloud in cloudip:
+        iplist.append((cloud.host_ip).replace('\t',''))
+    for storage in storageip:
+        iplist.append((storage.host_ip).replace('\t',''))
+    for network in networkip:
+        iplist.append((network.host_ip).replace('\t',''))
+    for resource in resourceip:
+        iplist.append((resource.host_ip).replace('\t',''))
+    return iplist
+
+#获取所管理主机组
+def getgroup():
+    grouplist = []
+
+    if user == "Admin" or user == "admin":
+        groups = JK_Shebei_Group.objects.all()
+        for group in groups:
+            groupdict = {}
+            groupdict['id'] = group.id
+            groupdict['text'] = group.Group_Name
+            grouplist.append(groupdict)
+    else:
+        userid = Jk_User.objects.filter(name=user)
+        for user_id in userid:
+            groups = JK_Shebei_Group.objects.filter(User_id_id=user_id)
+            for group in groups:
+                groupdict = {}
+                groupdict['id'] = group.id
+                groupdict['text'] = group.Group_Name
+                grouplist.append(groupdict)
+    return grouplist
+
+
+# 报表
+def reportTable(request):
+    if request.method == 'GET':
+        grouplist = getgroup()
+
+        # 物理机
+        code1 = '''[[
+                                        {checkbox: true, fixed: true}
+                                        , {field: 'host_ip', title: '设备ip',width:110}
+                                        , {field: 'hostname', title: '设备名',width:100}
+                                        , {field: 'app_name', title: '所属应用',width:120}
+                                        , {field: 'max_cpu', title: 'CPU最大利用率',width:150}
+                                        , {field: 'min_cpu', title: 'CPU最小利用率',width:150}
+                                        , {field: 'avg_cpu', title: 'CPU平均利用率',width:150}
+                                        , {field: 'max_mem', title: '内存最大利用率',width:150}
+                                        , {field: 'min_mem', title: '内存最小利用率',width:150}
+                                        , {field: 'avg_mem', title: '内存平均利用率',width:150}
+
+                                    ]]'''
+        # 宿主机
+        code2 = '''
+            [[
+                                            {checkbox: true, fixed: true}
+                                            , {field: 'host_ip', title: '设备ip', sort: true,width:110}
+                                            , {field: 'hostname', title: '设备名'}
+                                            , {field: 'data_center', title: '数据中心'}
+                                            , {field: 'cluster', title: '所属集群'}
+                                            , {field: 'app_name', title: '所属应用'}
+                                            , {field: 'max_cpu', title: 'CPU最大利用率'}
+                                            , {field: 'min_cpu', title: 'CPU最小利用率'}
+                                            , {field: 'avg_cpu', title: 'CPU平均利用率'}
+                                            , {field: 'max_mem', title: '内存最大利用率'}
+                                            , {field: 'min_mem', title: '内存最小利用率'}
+                                            , {field: 'avg_mem', title: '内存平均利用率'}
+
+                                        ]]
+        '''
+        # 云主机
+        code3 = '''
+                [[
+                                            {checkbox: true, fixed: true}
+                                            , {field: 'host_ip', title: '设备ip', sort: true, width:110}
+                                            , {field: 'hostname', title: '设备名', width:120}
+                                            , {field: 'data_center', title: '数据中心', width:120}
+                                            , {field: 'cluster', title: '所属集群', width:120}
+                                            , {field: 'app_name', title: '所属应用', width:120}
+                                            , {field: 'max_cpu', title: 'CPU最大利用率', width:120}
+                                            , {field: 'min_cpu', title: 'CPU最小利用率', width:120}
+                                            , {field: 'avg_cpu', title: 'CPU平均利用率', width:120}
+                                            , {field: 'max_mem', title: '内存最大利用率', width:120}
+                                            , {field: 'min_mem', title: '内存最小利用率', width:120}
+                                            , {field: 'avg_mem', title: '内存平均利用率', width:120}
+
+                                        ]]
+            '''
+        # 交换机
+        code4 = '''
+                [[
+                                            {checkbox: true, fixed: true}
+                                            , {field: 'host_ip', title: '设备ip', sort: true, width:110}
+                                            , {field: 'hostname', title: '设备名', width:120}
+                                            , {field: 'app_name', title: '所属应用', width:120}
+                                            , {field: 'max_cpu', title: 'CPU最大利用率', width:120}
+                                            , {field: 'min_cpu', title: 'CPU最小利用率', width:120}
+                                            , {field: 'avg_cpu', title: 'CPU平均利用率', width:120}
+                                            , {field: 'max_mem', title: '内存最大利用率', width:120}
+                                            , {field: 'min_mem', title: '内存最小利用率', width:120}
+                                            , {field: 'avg_mem', title: '内存平均利用率', width:120}
+                                            , {field: 'max_sy', title: '最大时延', width:120}
+                                            , {field: 'min_sy', title: '最小时延', width:120}
+                                            , {field: 'avg_sy', title: '平均时延', width:120}
+                                            , {field: 'max_packet_loss', title: '最大丢包数', width:120}
+                                            , {field: 'min_packet_loss', title: '最小丢包数', width:120}
+                                            , {field: 'avg_packet_loss', title: '平均丢包数', width:120}
+                                            , {field: 'max_packet_err', title: '最大错包数', width:120}
+                                            , {field: 'min_packet_err', title: '最小错包数', width:120}
+                                            , {field: 'avg_packet_err', title: '平均错包数', width:120}
+                                            , {field: 'max_net_usage', title: '最大带宽利用率', width:120}
+                                            , {field: 'min_net_usage', title: '最小带宽利用率', width:120}
+                                            , {field: 'avg_net_usage', title: '平均带宽利用率', width:120}
+                                            , {field: 'ping', title: 'ping', width:120}
+
+                                        ]]
+            '''
+        # 防火墙
+        code5 = '''
+                [[
+                                            {checkbox: true, fixed: true}
+                                            , {field: 'host_ip', title: '设备ip', sort: true, width:110}
+                                            , {field: 'hostname', title: '设备名'}
+                                            , {field: 'app_name', title: '所属应用'}
+                                            , {field: 'max_cpu', title: 'CPU最大利用率'}
+                                            , {field: 'min_cpu', title: 'CPU最小利用率'}
+                                            , {field: 'avg_cpu', title: 'CPU平均利用率'}
+                                            , {field: 'max_mem', title: '内存最大利用率'}
+                                            , {field: 'min_mem', title: '内存最小利用率'}
+                                            , {field: 'avg_mem', title: '内存平均利用率'}
+                                            , {field: 'ping', title: 'ping'}
+                                            , {field: 'session', title: '会话数'}
+
+                                        ]]
+            '''
+        # 路由器
+        code6 = '''
+                [[
+                                             {checkbox: true, fixed: true}
+                                            , {field: 'host_ip', title: '设备ip', sort: true,width:110}
+                                            , {field: 'hostname', title: '设备名', width:120}
+                                            , {field: 'app_name', title: '所属应用', width:120}
+                                            , {field: 'max_cpu', title: 'CPU最大利用率', width:120}
+                                            , {field: 'min_cpu', title: 'CPU最小利用率', width:120}
+                                            , {field: 'avg_cpu', title: 'CPU平均利用率', width:120}
+                                            , {field: 'max_mem', title: '内存最大利用率', width:120}
+                                            , {field: 'min_mem', title: '内存最小利用率', width:120}
+                                            , {field: 'avg_mem', title: '内存平均利用率', width:120}
+                                            , {field: 'max_sy', title: '最大时延', width:120}
+                                            , {field: 'min_sy', title: '最小时延', width:120}
+                                            , {field: 'avg_sy', title: '平均时延', width:120}
+                                            , {field: 'max_packet_loss', title: '最大丢包数', width:120}
+                                            , {field: 'min_packet_loss', title: '最小丢包数', width:120}
+                                            , {field: 'avg_packet_loss', title: '平均丢包数', width:120}
+                                            , {field: 'max_packet_err', title: '最大错包数', width:120}
+                                            , {field: 'min_packet_err', title: '最小错包数', width:120}
+                                            , {field: 'avg_packet_err', title: '平均错包数', width:120}
+                                            , {field: 'max_net_usage', title: '最大带宽利用率', width:120}
+                                            , {field: 'min_net_usage', title: '最小带宽利用率', width:120}
+                                            , {field: 'avg_net_usage', title: '平均带宽利用率', width:120}
+                                            , {field: 'ping', title: 'ping', width:120}
+                                        ]]
+            '''
+        # 负载均衡
+        code7 = '''
+            [[
+                                            {checkbox: true, fixed: true}
+                                            , {field: 'host_ip', title: '设备ip2', sort: true,width:110}
+                                            , {field: 'hostname', title: '设备名', width:120}
+                                            , {field: 'app_name', title: '所属应用', width:120}
+                                            , {field: 'max_cpu', title: 'CPU最大利用率', width:120}
+                                            , {field: 'min_cpu', title: 'CPU最小利用率', width:120}
+                                            , {field: 'avg_cpu', title: 'CPU平均利用率', width:120}
+                                            , {field: 'max_mem', title: '内存最大利用率', width:120}
+                                            , {field: 'min_mem', title: '内存最小利用率', width:120}
+                                            , {field: 'avg_mem', title: '内存平均利用率', width:120}
+                                            , {field: 'ping', title: 'ping', width:120}
+                                            , {field: 'connect', title: '实连接数', width:120}
+                                            , {field: 'max_vir_connect', title: '最大虚连接数', width:120}
+                                            , {field: 'min_vir_connect', title: '最小虚连接数', width:120}
+                                            , {field: 'avg_vir_connect', title: '平均虚连接数', width:120}
+                                            ]]
+            '''
+
+        url1 = "/reportTable/serverrpt/"                                #物理机
+        url2 = "/reportTable/resourcehostrpt/"                         #宿主机
+        url3 = "/reportTable/cloudrpt/"                                 #云主机
+        url8 = "/reportTable/fwrpt/"
+
+        data = {"grouplist": grouplist, "url1": url1, "url2": url2, "url3": url3,
+                "code1": code1, "url8": url8,
+                "code2": code2, "code3": code3, "code4": code4, "code5": code5,
+                "code6": code6, "code7": code7}
+
+        return render(request,'reportTable/report.html',data)
+    elif request.method == 'POST':
+        groups = request.POST.get("groups", '')
+        hostip = request.POST.get('hostip', '')
+        ips = []
+        if groups:
+            for group in groups:
+                pass
+        pass
+
+
+'''
+    设备IP	设备名称	所属应用	CPU最大利用率	CPU最小利用率	CPU平均利用率	内存最小利用率	内存最大利用率	内存平均利用率	磁盘空间使用率
+
+'''
+'''
+[{'id': '23297', 'text': 'CBSS1'}, {'id': '23296', 'text': 'CBSS2'}, {
+                        'id': '23295',
+                        'text': 'CBSS3'
+                    }, {'id': '23294', 'text': 'CBSS4'}]
+'''
+
+#时间转换
+def gettime(times):
+    # 转换成时间数组
+    timeArray = time.strptime(times, "%Y-%m-%d %H:%M:%S")
+    # 转换成时间戳
+    timestamp = time.mktime(timeArray)
+    return timestamp
+
+
+#物理机报表
+@csrf_exempt
+def ServerRpt(request):
+    if request.method == "POST":
+        group = request.POST.get("group", '')
+        host = request.POST.get("host", '')
+        startTime = request.POST.get('startTime', '')
+        endTime = request.POST.get('endTime', '')
+
+        #判断结束时间
+        if endTime:
+            #日期转化为时间戳
+            endTime = int(gettime(endTime))
+        else:
+            #如果结束时间为空，默认为当前时间
+            endTime = int(time.time())
+
+        #判断开始时间
+        if startTime:
+
+            startTime = int(gettime(startTime))
+
+        else:
+            # 如果开始时间为空，则默认开始时间为结束时间的当天00:00
+            startTime = int(time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00',  time.localtime(endTime-7*24*3600)),'%Y-%m-%d %H:%M:%S')))
+
+        rpt = []
+        if host:
+            hosts = ServerToZabbix.objects.filter(user=user).filter(host_ip=host)
+            if len(hosts)== 0:
+                return HttpResponse(json.dumps({"code": 0, "msg": "", "count": 0,"data":[]}))
+        else:
+            hosts = ServerToZabbix.objects.filter(user=user)
+
+        count = 0
+        for i in hosts:
+            mincpu = []
+            maxcpu = []
+            avgcpu = []
+            minmem = []
+            maxmem = []
+            avgmem = []
+            mindisk = []
+            maxdisk = []
+            avgdisk = []
+            rptdict = {}
+            rptdict['host_ip'] = (i.host_ip).replace('\t','')
+            rptdict['hostname'] = (i.hostname).replace('\t','')
+            rptdict['app_name'] = i.app_name
+
+            #获取主机信息
+            host = Jk_Server.objects.filter(IP=(i.host_ip).replace('\t','')).first()
+
+            #获取CPU信息
+            for cpu in Jk_Fcpu.objects.filter(Server_Id_id=host.Server_id)\
+                    .filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                maxcpu.append(cpu.Max_Cpu)
+                mincpu.append(cpu.Min_Cpu)
+                avgcpu.append(float(cpu.AVG_Cpu))
+
+            # print(maxcpu,mincpu,avgcpu)
+
+            if maxcpu and maxcpu and avgcpu:
+                rptdict['min_cpu'] = min(mincpu)
+                rptdict['max_cpu'] = max(maxcpu)
+                rptdict['avg_cpu'] = float('%.4f' % (sum(avgcpu)/len(avgcpu)))
+
+
+            #获取内存信息
+            for mem in Jk_Fmem.objects.filter(Server_Id_id=host.Server_id)\
+                    .filter(Name="物理内存利用率").filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                maxmem.append(mem.Max_Mem)
+                minmem.append(mem.Min_Mem)
+                avgmem.append(float(mem.AVG_Mem))
+            if len(minmem) > 0 and len(maxmem) > 0 and len(avgmem) > 0:
+                rptdict['min_mem'] = min(minmem)
+                rptdict['max_mem'] = max(maxmem)
+                rptdict['avg_mem'] = float('%.4f' % (sum(avgmem)/len(avgmem)))
+
+            #
+            # 获取磁盘信息
+            for disk in Jk_Fdisk.objects.filter(Server_Id_id=host.Server_id)\
+                    .filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                maxdisk.append(disk.Max_Disk)
+                mindisk.append(disk.Min_Disk)
+                avgdisk.append(float(disk.AVG_Disk))
+
+            if len(mindisk)>0 and len(maxdisk)>0 and len(avgcpu)>0:
+                rptdict['min_disk'] = min(mindisk)
+                rptdict['now_disk'] = max(maxdisk)
+                rptdict['avg_disk'] = float('%.4f' % (sum(avgdisk) / len(avgdisk)))
+
+            rpt.append(rptdict)
+            count += 1
+        # print(rpt)
+        datajson = {"code": 0, "msg": "", "count": count, "data": rpt}
+        return HttpResponse(json.dumps(datajson))
+    return HttpResponse(json.dumps({"code": 0, "msg": "", "count": 0, "data":[]}))
+
+
+
+#生成json数据，方便导出报表
+def datavalue(keys, datas):
+    datalist = []
+    #数据拼接成json
+    for data in datas:
+        datadict = {}
+        for i,v in keys.items():
+            datadict[i] = data[v]
+        datalist.append(datadict)
+    # 创建文件
+    workbook = xlsxwriter.Workbook(os.path.join(BASE_DIR, 'exportfile/file.xls'))
+    # 创建工作薄
+    worksheet = workbook.add_worksheet()
+    # alldatalist = []
+    i = 0
+    for ip in keys:
+        # print("11111111")
+        # print(ip)
+        worksheet.write(0, i, ip)
+        i = i + 1
+
+        # 写入其他行：
+    i = 1
+    for values in datalist:
+        # 写入该行内容：
+        # print(values)
+        j = 0
+        for index, value in values.items():
+            worksheet.write(i, j, value)
+            j = j + 1
+        i = i + 1
+    workbook.close()
+
+# from rexex import FileWrapper
+def down_file(keys, datajson):
+
+    if datajson:
+        datajson = datajson
+    else:
+        datajson = []
+    # datajson = []
+    datavalue(keys, json.loads(datajson))
+    file_name = os.path.join(BASE_DIR, 'exportfile/file.xls')
+    wrapper = open(file_name, 'rb')
+    response = HttpResponse(wrapper)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="file.xls"'
+
+    return response
+
+
+
+
+
+#报表导出
+def ExportFile(request):
+    if request.method == "POST":
+
+        datajson = request.POST.get("datajson", '')
+        #判断报表类型
+        types = request.POST.get("type", '')
+        # print(datajson)
+        # print(types)
+        if types == "0":
+            pass
+        elif types == "1":
+            pass
+        elif types == "2" or types == "3":
+            keys = {"设备IP": "host_ip", "设备名称": "hostname", "所属应用": "app_name", "CPU最大利用率": "max_cpu",
+                    "CPU最小利用率": "min_cpu", "CPU平均利用率": "avg_cpu", "内存最小利用率": "min_mem",
+                    "内存最大利用率": "max_mem", "内存平均利用率": "avg_mem"}
+            try:
+                rsp = down_file(keys, datajson)
+                return JsonResponse({"status":"0","code":"0"})
+            except:
+                return JsonResponse({"status":"1","code":"1"})
+
+
+
+        elif types == "4":
+            pass
+        elif types == "5":
+            pass
+        elif types == "6":
+            pass
+        elif types == "7":
+            pass
+    return HttpResponse([])
+
+
+def getfiletest(request):
+    file = open(os.path.join(BASE_DIR, 'exportfile/file.xls'), 'rb')
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="file.xls"'
+    return response
+
+
+#宿主机报表
+@csrf_exempt
+def ResourceHostRpt(request):
+    '''
+    cpu使用率 内存有问题
+    :param request:
+    :return:
+    '''
+    if request.method == "POST":
+        group = request.POST.get("group", '')
+        host = request.POST.get("host", '')
+        startTime = request.POST.get('startTime', '')
+        endTime = request.POST.get('endTime', '')
+
+        #判断结束时间
+        if endTime:
+            #日期转化为时间戳
+            endTime = int(gettime(endTime))
+        else:
+            #如果结束时间为空，默认为当前时间
+            endTime = int(time.time())
+
+        #判断开始时间
+        if startTime:
+
+            startTime = int(gettime(startTime))
+
+        else:
+            # 如果开始时间为空，则默认开始时间为结束时间的当天00:00
+            startTime = int(time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00',  time.localtime(endTime-7*24*3600)),'%Y-%m-%d %H:%M:%S')))
+
+
+        rpt = []
+        # hosts = ResourceHostToZabbix.objects.filter(user=user)
+        if host:
+            hosts = ResourceHostToZabbix.objects.filter(user=user).filter(host_ip=host)
+            if len(hosts) == 0:
+                return HttpResponse(json.dumps({"code": 0, "msg": "", "count": 0, "data": []}))
+        else:
+            hosts = ResourceHostToZabbix.objects.filter(user=user)
+
+        # print(hosts)
+        count = 0
+        for i in hosts:
+            mincpu = []
+            maxcpu = []
+            avgcpu = []
+            minmem = []
+            maxmem = []
+            avgmem = []
+            mindisk = []
+            maxdisk = []
+            avgdisk = []
+            rptdict = {}
+            rptdict['host_ip'] = (i.host_ip).replace('\t','')
+            rptdict['hostname'] = (i.hostname).replace('\t','')
+            rptdict['app_name'] = i.app_name
+            # print(i.host_ip)
+            #获取主机信息
+            host = Jk_Resource_Host.objects.filter(Ip=(i.host_ip).replace('\t','')).first()
+            # print(host)
+            #获取CPU信息
+            for cpu in Jk_Scpu.objects.filter(Resource_Id_id=host.Resource_Id)\
+                    .filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                maxcpu.append(cpu.Max_Cpu)
+                mincpu.append(cpu.Min_Cpu)
+                avgcpu.append(float(cpu.AVG_Cpu))
+
+            if maxcpu and maxcpu and avgcpu:
+                rptdict['min_cpu'] = min(mincpu)
+                rptdict['max_cpu'] = max(maxcpu)
+                rptdict['avg_cpu'] = float('%.4f' % (sum(avgcpu)/len(avgcpu)))
+
+
+            #获取内存信息
+            for mem in Jk_Smem.objects.filter(Resource_Id_id=host.Resource_Id)\
+                    .filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                maxmem.append(mem.Max_Mem)
+                minmem.append(mem.Min_Mem)
+                avgmem.append(float(mem.AVG_Mem))
+            if len(minmem) > 0 and len(maxmem) > 0 and len(avgmem) > 0:
+                rptdict['min_mem'] = min(minmem)
+                rptdict['max_mem'] = max(maxmem)
+                rptdict['avg_mem'] = float('%.4f' % (sum(avgmem)/len(avgmem)))
+
+            rptdict['cluster'] = "Ucloud-Paas"
+            rptdict['data_center'] = "亦庄数据中心"
+            rpt.append(rptdict)
+            count += 1
+        datajson = {"code": 0, "msg": "", "count": count, "data": rpt}
+        return HttpResponse(json.dumps(datajson))
+    return HttpResponse(json.dumps({"code": 0, "msg": "", "count": 0, "data": []}))
+
+
+#云主机报表
+@csrf_exempt
+def CloudRpt(request):
+    '''
+    内存使用率有问题，待修正
+    :param request:
+    :return:
+    '''
+    if request.method == "POST":
+        group = request.POST.get("group", '')
+        host = request.POST.get("host", '')
+        startTime = request.POST.get('startTime', '')
+        endTime = request.POST.get('endTime', '')
+
+        #判断结束时间
+        if endTime:
+            #日期转化为时间戳
+            endTime = int(gettime(endTime))
+        else:
+            #如果结束时间为空，默认为当前时间
+            endTime = int(time.time())
+
+        #判断开始时间
+        if startTime:
+
+            startTime = int(gettime(startTime))
+
+        else:
+            # 如果开始时间为空，则默认开始时间为结束时间的当天00:00
+            startTime = int(time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00',
+                            time.localtime(endTime-7*24*3600)),'%Y-%m-%d %H:%M:%S')))
+
+
+        rpt = []
+
+        if host:
+            hosts = CloudDeviceToZabbix.objects.filter(user=user).filter(host_ip=host)
+            if len(hosts) == 0:
+                return HttpResponse(json.dumps({"code": 0, "msg": "", "count": 0, "data": []}))
+        else:
+            hosts = CloudDeviceToZabbix.objects.filter(user=user)
+
+        # print(hosts)
+        count = 0
+        for i in hosts:
+            mincpu = []
+            maxcpu = []
+            avgcpu = []
+            minmem = []
+            maxmem = []
+            avgmem = []
+            mindisk = []
+            maxdisk = []
+            avgdisk = []
+            rptdict = {}
+            rptdict['host_ip'] = (i.host_ip).replace('\t','')
+            rptdict['hostname'] = (i.hostname).replace('\t','')
+            rptdict['app_name'] = i.app_name
+            print(i.host_ip)
+            #获取主机信息
+            host = Jk_Cloud_Device.objects.filter(Ip=(i.host_ip).replace('\t','')).first()
+            print(host)
+            #获取CPU信息
+            for cpu in Jk_Ycpu.objects.filter(Cloud_Id_id=host.Cloud_Id)\
+                    .filter(Name="CPU利用率").filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                maxcpu.append(cpu.Max_Cpu)
+                mincpu.append(cpu.Min_Cpu)
+                avgcpu.append(float(cpu.AVG_Cpu))
+
+            if maxcpu and maxcpu and avgcpu:
+                rptdict['min_cpu'] = min(mincpu)
+                rptdict['max_cpu'] = max(maxcpu)
+                rptdict['avg_cpu'] = float('%.4f' % (sum(avgcpu)/len(avgcpu)))
+
+
+            #获取内存信息
+            for mem in Jk_Ymem.objects.filter(Cloud_Id_id=host.Cloud_Id)\
+                    .filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                maxmem.append(mem.Max_Mem)
+                minmem.append(mem.Min_Mem)
+                avgmem.append(float(mem.AVG_Mem))
+            if len(minmem) > 0 and len(maxmem) > 0 and len(avgmem) > 0:
+                rptdict['min_mem'] = min(minmem)
+                rptdict['max_mem'] = max(maxmem)
+                rptdict['avg_mem'] = float('%.4f' % (sum(avgmem)/len(avgmem)))
+
+            rptdict['cluster'] = "Ucloud-Paas"
+            rptdict['data_center'] = "亦庄数据中心"
+            rpt.append(rptdict)
+            count += 1
+        datajson = {"code": 0, "msg": "", "count": count, "data": rpt}
+        return HttpResponse(json.dumps(datajson))
+    return HttpResponse(json.dumps({"code": 0, "msg": "", "count": 0, "data": []}))
+
+
+#防火墙报表
+@csrf_exempt
+def FwRpt(request):
+
+    '''
+    ping
+    :param request:
+    :return:
+    '''
+    if request.method == "POST":
+        group = request.POST.get("group", '')
+        host = request.POST.get("host", '')
+        startTime = request.POST.get('startTime', '')
+        endTime = request.POST.get('endTime', '')
+
+        #判断结束时间
+        if endTime:
+            #日期转化为时间戳
+            endTime = int(gettime(endTime))
+        else:
+            #如果结束时间为空，默认为当前时间
+            endTime = int(time.time())
+
+        #判断开始时间
+        if startTime:
+
+            startTime = int(gettime(startTime))
+
+        else:
+            # 如果开始时间为空，则默认开始时间为结束时间的当天00:00
+            startTime = int(time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00',
+                            time.localtime(endTime-7*24*3600)),'%Y-%m-%d %H:%M:%S')))
+
+
+        rpt = []
+
+        if host:
+            hosts = NetworkDeviceToZabbix.objects.filter(user=user).filter(host_ip=host)
+            if len(hosts) == 0:
+                return HttpResponse(json.dumps({"code": 0, "msg": "", "count": 0, "data": []}))
+        else:
+            hosts = NetworkDeviceToZabbix.objects.filter(user=user)
+
+        # print(hosts)
+        count = 0
+        for i in hosts:
+            mincpu = []
+            maxcpu = []
+            avgcpu = []
+            minmem = []
+            maxmem = []
+            avgmem = []
+            mindisk = []
+            maxdisk = []
+            avgdisk = []
+            ping = []
+            rptdict = {}
+            rptdict['host_ip'] = (i.host_ip).replace('\t','')
+            rptdict['hostname'] = (i.hostname).replace('\t','')
+            rptdict['app_name'] = i.app_name
+            print(i.host_ip)
+            #获取主机信息
+            host = Jk_Fw.objects.filter(Ip=(i.host_ip).replace('\t','')).first()
+            print(host)
+            #获取CPU信息
+            for cpu in Jk_Fwcpu.objects.filter(Fw_id_id=host.Fw_id)\
+                    .filter(Name="CPU利用率").filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                maxcpu.append(cpu.Max_Cpu)
+                mincpu.append(cpu.Min_Cpu)
+                avgcpu.append(float(cpu.AVG_Cpu))
+
+            if maxcpu and maxcpu and avgcpu:
+                rptdict['min_cpu'] = min(mincpu)
+                rptdict['max_cpu'] = max(maxcpu)
+                rptdict['avg_cpu'] = float('%.4f' % (sum(avgcpu)/len(avgcpu)))
+
+
+            #获取内存信息
+            for mem in Jk_Fwmem.objects.filter(Fw_id_id=host.Fw_id)\
+                    .filter(Name="物理内存利用率").filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                maxmem.append(mem.Max_Mem)
+                minmem.append(mem.Min_Mem)
+                avgmem.append(float(mem.AVG_Mem))
+            if len(minmem) > 0 and len(maxmem) > 0 and len(avgmem) > 0:
+                rptdict['min_mem'] = min(minmem)
+                rptdict['max_mem'] = max(maxmem)
+                rptdict['avg_mem'] = float('%.4f' % (sum(avgmem)/len(avgmem)))
+
+            #由于ping实时的所以没法判断时间段内的状态，只能暂时以该时间段内最后一次的为结果，展示
+            for ping in Jk_Fwping_Pf_Ids.objects.filter(Fw_id_id=host.Fw_id)\
+                    .filter(Name="ICMP ping").filter(Clock__gte=startTime).filter(Clock__lte=endTime):
+                if ping.Value == 1:
+                    rptdict["ping"] = "正常"
+                else:
+                    rptdict["ping"] = "中断"
+                pass
+            rpt.append(rptdict)
+            count += 1
+        datajson = {"code": 0, "msg": "", "count": count, "data": rpt}
+        return HttpResponse(json.dumps(datajson))
+    return HttpResponse(json.dumps({"code": 0, "msg": "", "count": 0, "data": []}))

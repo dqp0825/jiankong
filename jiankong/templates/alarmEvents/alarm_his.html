@@ -1,0 +1,449 @@
+{% load staticfiles %}
+{#<!--{% static ''%}-->#}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<!-- Bootstrap -->
+	    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+	    <!-- Font Awesome -->
+	    <!--<link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">-->
+	    <!-- NProgress -->
+	    <!--<link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">-->
+	    <!-- bootstrap-daterangepicker -->
+	    <!--<link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">-->
+	
+	    <!-- Custom Theme Style -->
+	    <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+	    <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+	    <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}">
+	    <style type="text/css">
+		*{margin:0;padding:0;list-style:none;}
+		html{background-color:#E3E3E3; font-size:14px; color:#000; font-family:'微软雅黑'}
+		h2{line-height:30px; font-size:20px;}
+		a,a:hover{ text-decoration:none;}
+		pre{font-family:'微软雅黑'}
+
+		.box a{padding-right:20px;}
+		.demo1,.demo2,.demo3,.demo4,.demo5,.demo6{margin:25px 0;}
+		h3{margin:10px 0;}
+		.layinput{height: 30px;line-height: 30px;width: 150px;margin: 0;}
+		.ack-color{font-size:14px; color:#000; margin-bottom: 8px; font-family:'微软雅黑'}
+
+		.layui-table-cell {
+		height: auto;
+		line-height: 28px;
+		padding: 0 15px;
+		position: relative;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		box-sizing: border-box;
+		}
+
+		</style>
+	</head>
+	<body style="width: 100%; overflow-x: hidden; background: #ecf0f5">
+
+		<!--详情弹出框-->
+		<div id="detail_box" style="display: none; overflow-x: hidden; ">
+		</div>
+
+		<!--<div  style="overflow-x: hidde;">-->
+		<div class="title_left">
+	        <h3>&nbsp;&nbsp;<small>告警事件</small></h3>
+	    </div>
+	    <div class="container">
+	    	<div class="row">
+	    		<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel" style="background: #ecf0f5">
+                  <div class="x_content">
+                    <div class="" >
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li class=""><a href="{% url 'alarmEvents:alarmEvent' %}"   id="home-tab" >当前告警</a>
+                        </li>
+                        <li class="active"><a href="#" >历史告警</a>
+                        </li>
+
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+
+                        <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" >
+							<div class="container">
+								<!--自定义搜索-->
+								<div class="row">
+									<div style="width: 90%; margin: 0 auto;">
+
+										<div class="col-md-3 col-sm-3 col-xs-3" >
+											<select class="select2_group form-control" id="Device_Type1">
+												<option value="">所有设备</option>
+												{% for Device_Type in Device_Type_list %}
+												<option value="{{ Device_Type.name }}"> {{ Device_Type.name }} </option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-3">
+												<select class="form-control" id="alert_lev1">
+													<option value=''>告警等级</option>
+													{% for alert_lev in alert_lev_list %}
+													<option value="{{ alert_lev.lev_id }}"> {{ alert_lev.name }} </option>
+													{% endfor %}
+												</select>
+											</div>
+                                        <div class="layui-inline col-md-6 col-sm-6 col-xs-6">
+                                            <div class="layui-input-inline">
+                                                <input class="layui-input" id="startTime" placeholder="开始时间"
+                                                       type="text">
+                                            </div>
+                                            <div class="layui-input-inline">
+                                                <input class="layui-input" id="endTime" placeholder="终止时间"
+                                                       type="text">
+                                            </div>
+                                        </div>
+									</div>
+								</div>
+								<div class="row">
+									<div style="width: 90%; margin: 0 auto;">
+                                        <div class="col-md-1 col-sm-1 col-xs-1 pull-right">
+											<button type="submit" class="layui-btn layui-btn-sm" id="btn-sea2">导出</button>
+										</div>
+										<div class="col-md-1 col-sm-1 col-xs-1 pull-right">
+											<button type="submit" class="layui-btn layui-btn-sm" id="btn-search1">查询</button>
+										</div>
+										<div class="col-md-2 col-sm-2 col-xs-2 pull-right">
+											<input type="text" placeholder="所属应用" name="country"  class="form-control col-md-10" autocomplete="off" id="txt-appname1">
+										</div>
+										<div class="col-md-2 col-sm-2 col-xs-2 pull-right ">
+											<input type="text" placeholder="告警内容" name="country"  class="form-control col-md-11" autocomplete="off" id="txt-machine1">
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-3 pull-right ">
+											<input type="text" placeholder="主机IP" name="country"  class="form-control col-md-10" autocomplete="off" id="txt-ip1">
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-3 pull-right ">
+											<input type="text" placeholder="主机名" name="country"  class="form-control col-md-10" autocomplete="off" id="txt-hostname1">
+										</div>
+
+									</div>
+								</div>
+
+								 <!--表格-->
+								<div class="row">
+									<div class="col-md-12 col-sm-12 col-xs-12">
+										<div style="width: 90%; margin: 0 auto;">
+
+											<table class="layui-hide" id="test1">
+
+											</table>
+										</div>
+									</div>
+
+								</div>
+								 <!--表格止-->
+							</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+	    	</div>
+	    </div>
+
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <!--<script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>-->
+    <!-- NProgress -->
+    <!--<script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>-->
+    <!-- Chart.js -->
+    <!--<script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>-->
+    <!-- jQuery Sparklines -->
+    <!--<script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>-->
+    <!-- Flot -->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>-->
+    <!-- Flot plugins -->
+    <!--<script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>-->
+    <!-- DateJS -->
+    <!--<script src="{% static 'vendors/DateJS/build/date.js'%}"></script>-->
+    <!-- bootstrap-daterangepicker -->
+    <!--<script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>-->
+
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>
+	<script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js' %}" charset="utf-8"></script>
+
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+layui.use('table', function(){
+  var table = layui.table;
+  //监听表格复选框选择
+  table.on('checkbox(demo)', function(obj){
+    console.log(obj)
+  });
+  //监听工具条
+  table.on('tool(demo)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'detail'){
+      layer.msg('ID：'+ data.id + ' 的查看操作');
+    } else if(obj.event === 'del'){
+      layer.confirm('真的删除行么', function(index){
+        obj.del();
+        layer.close(index);
+      });
+    } else if(obj.event === 'edit'){
+      layer.alert('编辑行：<br>'+ JSON.stringify(data))
+    }
+  });
+
+  var $ = layui.$, active = {
+    getCheckData: function(){ //获取选中数据
+      var checkStatus = table.checkStatus('idTest')
+      ,data = checkStatus.data;
+      layer.alert(JSON.stringify(data));
+    }
+    ,getCheckLength: function(){ //获取选中数目
+      var checkStatus = table.checkStatus('idTest')
+      ,data = checkStatus.data;
+      layer.msg('选中了：'+ data.length + ' 个');
+    }
+    ,isAll: function(){ //验证是否全选
+      var checkStatus = table.checkStatus('idTest');
+      layer.msg(checkStatus.isAll ? '全选': '未全选')
+    }
+  };
+
+  $('.demoTable .layui-btn').on('click', function(){
+    var type = $(this).data('type');
+    active[type] ? active[type].call(this) : '';
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+
+<!-- 历史告警-->
+$(function() {
+    var searchObj = {
+        machine: "",
+        appname: "",
+        alert_lev: "",
+        Device_Type: "",
+        startTime: "",
+        endTime: "",
+        hostname: "",
+        ip: "",
+    };
+    // 查找
+    $('#btn-search1').on('click', function () {
+// {#			searchObj.endTime = Date.parse(new Date(($('#endTime').val()).replace(/-/g, '/')))/1000;#}
+// {#			searchObj.startTime = Date.parse(new Date(($('#startTime').val()).replace(/-/g, '/')))/1000;#}
+        searchObj.endTime = $('#endTime').val();
+        searchObj.startTime = $('#startTime').val();
+        searchObj.appname = $('#txt-appname1').val();
+        searchObj.machine = $('#txt-machine1').val();
+        searchObj.hostname = $('#txt-hostname1').val();
+        searchObj.ip = $('#txt-ip1').val();
+        searchObj.alert_lev = $('#alert_lev1 option:selected').val();
+        searchObj.Device_Type = $('#Device_Type1 option:selected').val()
+        getData1()
+    });
+    // 导出
+    $('#btn-sea2').on('click', function () {
+        searchObj.endTime = $('#endTime').val();
+        searchObj.startTime = $('#startTime').val();
+        searchObj.appname = $('#txt-appname1').val();
+        searchObj.machine = $('#txt-machine1').val();
+        searchObj.hostname = $('#txt-hostname1').val();
+        searchObj.ip = $('#txt-ip1').val();
+        searchObj.alert_lev = $('#alert_lev1 option:selected').val();
+        searchObj.Device_Type = $('#Device_Type1 option:selected').val()
+        var table = layui.table;
+        var alert_his_ids = [];
+        var checkStatus = table.checkStatus('test1');
+        $.each(checkStatus.data, function (index, obj) {
+            alert_his_ids.push(obj.Alert_His_id)
+        });
+        var ajax_data = {
+            alert_his_ids: alert_his_ids,
+            startTime: searchObj.startTime,
+            endTime: searchObj.endTime,
+            appname: searchObj.appname,
+            machine: searchObj.machine,
+            hostname: searchObj.hostname,
+            ip: searchObj.ip,
+            alert_lev: searchObj.alert_lev,
+            Device_Type: searchObj.Device_Type
+        };
+        $.ajax({
+            url: '{% url "alarmEvents:alarm_his_export" %}',
+            method: 'POST',
+            data: JSON.stringify(ajax_data),
+            dataType: "json",
+            success: function (data, textStatus) {
+                window.open(data.redirect)
+            },
+            error: function () {
+                toastr.error('Export failed');
+            }
+        })
+    });
+
+    // 加载表格
+    function getData1() {
+        layui.use('table', function () {
+            var table1 = layui.table;
+            //第一个实例
+            table1.render({
+                elem: '#test1'
+                , url: '/alarmEvents/alarm_his/'
+                , method: 'post'
+                //,limit:searchObj.limit
+                , where: searchObj
+                , page: true //开启分页
+                , cellMinWidth: '100%'
+                , cols: [[ //表头
+                    {checkbox: true, width:'4%', minWidth:10}
+                    , {field: 'Alert_lev_id', title: '级别', width:'6%', minWidth:10}
+                    , {field: 'Application', title: '所属应用', width:'10%', minWidth:10}
+                    , {field: 'Type_ip', title: '告警设备IP', width:'12%', minWidth:10}
+                    // ,{field:'item', title: '监控项', width:110}
+                    , {field: 'message', title: '告警内容', width:'14%', minWidth:10}
+                    , {field: 'Oc_time', title: '发生时间', width:'12%', minWidth:10}
+                    , {field: 'End_time', title: '结束时间',width:'12%', minWidth:10}
+                    , {field: '', title: '受理人', width:'9%', minWidth:10, templet: function (d) {
+					    var desc = d.Deal_Details;
+					    if( desc && desc.indexOf(":") != -1 && desc.split(':').length==2){
+					       return desc.split(':')[0]
+						}else {
+					        return d.Sendto
+						}
+						}}
+                    , {field: 'A_time', title: '受理时间', width:'12%', minWidth:10}
+                    // ,{field:'state', title: '解决', width:80}
+                    // ,{field:'Deal_Person', title: '处理人', width:80}
+                    // ,{field:'Deal_Details', title: '处理详情', width:180}
+                    // ,{field:'Deal_End_time', title: '处理完成时间', width:150}
+                    // ,{field:'DESC', title: '描述'}
+                    , {
+                        field: 'Alert_id', title: '查看', width:'9%', minWidth:10, templet: function (d) {
+                            return '<div>' +
+                                '<a href="#" class="layui-btn layui-btn-sm btn_detail"  data-alert_lev="' + d.Alert_lev_id +
+                                '" data-item="' + d.item + '" data-application="' + d.Application + '" data-message="' + d.message +
+                                '" data-sendto="' + d.Sendto + '" data-end_time="' + d.End_time + '" data-oc_time="' + d.Oc_time + '" data-desc="' + d.DESC +
+                                '" data-deal_end_time="' + d.Deal_End_time + '" data-deal_details="' + d.Deal_Details + '" data-deal_person="' + d.Deal_Person +
+                                '" data-state="' + d.state + '" data-status="' + d.Status + '" data-a_time="' + d.A_time + '" data-type_ip="' + d.Type_ip + '">详情</a>' +
+                                '</div>'
+                            // '<a href="#" class="layui-btn layui-btn-sm" onclick="testClick('+d.hostid+')">导出</a>'+
+                        }
+                    }
+
+                ]]
+                , limits: [5, 10, 50, 100, 500]
+            });
+            //
+        });
+        ////
+        ////
+    }
+
+    getData1()
+})
+.on('click', '.btn_detail', function () {
+			var type_ip = $(this).data('type_ip');
+			var alert_lev = $(this).data('alert_lev');
+			var application = $(this).data('application');
+			var message = $(this).data('message');
+			var item = $(this).data('item');
+			var oc_time = $(this).data('oc_time');
+			var end_time = $(this).data('end_time');
+			var sendto = $(this).data('sendto');
+			var a_time = $(this).data('a_time');
+			var status = $(this).data('status');
+			var deal_person = $(this).data('deal_person');
+			var deal_details = $(this).data('deal_details');
+			// var state = $(this).data('state');
+			var state = '已解决';
+			var desc = $(this).data('desc');
+			if(deal_details && deal_details.indexOf(":") != -1 && deal_details.split(':').length==2){
+				sendto = deal_details.split(':')[0];
+				deal_details = deal_details.split(':')[1];
+			};
+			var detail_html = '<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >设备IP:&emsp;&emsp;</label><label >' + type_ip + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >告警级别:&emsp;&emsp;</label><label >' + alert_lev + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >所属应用:&emsp;&emsp;</label><label >' + application + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >监控项:&emsp;&emsp;</label><label >' + item + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >发生时间:&emsp;&emsp;</label><label >' + oc_time + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >结束时间:&emsp;&emsp;</label><label >' + end_time + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理人:&emsp;&emsp;</label><label >' + sendto + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理结果:&emsp;&emsp;</label><label >' + status + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理时间:&emsp;&emsp;</label><label >' + a_time + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >解决情况:&emsp;&emsp;</label><label >' + state + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >处理人:&emsp;&emsp;</label><label >' + deal_person + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >告警内容:&emsp;&emsp;</label><label >' + message + '</label></div>' +
+					// '<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理内容:&emsp;&emsp;</label><label >' + desc + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理内容:&emsp;&emsp;</label><label >' + deal_details + '</label></div>';
+			$('#detail_box').html(detail_html);
+			// alert($(this).data('eventids'));
+			layer.open({
+				title: '告警历史详情',
+				type:1,
+				area: ['780px'],
+				btn:['关闭'],
+			    content: $('#detail_box'),
+				btn1: function(index, layero){
+					layer.closeAll();
+  				}
+
+			});
+
+        })
+
+</script>
+<script>
+	layui.use('laydate', function () {
+		var laydate = layui.laydate;
+		//日期时间选择器
+		laydate.render({
+			elem: '#startTime'
+			, type: 'datetime'
+		});
+		//日期时间选择器
+		laydate.render({
+			elem: '#endTime'
+			, type: 'datetime'
+		});
+	})
+</script>
+<!--<script>-->
+	<!--layui.use('laydate', function () {-->
+		<!--var laydate = layui.laydate;-->
+		<!--//日期时间选择器-->
+		<!--laydate.render({-->
+			<!--elem: '#form_startTime'-->
+			<!--, type: 'datetime'-->
+		<!--});-->
+		<!--//日期时间选择器-->
+		<!--laydate.render({-->
+			<!--elem: '#form_endTime'-->
+			<!--, type: 'datetime'-->
+		<!--});-->
+	<!--})-->
+<!--</script>-->
+</body>
+</html>

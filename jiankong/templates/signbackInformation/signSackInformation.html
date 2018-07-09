@@ -1,0 +1,490 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+        <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+        <!-- NProgress -->
+        <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+        <!-- bootstrap-daterangepicker -->
+        <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+
+        <!-- Custom Theme Style -->
+        <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+        <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+        <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+		<style type="text/css">
+		.layui-table-cell {
+		height: auto;
+		line-height: 28px;
+		padding: 0 15px;
+		position: relative;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		box-sizing: border-box;
+		}
+
+		</style>
+	</head>
+	<body>
+	{% csrf_token %}
+	<div id="form_box" style="display: none;"style="overflow-x: hidden;">
+	</div>
+	<div style="width: 100%; overflow-x: hidden;">
+		<div class="title_left">
+        	<h3 style="margin: 10px auto;">&nbsp;&nbsp;<small>维护信息</small></h3>
+    	</div>
+		<div class="container">
+			<div class="row" class="col-md-12 col-sm-12 col-xs-12 " >
+				<div style="width: 90%; margin: 0 auto;">
+					<div class="col-md-2 col-sm-2 col-xs-2 ">
+						<input type="text" placeholder="主机IP" name="country"  class="form-control col-md-10" autocomplete="off" id="txt-machine">
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-2" >
+	                	<select class="form-control" id="osel-group">
+							<option value="" selected>全部设备组</option>
+							<!--{% for g in  group %}-->
+							<!--<option value="{{g.id}}">{{g.Group_Name}}</option>-->
+	                        <!--&lt;!&ndash;<option value="">主机组</option>&ndash;&gt;-->
+							<!--{% endfor %}-->
+                            {% for shebei_group in shebei_gurop_list %}
+                            <option value="{{ shebei_group.id }}"> {{ shebei_group.Group_Name }} </option>
+                            {% endfor %}
+
+	                    </select>
+	            	</div>
+                    <div class="col-md-2 col-sm-2 col-xs-2">
+                        <select class="form-control" id="osel-type">
+							<option value="1">维护期间</option>
+                            <option value="2">计划维护</option>
+                            <option value="3">维护结束</option>
+                            <!--<option value="4">正常</option>-->
+							<option value="0">全部维护状态</option>
+                        </select>
+                    </div>
+					<div class="col-md-1 col-sm-1 col-xs-1 pull-right">
+						<button type="submit" class="layui-btn layui-btn-sm" id="btn-sea">导出</button>
+					</div>
+					<div class="col-md-1 col-sm-1 col-xs-1 pull-right">
+						<button type="submit" class="layui-btn layui-btn-sm " id="btn-search">查询</button>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-2 pull-right">
+						{#<input placeholder="结束时间" class="laydate-icon form-control col-md-10" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="endTime">#}
+						<div class="layui-input-inline">
+							<input class="layui-input" id="endTime" placeholder="终止时间"
+								   type="text">
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-2 pull-right" >
+						{#<input  placeholder="开始时间" class="laydate-icon form-control col-md-10" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="startTime">#}
+						<div class="layui-input-inline">
+							<input class="layui-input" id="startTime" placeholder="开始时间" type="text">
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+
+			<div class="row">
+				<div style="width: 90%; margin: 0 auto;">
+					<table class="layui-hide" id="test">
+
+					</table>
+				</div>
+
+			</div>
+
+		</div>
+		</div>
+
+	<script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>
+    <script type="text/html" id="tmpFun">
+		<a href="#" class="layui-table-link" onclick="testClick(1)">修改</a>
+		<a href="#" class="layui-table-link" onclick="testClick(1)">删除</a>
+		<a href="#" class="layui-table-link" onclick="testClick(1)">上传</a>
+	</script>
+    <script type="text/javascript">
+
+		function testClick(id) {
+			alert("id is " + id)
+        }
+
+    	$(function(){
+    	    var searchObj = {
+			        startTime:"",
+			        endTime:"",
+			        host_ip:"",
+					group:"",
+					type:"1"
+				};
+    	    // 查询
+			$('#btn-search').on('click',function(){
+					searchObj.endTime = $('#endTime').val();
+					searchObj.startTime = $('#startTime').val();
+					searchObj.host_ip = $('#txt-machine').val();
+					searchObj.group = $('#osel-group option:selected').val();
+					searchObj.type = $('#osel-type option:selected').val();
+				if(searchObj.endTime && searchObj.startTime){
+					 if(searchObj.endTime <= searchObj.startTime){
+					     // layer.msg('结束时间不能早于开始时间',{
+							//   time: 5000,
+							//   btn: ['明白了']
+							// });
+					     layer.open({
+						 title: '结束时间不能早于开始时间',
+						 type: 1,
+					 	 time: 5000
+							});
+					}else{
+						  getData()
+					}
+				}else{
+				     layer.open({
+						 title: '开始时间或结束时间不能为空',
+						 type: 1,
+					 	 time: 5000
+							});
+					  // alert('请选择一个时间区间');
+				}
+			});
+			// 导出
+			$('#btn-sea').on('click',function(){
+				searchObj.endTime = $('#endTime').val();
+				searchObj.startTime = $('#startTime').val();
+				searchObj.host_ip = $('#txt-machine').val();
+				searchObj.group = $('#osel-group option:selected').val();
+				searchObj.type = $('#osel-type option:selected').val();
+				var table = layui.table;
+				var maintenances_id = [];
+				var checkStatus = table.checkStatus('test');
+				datajson = JSON.stringify(checkStatus.data);
+				$.each(checkStatus.data, function (index, obj) {
+					maintenances_id.push(obj.id)
+				});
+				var ajax_data ={maintenances_id:maintenances_id,
+								host_ip:searchObj.host_ip,
+								group:searchObj.group,
+								type:searchObj.type,
+								startTime:searchObj.startTime,
+								endTime:searchObj.endTime,
+								};
+				// alert($("[name='csrfmiddlewaretoken']").val())
+				$.ajax({
+				url: '{% url "signbackInformation:maintenance_export" %}',
+				method: 'POST',
+				data: JSON.stringify(ajax_data),
+				dataType: "json",
+				headers:{"X_CSRFToken":$("[name='csrfmiddlewaretoken']").val()},
+				success: function (data, textStatus) {
+					window.open(data.redirect)
+				},
+				error: function () {
+					toastr.error('Export failed');
+				}
+            })
+		});
+			function getData(){
+					layui.use('table', function(){
+					var table = layui.table;
+					//第一个实例
+					table.render({
+						elem: '#test'
+						,url: '/signbackInformation/signbackInformation/'
+						,method:'post'
+						//,limit:searchObj.limit
+						,where: searchObj
+						,page: true //开启分页
+						,cellMinWidth:'100%'
+						,cols: [[ //表头
+							{checkbox: true, width:'4%', minWidth:10}
+							,{field:'IP', title: '主机IP',width:'10%', minWidth:10}
+							,{field:'groupname', title: '所属组',width:'17%', minWidth:10}
+							,{field:'name', title: '维护内容',width:'17%', minWidth:10}
+							,{field:'Oc_time', title: '维护开始时间',width:'15%', minWidth:10}
+							,{field:'End_time', title: '维护结束时间',width:'15%', minWidth:10}
+							,{field:'type', title: '状态',width:'10%', minWidth:10}
+							,{field:'id',  title: '功能',width:'12%', minWidth:10, templet: function (d) {
+                                // if(d.type=="维护结束"){
+								// return '<div>'+
+								// 	'<a href="#" class="layui-btn layui-btn-sm btn_sign "  data-hostid="'+d.hostid+
+								// 	'" data-name="'+d.name+'" data-oc_time="'+d.Oc_time+'" data-end_time="'+d.End_time+
+								// 	'" data-desc="'+d.DESC+ '" data-ip="'+d.IP+ '" data-zabbix_id="'+d.Zabbix_id+'">签退</a>'+
+								// 	'</div>'
+								// }
+								if(d.type=="维护期间"){
+								return '<div>'+
+									'<a href="#" class="layui-btn layui-btn-sm btn_sx"  data-maintenanceid="'+d.maintenanceid+'" data-hostid="'+d.hostid+'"  data-zabbix_id="'+d.Zabbix_id+'">上线</a>'+
+									'</div>'
+								}
+								return '<div>'+
+									// '<a href="#" class="layui-btn layui-btn-sm btn_sx"  data-maintenanceid="'+d.maintenanceid+'"  data-zabbix_id="'+d.Zabbix_id+'">上线</a>'+
+									'<a href="#" class="layui-btn layui-btn-sm btn_sign " data-groupid="'+d.groupid+'" data-hostid="'+d.hostid+
+									'" data-name="'+d.name+'" data-oc_time="'+d.Oc_time+'" data-end_time="'+d.End_time+
+									'" data-maintenanceid="'+d.maintenanceid+'" data-desc="'+d.DESC+ '" data-ip="'+d.IP+
+									'" data-zabbix_id="'+d.Zabbix_id+'">签退</a>'+
+									'</div>'
+								// '<a href="#" class="layui-btn layui-btn-sm" onclick="testClick('+d.hostid+')">导出</a>'+
+                            }}
+						]]
+						,limits:[5,10,50,100,500]
+					});
+//
+					});
+				}
+
+			getData();
+		})
+			.on('click', '.btn_sign', function () {
+				var ip = $(this).data('ip');
+				var hostid = $(this).data('hostid');
+				var maintenanceid = $(this).data('maintenanceid');
+				var zabbix_id = $(this).data('zabbix_id');
+				var oc_time = $(this).data('oc_time');
+				var end_time = $(this).data('end_time');
+				var name = $(this).data('name').split(':')[1] || $(this).data('name') || '';
+				var desc = $(this).data('desc') || '';
+				// var name_input = '<input type="text" readonly  name="country" id="form_name" value="'+ name +'" id="form_name">'
+				var form_html = '<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-top: 20px; margin-bottom: 10px;">'+
+					'<label class="col-md-3 col-sm-3 col-xs-3 ">维护名称:&emsp;</label>'+
+					'<div class="col-md-7 col-sm7 col-xs-7 " >'+
+					'<input type="text" name="country" id="form_name" value="'+ name +'" id="form_name">' +
+					'</div>' +
+					'</div>' +
+					'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-bottom: 10px;">'+
+					'<label class="col-md-3 col-sm-3 col-xs-3 ">维护开始时间:&emsp;</label>'+
+					'<div class="col-md-7 col-sm7 col-xs-7 " >'+
+					'<input class="laydate-icon form-control col-md-10" value="'+ oc_time +'" onclick="laydate({istime: true, format: \'YYYY-MM-DD hh:mm:ss\'})" id="form_startTime">'+
+					'</div>'+
+					'</div>'+
+					'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-bottom: 10px;">'+
+					'<label class="col-md-3 col-sm-3 col-xs-3 ">维护结束时间:&emsp;</label>'+
+					'<div class="col-md-7 col-sm7 col-xs-7 ">'+
+					'<input class="laydate-icon form-control col-md-10" value="'+ end_time +'" onclick="laydate({istime: true, format: \'YYYY-MM-DD hh:mm:ss\'})" id="form_endTime">'+
+					'</div>'+
+					'</div>'+
+					'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-bottom: 10px;">'+
+					'<label class="col-md-3 col-sm-3 col-xs-3 ">描述:&emsp;</label>'+
+					'<div class="col-md-7 col-sm7 col-xs-7 " >'+
+					'<textarea name="" required lay-verify="required" class="layui-textarea" id="form_DESC">'+ desc + '</textarea>'+
+					'</div>'+
+					'</div>';
+				$('#form_box').html(form_html);
+				layer.open({
+					title: '主机维护' + ip,
+					type:1,
+					area: ['600px'],
+					btn:['签退', '修改'],
+					content: $('#form_box'),
+					yes: function(index, layero){
+						var form_name = $('#form_name').val();
+						var form_endTime = $('#form_endTime').val();
+						var form_startTime = $('#form_startTime').val();
+						var description = $('#form_DESC').val();
+						if(!form_endTime || !form_startTime){
+							layer.open({
+								title: '开始时间或结束时间不能为空',
+								type: 1,
+								time: 5000
+							});
+						}else if(!form_name){
+						    layer.open({
+								title: '维护内容不能为空',
+								type: 1,
+								time: 5000
+							})
+						}else if(form_endTime && form_startTime){
+							if(form_endTime <= form_startTime){
+								// layer.msg('结束时间不能早于开始时间',{
+								//   time: 5000,
+								//   btn: ['明白了']
+								// });
+								layer.open({
+									title: '结束时间不能早于开始时间',
+									type: 1,
+									time: 5000
+								});
+							}else{
+							    $.get("/signbackInformation/host_maintenance/",
+									{ hostids: hostid, zabbix_id: zabbix_id, active_since: form_startTime,
+									active_till: form_endTime, name: ip +'主机:'+ form_name, description: description},
+									function(res){
+								if(res['maintenanceids']){
+									layer.msg('ip为：'+ ip +'的设备签退成功',{
+										 type: 1,
+										 time: 5000,
+										 btn: ['确定'],
+										 btn1: function(index, layero){
+										    layer.closeAll();
+											// getData()
+										 }
+											});
+									setTimeout("window.location.reload()",3000)
+									// alert('hostid为：'+ hostid +'的设备签退成功')
+								}
+								if(res['mgs']){
+									   layer.msg('ip为（'+ ip +'）的设备出错了：' + res['mgs'],{
+										   type: 1,
+										   time: 50000,
+										   btn: ['明白了']
+										});
+									// alert('hostid为（'+ hostid +'）的设备出错了：' + res['mgs'])
+								}
+							}
+
+								);
+							}
+						}
+
+					},
+					btn2:function(index, layero){
+						var form_name = $('#form_name').val();
+						var form_endTime = $('#form_endTime').val();
+						var form_startTime = $('#form_startTime').val();
+						var description = $('#form_DESC').val();
+						if(!form_endTime || !form_startTime){
+							layer.open({
+								title: '开始时间或结束时间不能为空',
+								type: 1,
+								time: 5000
+							});
+						}else if(!form_name){
+						    layer.open({
+								title: '维护内容不能为空',
+								type: 1,
+								time: 5000
+							})
+						}else if(form_endTime && form_startTime){
+							if(form_endTime <= form_startTime){
+								// layer.msg('结束时间不能早于开始时间',{
+								//   time: 5000,
+								//   btn: ['明白了']
+								// });
+								layer.open({
+									title: '结束时间不能早于开始时间',
+									type: 1,
+									time: 5000
+								});
+							}else{
+							    $.get("/signbackInformation/host_maintenance_online/",
+									{ maintenanceid: maintenanceid, zabbix_id: zabbix_id, hostid: hostid,
+										active_since: form_startTime, active_till: form_endTime,
+										name: ip +'主机:'+ form_name, description:description},
+									function(res){
+								if(res['maintenanceids']){
+									layer.msg('ip为：'+ ip +'的设备修改成功',{
+										 type: 1,
+										 time: 3000,
+										 btn: ['确定'],
+										 btn1: function(index, layero){
+										     layer.closeAll()
+
+										 }
+											});
+										setTimeout("window.location.reload()",3000)
+									// alert('hostid为：'+ hostid +'的设备签退成功')
+								}
+								if(res['mgs']){
+									   layer.msg('ip为（'+ ip +'）的设备出错了：' + res['mgs'],{
+										   type: 1,
+										   time: 50000,
+										   btn: ['明白了']
+										});
+									// alert('hostid为（'+ hostid +'）的设备出错了：' + res['mgs'])
+								}
+							}
+
+								);
+								// getData()
+							}
+						}
+
+					}
+
+
+
+				});
+
+        	})
+			.on('click', '.btn_sx', function () {
+				var maintenanceid = $(this).data('maintenanceid');
+				var zabbix_id = $(this).data('zabbix_id');
+				var hostid = $(this).data('hostid');
+				$.get("/signbackInformation/host_maintenance_online/",
+							{ maintenanceid: maintenanceid, zabbix_id: zabbix_id, hostid: hostid},
+							function(res){
+								if(res['maintenanceids']){
+									layer.msg('hostids为（'+ hostid +'）上线成功',{
+										 type: 1,
+										 time: 5000,
+										 btn: ['确定']
+											});
+									setTimeout("window.location.reload()",5000)
+									// alert('hostid为：'+ hostid +'的设备签退成功')
+								}else if(res['mgs']){
+									   layer.msg('hostid为（'+ hostid +'）的设备出错了：' + res['mgs'],{
+										   type: 1,
+										   time: 10000,
+										   btn: ['明白了']
+										});
+									// alert('hostid为（'+ hostid +'）的设备出错了：' + res['mgs'])
+								}
+							});
+				// alert(name+'上线成功');
+        	})
+
+	</script>
+<script>
+	layui.use('laydate', function () {
+		var laydate = layui.laydate;
+		//日期时间选择器
+		laydate.render({
+			elem: '#startTime'
+			, type: 'datetime'
+		});
+		//日期时间选择器
+		laydate.render({
+			elem: '#endTime'
+			, type: 'datetime'
+		});
+	})
+</script>
+
+    </body>
+</html>

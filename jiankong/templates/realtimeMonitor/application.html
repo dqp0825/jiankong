@@ -1,0 +1,283 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+        <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+        <!-- NProgress -->
+        <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+        <!-- bootstrap-daterangepicker -->
+        <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+    
+        <!-- Custom Theme Style -->
+        <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+        <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+        <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+	</head>
+	<body style="background: #fff">
+	<div class="title_left">
+        <h3 style="margin: 10px auto;">&nbsp;&nbsp;<small>应用</small></h3>
+    </div>
+    <div class="container" style="width: 100%; overflow-x: hidden;">
+    	
+    	<div class="row">
+    		
+    			<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">应用告警</h5>
+					<div id="content1" style="height:400px; width:90%; margin:0  auto;"></div>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">告警超时率</h5>
+					<div id="content2" style="height:400px; width:90%; margin:0  auto;"></div>
+				</div>
+    		
+    	</div>
+    	<div class="row">
+    		<div style="height: 40px; line-height:40px;width:98%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">
+    			<h5 style="line-height: 40px; display: inline-block;">应用监控详情</h5>
+{#    			<button type="submit" class="btn btn-success" style="float: right;  display: inline-block;">导出</button>#}
+    		</div>
+    		
+    	</div>
+    	<div class="row">
+    		<div style="width: 98%; margin: 0 auto;">
+    			<table class="layui-hide" id="test" lay-filter="demoEvent"></table>
+    		</div>
+    		
+    	</div>
+    </div>
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'production/build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>  
+    <script type="text/javascript">
+    	require.config({
+			paths: {
+                'echarts': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/'%}",
+                'echarts/chart/line': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/line'%}",
+                'echarts/chart/pie': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/pie'%}",
+                'echarts/chart/bar': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/bar'%}",
+                'echarts/chart/gauge':"{% static 'production/plugins/echarts-2.2.7/build/dist/chart/gauge'%}",
+			}
+		});
+//		应用告警
+		require(
+                [
+                    'echarts',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('content1'));
+                    var option = {
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+
+
+
+
+
+                        toolbox: {
+                            show : true,
+                        },
+                        calculable : false,
+                        series : [
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                selectedMode: 'single',
+                                radius : [0, 70],
+
+                                // for funnel
+                                x: '20%',
+                                width: '40%',
+                                funnelAlign: 'right',
+                                max: 1548,
+
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            position : 'inner'
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    }
+                                },
+                                data:[
+                                    {value:{{ alertzd }}, name:'重大',
+                                    itemStyle: {
+                                            normal: {
+                                                color: 'red'
+                                            }
+                                        }},
+                                    {value:{{ alertyz }}, name:'严重',
+                                    itemStyle: {
+                                            normal: {
+                                                color: '#FFA500'
+                                            }
+                                        }},
+                                    {value:{{ alertyb }}, name:'一般',
+                                    itemStyle: {
+                                            normal: {
+                                                color: '#FFFF00'
+                                            }
+                                        }},
+                                    {value:{{ alertqt }}, name:'其它',
+                                    itemStyle: {
+                                            normal: {
+                                                color: '#00FF00'
+                                            }
+                                        }},
+
+                                ]
+                            },
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                radius : [100, 140],
+
+                                // for funnel
+                                x: '60%',
+                                width: '35%',
+                                funnelAlign: 'left',
+                                max: 1048,
+
+                                data:[
+                                {% for zd in zdapplist %}
+                                    {% ifnotequal zd.value 0 %}
+                                    {{ zd|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                {% for yz in yzapplist %}
+                                    {% ifnotequal yz.value 0 %}
+                                    {{ yz|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                {% for yb in ybapplist %}
+                                    {% ifnotequal yb.value 0 %}
+                                    {{ yb|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                {% for qt in qtapplist %}
+                                    {% ifnotequal qt.value 0 %}
+                                    {{ qt|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                ]
+                            }
+                        ]
+                    };
+
+                    myChart1.setOption(option);
+                }
+            );
+//		告警超时率
+		require(
+                [
+                    'echarts',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('content2'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        x : 'center',
+                        y : 'bottom',
+                        data:['超时','未超时']
+                    },
+                    calculable : true,
+                    series : [
+
+                        {
+                            name:'面积模式',
+                            type:'pie',
+                            radius : [30, 110],
+                            center : ['55%', 200],
+                            roseType : 'area',
+                            x: '50%',               // for funnel
+                            max: 40,                // for funnel
+                            sort : 'ascending',     // for funnel
+                            data:[
+                                {{ cs|safe }},
+
+                                {{ wcs|safe }}
+                            ]
+                        }
+                    ]
+                };
+
+                    myChart1.setOption(option);
+                }
+            );
+    </script>
+    <script>
+    	layui.use('table', function(){
+		  var table = layui.table;
+		  
+		  table.render({
+		    elem: '#test'
+		    ,url:'/realtimeMonitor/getappalert/'
+		    ,cols: [[
+		      {field:'appname',  title: '应用名称', event: 'appname', style:'cursor: pointer;'}
+		      ,{field:'applev', title: '应用级别'}
+		      ,{field:'appzd',  title: '重大'}
+		      ,{field:'appyz', title: '严重'}
+		      ,{field:'appyb',  title: '一般'}
+		      ,{field:'appqt',  title: '其它'}
+		     
+		    ]]
+		    ,page: true
+		  });
+
+            table.on('tool(demoEvent)', function(obj){
+            var data = obj.data;
+            console.log(obj.data)
+            if(obj.event === 'appname'){
+             window.location.href='/realtimeMonitor/applicationJump/?'+"appname="+data.appname;
+            }
+          });
+
+
+
+		});
+    </script>
+	</body>
+</html>

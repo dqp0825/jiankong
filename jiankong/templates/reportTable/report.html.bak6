@@ -1,0 +1,520 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+
+
+            <link rel="stylesheet" type="text/css" href="{% static 'EasyUI/easyui.css' %}"/>
+            <script type="text/javascript" src="{% static 'EasyUI/jquery.min.js' %}"></script>
+         <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+{#                <script src="{% static 'js/jquery-2.2.4.min.js' %}" charset="utf-8"></script>#}
+            <script type="text/javascript" src="{% static 'EasyUI/jquery.easyui.min.js' %}"></script>
+            <link rel="stylesheet" href="{% static "production/plugins/layui-v2.2.5/layui/css/layui.css" %}"  media="all">
+            	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+{#  <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>#}
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>
+		<style>
+			.hide{
+				display: none;
+			}
+			
+			caption{
+				font-size: 30px;
+				font-weight: bold;
+				margin-bottom: 20px;
+			}
+		</style>
+
+{#        <script>#}
+{#            $(function () {#}
+{#                tab()#}
+{#            })#}
+
+
+{##}
+{#            function tab() {#}
+{#                layui.use('table', function () {#}
+{#                    var table = layui.table;#}
+{#                    var div_li = ;#}
+{#                   document.getElementById('tab_menu').on('click',function () {#}
+{#                        var   mySelect = document.getElementById('tab_menu');#}
+{#                        var   index =mySelect.selectedIndex;#}
+{#                        console.log(index)#}
+{#                        switch (index) {#}
+{#                            case 0:#}
+{#                                //方法级渲染#}
+{#                                table.render({#}
+{#                                    elem: '#test1'#}
+{#                                    , url: '{{ url }}'#}
+{#                                    , cols: [[#}
+{#                                        {checkbox: true, fixed: true}#}
+{#                                        , {field: 'host_ip', title: '设备ip',width:100}#}
+{#                                        , {field: 'hostname', title: '设备名',width:100}#}
+{#                                        , {field: 'app_name', title: '所属应用',width:120}#}
+{#                                        , {field: 'max_cpu', title: 'CPU最大利用率',width:150}#}
+{#                                        , {field: 'min_cpu', title: 'CPU最小利用率',width:150}#}
+{#                                        , {field: 'avg_cpu', title: 'CPU平均利用率',width:150}#}
+{#                                        , {field: 'max_mem', title: '内存最大利用率',width:150}#}
+{#                                        , {field: 'min_mem', title: '内存最小利用率',width:150}#}
+{#                                        , {field: 'avg_mem', title: '内存平均利用率',width:150}#}
+{#                                        , {field: 'now_disk', title: '磁盘使用率',width:150}#}
+{#                                    ]]#}
+{#                                    , id: 'testReload'#}
+{#                                    , page: true#}
+{#                                    , height: 315#}
+{#                                });#}
+{#                                break;#}
+{#                            case 1:#}
+{#                                //方法级渲染#}
+{#                                table.render({#}
+{#                                    elem: '#test1'#}
+{#                                    , url: '{{ url }}'#}
+{#                                    , cols: [[#}
+{#                                        {checkbox: true, fixed: true}#}
+{#                                        , {field: 'host_ip', title: '设备ip', sort: true, fixed: true}#}
+{#                                        , {field: 'hostname', title: '设备名'}#}
+{#                                        , {field: 'data_center', title: '数据中心'}#}
+{#                                        , {field: 'cluster', title: '所属集群'}#}
+{#                                        , {field: 'app_name', title: '所属应用'}#}
+{#                                        , {field: 'max_cpu', title: 'CPU最大利用率'}#}
+{#                                        , {field: 'min_cpu', title: 'CPU最小利用率'}#}
+{#                                        , {field: 'avg_cpu', title: 'CPU平均利用率'}#}
+{#                                        , {field: 'max_mem', title: '内存最大利用率'}#}
+{#                                        , {field: 'min_mem', title: '内存最小利用率'}#}
+{#                                        , {field: 'avg_mem', title: '内存平均利用率'}#}
+{#                                        , {field: 'now_disk', title: '磁盘使用率'}#}
+{#                                    ]]#}
+{#                                    , id: 'testReload'#}
+{#                                    , page: true#}
+{#                                    , height: 315#}
+{#                                });#}
+{#                                break;#}
+{#                            case 2:#}
+{#                                //方法级渲染#}
+{#                                table.render({#}
+{#                                    elem: '#test1'#}
+{#                                    , url: '{{ url }}'#}
+{#                                    , cols: [[#}
+{#                                        {checkbox: true, fixed: true}#}
+{#                                        , {field: 'host_ip', title: '设备ip', sort: true, fixed: true}#}
+{#                                        , {field: 'hostname', title: '设备名'}#}
+{#                                        , {field: 'data_center', title: '数据中心'}#}
+{#                                        , {field: 'cluster', title: '所属集群'}#}
+{#                                        , {field: 'app_name', title: '所属应用'}#}
+{#                                        , {field: 'max_cpu', title: 'CPU最大利用率'}#}
+{#                                        , {field: 'min_cpu', title: 'CPU最小利用率'}#}
+{#                                        , {field: 'avg_cpu', title: 'CPU平均利用率'}#}
+{#                                        , {field: 'max_mem', title: '内存最大利用率'}#}
+{#                                        , {field: 'min_mem', title: '内存最小利用率'}#}
+{#                                        , {field: 'avg_mem', title: '内存平均利用率'}#}
+{#                                        , {field: 'now_disk', title: '磁盘使用率'}#}
+{#                                    ]]#}
+{#                                    , id: 'testReload'#}
+{#                                    , page: true#}
+{#                                    , height: 315#}
+{#                                });#}
+{#                                break;#}
+{#                        case 3:#}
+{#                                //方法级渲染#}
+{#                                table.render({#}
+{#                                    elem: '#test1'#}
+{#                                    , url: '{{ url }}'#}
+{#                                    , cols: [[#}
+{#                                        {checkbox: true, fixed: true}#}
+{#                                        , {field: 'host_ip', title: '设备ip', sort: true, fixed: true}#}
+{#                                        , {field: 'hostname', title: '设备名'}#}
+{#                                        , {field: 'app_name', title: '所属应用'}#}
+{#                                        , {field: 'max_cpu', title: 'CPU最大利用率'}#}
+{#                                        , {field: 'min_cpu', title: 'CPU最小利用率'}#}
+{#                                        , {field: 'avg_cpu', title: 'CPU平均利用率'}#}
+{#                                        , {field: 'max_mem', title: '内存最大利用率'}#}
+{#                                        , {field: 'min_mem', title: '内存最小利用率'}#}
+{#                                        , {field: 'avg_mem', title: '内存平均利用率'}#}
+{#                                        , {field: 'max_sy', title: '最大时延'}#}
+{#                                        , {field: 'min_sy', title: '最小时延'}#}
+{#                                        , {field: 'avg_sy', title: '平均时延'}#}
+{#                                        , {field: 'max_packet_loss', title: '最大丢包数'}#}
+{#                                        , {field: 'min_packet_loss', title: '最小丢包数'}#}
+{#                                        , {field: 'avg_packet_loss', title: '平均丢包数'}#}
+{#                                        , {field: 'max_packet_err', title: '最大错包数'}#}
+{#                                        , {field: 'min_packet_err', title: '最小错包数'}#}
+{#                                        , {field: 'avg_packet_err', title: '平均错包数'}#}
+{#                                        , {field: 'max_net_usage', title: '最大带宽利用率'}#}
+{#                                        , {field: 'min_net_usage', title: '最小带宽利用率'}#}
+{#                                        , {field: 'avg_net_usage', title: '平均带宽利用率'}#}
+{#                                        , {field: 'ping', title: 'ping'}#}
+{##}
+{#                                    ]]#}
+{#                                    , id: 'testReload'#}
+{#                                    , page: true#}
+{#                                    , height: 315#}
+{#                                });#}
+{#                                break;#}
+{#                        case 4:#}
+{#                                //方法级渲染#}
+{#                                table.render({#}
+{#                                    elem: '#test1'#}
+{#                                    , url: '{{ url }}'#}
+{#                                    , cols: [[#}
+{#                                        {checkbox: true, fixed: true}#}
+{#                                        , {field: 'host_ip', title: '设备ip', sort: true, fixed: true}#}
+{#                                        , {field: 'hostname', title: '设备名'}#}
+{#                                        , {field: 'app_name', title: '所属应用'}#}
+{#                                        , {field: 'max_cpu', title: 'CPU最大利用率'}#}
+{#                                        , {field: 'min_cpu', title: 'CPU最小利用率'}#}
+{#                                        , {field: 'avg_cpu', title: 'CPU平均利用率'}#}
+{#                                        , {field: 'max_mem', title: '内存最大利用率'}#}
+{#                                        , {field: 'min_mem', title: '内存最小利用率'}#}
+{#                                        , {field: 'avg_mem', title: '内存平均利用率'}#}
+{#                                        , {field: 'ping', title: 'ping'}#}
+{#                                        , {field: 'session', title: '会话数'}#}
+{##}
+{##}
+{#                                    ]]#}
+{#                                    , id: 'testReload'#}
+{#                                    , page: true#}
+{#                                    , height: 315#}
+{#                                });#}
+{#                                break;#}
+{#                        case 5:#}
+{#                                //方法级渲染#}
+{#                                table.render({#}
+{#                                    elem: '#test1'#}
+{#                                    , url: '{{ url }}'#}
+{#                                    , cols: [[#}
+{#                                         {checkbox: true, fixed: true}#}
+{#                                        , {field: 'host_ip', title: '设备ip', sort: true, fixed: true}#}
+{#                                        , {field: 'hostname', title: '设备名'}#}
+{#                                        , {field: 'app_name', title: '所属应用'}#}
+{#                                        , {field: 'max_cpu', title: 'CPU最大利用率'}#}
+{#                                        , {field: 'min_cpu', title: 'CPU最小利用率'}#}
+{#                                        , {field: 'avg_cpu', title: 'CPU平均利用率'}#}
+{#                                        , {field: 'max_mem', title: '内存最大利用率'}#}
+{#                                        , {field: 'min_mem', title: '内存最小利用率'}#}
+{#                                        , {field: 'avg_mem', title: '内存平均利用率'}#}
+{#                                        , {field: 'max_sy', title: '最大时延'}#}
+{#                                        , {field: 'min_sy', title: '最小时延'}#}
+{#                                        , {field: 'avg_sy', title: '平均时延'}#}
+{#                                        , {field: 'max_packet_loss', title: '最大丢包数'}#}
+{#                                        , {field: 'min_packet_loss', title: '最小丢包数'}#}
+{#                                        , {field: 'avg_packet_loss', title: '平均丢包数'}#}
+{#                                        , {field: 'max_packet_err', title: '最大错包数'}#}
+{#                                        , {field: 'min_packet_err', title: '最小错包数'}#}
+{#                                        , {field: 'avg_packet_err', title: '平均错包数'}#}
+{#                                        , {field: 'max_net_usage', title: '最大带宽利用率'}#}
+{#                                        , {field: 'min_net_usage', title: '最小带宽利用率'}#}
+{#                                        , {field: 'avg_net_usage', title: '平均带宽利用率'}#}
+{#                                        , {field: 'ping', title: 'ping'}#}
+{#                                    ]]#}
+{#                                    , id: 'testReload'#}
+{#                                    , page: true#}
+{#                                    , height: 315#}
+{#                                });#}
+{#                                break;#}
+{#                        case 6:#}
+{#                                //方法级渲染#}
+{#                                table.render({#}
+{#                                    elem: '#test1'#}
+{#                                    , url: '{{ url }}'#}
+{#                                    , cols: [[#}
+{#                                        {checkbox: true, fixed: true}#}
+{#                                        , {field: 'host_ip', title: '设备ip2', sort: true, fixed: true}#}
+{#                                        , {field: 'hostname', title: '设备名'}#}
+{#                                        , {field: 'app_name', title: '所属应用'}#}
+{#                                        , {field: 'max_cpu', title: 'CPU最大利用率'}#}
+{#                                        , {field: 'min_cpu', title: 'CPU最小利用率'}#}
+{#                                        , {field: 'avg_cpu', title: 'CPU平均利用率'}#}
+{#                                        , {field: 'max_mem', title: '内存最大利用率'}#}
+{#                                        , {field: 'min_mem', title: '内存最小利用率'}#}
+{#                                        , {field: 'avg_mem', title: '内存平均利用率'}#}
+{#                                        , {field: 'ping', title: 'ping'}#}
+{#                                        , {field: 'connect', title: '实连接数'}#}
+{#                                        , {field: 'max_vir_connect', title: '最大虚连接数'}#}
+{#                                        , {field: 'min_vir_connect', title: '最小虚连接数'}#}
+{#                                        , {field: 'avg_vir_connect', title: '平均虚连接数'}#}
+{#                                    ]]#}
+{#                                    , id: 'testReload'#}
+{#                                    , page: true#}
+{#                                    , height: 315#}
+{#                                });#}
+{#                                break;#}
+{#                        }#}
+{##}
+{#                    var $ = layui.$, active = {#}
+{#                        reload: function () {#}
+{#                            var demoReload = $('#demoReload');#}
+{##}
+{#                            //执行重载#}
+{#                            table.reload('testReload', {#}
+{#                                page: {#}
+{#                                    curr: 1 //重新从第 1 页开始#}
+{#                                }#}
+{#                                , where: {#}
+{#                                    key: {#}
+{#                                        id: demoReload.val()#}
+{#                                    }#}
+{#                                }#}
+{#                            });#}
+{#                        }#}
+{#                    };#}
+{##}
+{#                    $('.demoTable .layui-btn').on('click', function () {#}
+{#                        var type = $(this).data('type');#}
+{#                        active[type] ? active[type].call(this) : '';#}
+{#                    });#}
+{#                });#}
+{#            }#}
+{#            </script>#}
+
+	</head>
+	<body>
+		<div class="layui-row" style="margin: 40px;">
+
+            <div class="form-inline" style="text-align: center;margin-top: 20px;margin-left: 31%">
+{#                <div class="form-group" style="float: left;">#}
+{#                    <label for="exampleInputName2">群组</label>#}
+{#                    <select id="group" class="form-control" style="width: 205px; height: 24px;">#}
+{#                    </select>#}
+{#                </div>#}
+{#                 <div class="form-group" style="float: left;margin-left: 30px">#}
+{#                    <label for="exampleInputEmail2">群组</label>#}
+{#                    <select id="host" class="form-control" style="width: 205px; height: 24px;" onclick="alert('111');">#}
+{#                    <select type="text" style="border: 1px solid #b2dba1;border-radius: 3px;height: 22px">#}
+{#                        {% for i in grouplist %}#}
+{#                        <option>{{ i.text }}</option>#}
+{#                        {% endfor %}#}
+{#                    </select>#}
+{#                </div>#}
+{#                <div class="form-group" style="float: left;margin-left: 30px">#}
+{#                    <label for="exampleInputEmail2">设备名</label>#}
+{#                    <select id="host" class="form-control" style="width: 205px; height: 24px;" onclick="alert('111');">#}
+{#                    <input type="text" style="border: 1px solid #b2dba1;border-radius: 3px;height: 22px">#}
+{#                    </select>#}
+{#                </div>#}
+
+   		</div>
+
+            <div class="layui-row"  style="margin-left:-3%;">
+                 <div class="tab_menu" style="float: left;margin-left:3%;margin-top: 10px">
+                    <label for="exampleInputEmail2">群组:</label>
+                    <select type="text" style="border: 1px solid #c6c6c6;height: 33px;" id="group">
+                        {% for i in grouplist %}
+                        <option>{{ i.text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="tab_menu" style="float: left;margin-left:0.5%;margin-top: 10px">
+                    <label for="exampleInputEmail2">设备IP:</label>
+                    <input type="text" style="border: 1px solid #C6C6C6;height: 33px" id="host">
+
+                </div>
+
+                <span style="margin-top: 10px;margin-left: 0.5%">报表类型:</span>
+                <select class="tab_menu" id="type" style="font-size: 12px;width: 150px;margin-top: 10px"
+                       >
+                    <option type="radio" id="btn1" name="radio" value="物理机"
+                            style="width: 18px;height: 30px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;border: 1px solid #C6C6C6">
+                        物理机
+                    </option>
+                    <option type="radio" id="btn2" name="radio" value="宿主机"
+                            style="width: 18px;height: 30px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;border: 1px solid #C6C6C6">
+                        宿主机
+                    </option>
+                    <option type="radio" id="btn3" name="radio" value="云主机"
+                            style="width: 18px;height: 30px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;border: 1px solid #C6C6C6">
+                        云主机
+                    </option>
+                    <option type="radio" id="btn4" name="radio" value="交换机"
+                            style="width: 18px;height: 30px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;border: 1px solid #C6C6C6">
+                        交换机
+                    </option>
+                    <option type="radio" id="btn5" name="radio" value="防火墙"
+                            style="width: 18px;height: 30px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;border: 1px solid #C6C6C6">
+                        防火墙
+                    </option>
+                    <option type="radio" id="btn6" name="radio" value="路由器"
+                            style="width: 18px;height: 30px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;border: 1px solid #C6C6C6">
+                        路由器
+                    </option>
+                    <option type="radio" id="btn7" name="radio" value="负载均衡"
+                            style="width: 18px;height: 30px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;border: 1px solid #C6C6C6">
+                        负载均衡
+                    </option>
+                </select>
+
+                <div class="layui-input-inline col-md-3 col-sm-3 col-xs-3" style="margin-left: 0.5%">
+                    <input class="layui-input" id="startTime" placeholder="开始时间"
+                           type="text">
+                </div>
+                <div class="layui-input-inline col-md-3 col-sm-3 col-xs-3"  style="margin-left: 0.5%">
+                    <input class="layui-input" id="endTime" placeholder="结束时间"
+                           type="text">
+                </div>
+
+
+{#            <select class="form-group" style="margin-top: 5px;width: 50px">#}
+{#                <option value="1">日报</option>#}
+{#                <option value="2">周报</option>#}
+{#                <option value="3">月报</option>#}
+{#            </select>#}
+            <button type="submit" class="layui-btn layui-btn-sm" id="btn-search">查询</button>
+{#                <button type="submit" class="layui-btn layui-btn-sm">查询</button>#}
+                <button type="submit" class="layui-btn layui-btn-sm">导出</button>
+   		</div>
+
+        </div>
+        <div class="tab_box">
+            <table class="layui-hide" id="test1" lay-filter="user" style="display: none"></table>
+        </div>
+
+        <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js' %}" charset="utf-8"></script>
+
+{#        <script>#}
+{#            function cx() {#}
+{#                $.ajax({#}
+{#                    type: 'post',#}
+{#                    url: '',#}
+{#                    data: {#}
+{#                        group:"",#}
+{#                        host:"",#}
+{#                        startTime:"",#}
+{#                        endTime:"",#}
+{#                    },#}
+{#                    cache: false,#}
+{#                    dataType: 'json',#}
+{#                    success: function (data) {#}
+{#                    }#}
+{#            });#}
+{#                var groups = $('#group').combobox('getValues')#}
+{#                console.log(groups)#}
+{#                tab()#}
+{#            }#}
+{#        </script>#}
+
+    <script>
+            layui.use('laydate', function () {
+                var laydate = layui.laydate;
+                //日期时间选择器
+                laydate.render({
+                    elem: '#startTime'
+                    , type: 'datetime'
+                });
+                //日期时间选择器
+                laydate.render({
+                    elem: '#endTime'
+                    , type: 'datetime'
+                });
+            })
+        </script>
+{#        <script>#}
+{#            function onlo()#}
+{#            {#}
+{#                layui.use('table', function () {#}
+{#                    var table = layui.table;#}
+{#                    table.render({#}
+{#                        elem: '#test1'#}
+{#                        , url: '{{ url }}'#}
+{#                        , cols:{{ data|safe }}#}
+{#                        , id: 'testReload'#}
+{#                        , page: true#}
+{#                        , height: 315#}
+{#                    });#}
+{#                    var $ = layui.$, active = {#}
+{#                        reload: function () {#}
+{#                            var demoReload = $('#demoReload');#}
+{##}
+{#                            //执行重载#}
+{#                            table.reload('testReload', {#}
+{#                                page: {#}
+{#                                    curr: 1 //重新从第 1 页开始#}
+{#                                }#}
+{#                                , where: {#}
+{#                                    key: {#}
+{#                                        id: demoReload.val()#}
+{#                                    }#}
+{#                                }#}
+{#                            });#}
+{#                        }#}
+{#                    };#}
+{##}
+{#                    $('.demoTable .layui-btn').on('click', function () {#}
+{#                        var type = $(this).data('type');#}
+{#                        active[type] ? active[type].call(this) : '';#}
+{#                    });#}
+{#                });#}
+{#            }#}
+{#            onlo()#}
+{#        </script>#}
+        <script>
+    $(function(){
+	var searchObj = {
+			group:"",
+            host:"",
+            type:""
+		}
+	$('#btn-search').on('click',function(){
+			searchObj.group = $("#group").val()
+            searchObj.host = $("#host").val()
+            searchObj.type = $("#type").val()
+            console.log(searchObj.group,searchObj.host,searchObj.type)
+			getData1()
+		})
+	function getData1(){
+
+			layui.use('table', function(){
+			var table = layui.table;
+			//第一个实例
+			table.render({
+				elem: '#test1'
+				,url: '{{ url }}'
+				,method:'post'
+				//,limit:searchObj.limit
+				,where: searchObj
+				,page: true //开启分页
+				,cols: {{ data|safe }}
+				,limits:[5,10,50,100,500]
+			});
+	//
+			});
+	////
+	////
+		}
+
+	getData1();
+})
+        </script>
+	</body>
+</html>

@@ -1,0 +1,7 @@
+from django.conf.urls import url
+from . import views
+urlpatterns = [
+    url(r'alarmEvent',views.alarmEvent,name='alarmEvent'),
+    url(r'getalarm',views.getalarm,name='getalarm'),
+    url(r'outtime',views.getalarm,name='outtime'),
+]

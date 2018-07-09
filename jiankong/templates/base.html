@@ -1,0 +1,1060 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN" class="no-js"><!--<![endif]-->
+<head>
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+    <style type="text/css">[uib-typeahead-popup].dropdown-menu {
+        display: block;
+    }</style>
+    <style type="text/css">.uib-time input {
+        width: 50px;
+    }</style>
+    <style type="text/css">[uib-tooltip-popup].tooltip.top-left > .tooltip-arrow, [uib-tooltip-popup].tooltip.top-right > .tooltip-arrow, [uib-tooltip-popup].tooltip.bottom-left > .tooltip-arrow, [uib-tooltip-popup].tooltip.bottom-right > .tooltip-arrow, [uib-tooltip-popup].tooltip.left-top > .tooltip-arrow, [uib-tooltip-popup].tooltip.left-bottom > .tooltip-arrow, [uib-tooltip-popup].tooltip.right-top > .tooltip-arrow, [uib-tooltip-popup].tooltip.right-bottom > .tooltip-arrow, [uib-tooltip-html-popup].tooltip.top-left > .tooltip-arrow, [uib-tooltip-html-popup].tooltip.top-right > .tooltip-arrow, [uib-tooltip-html-popup].tooltip.bottom-left > .tooltip-arrow, [uib-tooltip-html-popup].tooltip.bottom-right > .tooltip-arrow, [uib-tooltip-html-popup].tooltip.left-top > .tooltip-arrow, [uib-tooltip-html-popup].tooltip.left-bottom > .tooltip-arrow, [uib-tooltip-html-popup].tooltip.right-top > .tooltip-arrow, [uib-tooltip-html-popup].tooltip.right-bottom > .tooltip-arrow, [uib-tooltip-template-popup].tooltip.top-left > .tooltip-arrow, [uib-tooltip-template-popup].tooltip.top-right > .tooltip-arrow, [uib-tooltip-template-popup].tooltip.bottom-left > .tooltip-arrow, [uib-tooltip-template-popup].tooltip.bottom-right > .tooltip-arrow, [uib-tooltip-template-popup].tooltip.left-top > .tooltip-arrow, [uib-tooltip-template-popup].tooltip.left-bottom > .tooltip-arrow, [uib-tooltip-template-popup].tooltip.right-top > .tooltip-arrow, [uib-tooltip-template-popup].tooltip.right-bottom > .tooltip-arrow, [uib-popover-popup].popover.top-left > .arrow, [uib-popover-popup].popover.top-right > .arrow, [uib-popover-popup].popover.bottom-left > .arrow, [uib-popover-popup].popover.bottom-right > .arrow, [uib-popover-popup].popover.left-top > .arrow, [uib-popover-popup].popover.left-bottom > .arrow, [uib-popover-popup].popover.right-top > .arrow, [uib-popover-popup].popover.right-bottom > .arrow, [uib-popover-html-popup].popover.top-left > .arrow, [uib-popover-html-popup].popover.top-right > .arrow, [uib-popover-html-popup].popover.bottom-left > .arrow, [uib-popover-html-popup].popover.bottom-right > .arrow, [uib-popover-html-popup].popover.left-top > .arrow, [uib-popover-html-popup].popover.left-bottom > .arrow, [uib-popover-html-popup].popover.right-top > .arrow, [uib-popover-html-popup].popover.right-bottom > .arrow, [uib-popover-template-popup].popover.top-left > .arrow, [uib-popover-template-popup].popover.top-right > .arrow, [uib-popover-template-popup].popover.bottom-left > .arrow, [uib-popover-template-popup].popover.bottom-right > .arrow, [uib-popover-template-popup].popover.left-top > .arrow, [uib-popover-template-popup].popover.left-bottom > .arrow, [uib-popover-template-popup].popover.right-top > .arrow, [uib-popover-template-popup].popover.right-bottom > .arrow {
+        top: auto;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        margin: 0;
+    }
+
+    [uib-popover-popup].popover, [uib-popover-html-popup].popover, [uib-popover-template-popup].popover {
+        display: block !important;
+    }</style>
+    <style type="text/css">.uib-datepicker-popup.dropdown-menu {
+        display: block;
+        float: none;
+        margin: 0;
+    }
+
+    .uib-button-bar {
+        padding: 10px 9px 2px;
+    }</style>
+    <style type="text/css">.uib-position-measure {
+        display: block !important;
+        visibility: hidden !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+
+    .uib-position-scrollbar-measure {
+        position: absolute !important;
+        top: -9999px !important;
+        width: 50px !important;
+        height: 50px !important;
+        overflow: scroll !important;
+    }
+
+    .uib-position-body-scrollbar-measure {
+        overflow: scroll !important;
+    }</style>
+    <style type="text/css">.uib-datepicker .uib-title {
+        width: 100%;
+    }
+
+    .uib-day button, .uib-month button, .uib-year button {
+        min-width: 100%;
+    }
+
+    .uib-left, .uib-right {
+        width: 100%
+    }</style>
+    <style type="text/css">.ng-animate.item:not(.left):not(.right) {
+        -webkit-transition: 0s ease-in-out left;
+        transition: 0s ease-in-out left
+    }</style>
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
+            display: none !important;
+        }
+
+        ng\:form {
+            display: block;
+        }
+
+        .ng-animate-shim {
+            visibility: hidden;
+        }
+
+        .ng-anchor {
+            position: absolute;
+        }</style>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="">
+    <link rel="stylesheet" href="{% static 'css/vendor.d3f223b3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.195c2aa0.css' %}">
+
+
+    <style type="text/css">.flowchart {
+        cursor: -webkit-grab;
+        cursor: grab;
+    }
+
+    .flowchart .flowchart-bg {
+        fill: #fff;
+        pointer-events: all;
+    }
+
+    .flowchart .node {
+        cursor: pointer;
+    }
+
+    .flowchart .node text {
+        fill: #fff;
+        stroke: none;
+        text-anchor: middle;
+        font-size: 12px;
+    }
+
+    .flowchart .node .branch {
+        visibility: hidden;
+        fill: transparent;
+    }
+
+    .flowchart .node .branch path {
+        stroke: transparent;
+        stroke-width: 0;
+    }
+
+    .flowchart .guide {
+        pointer-events: none;
+    }
+
+    .flowchart .guide line {
+        visibility: hidden;
+        stroke: #f00;
+        stroke-width: 1px;
+    }
+
+    .flowchart .guide line.active {
+        visibility: visible;
+    }
+
+    .flowchart .link {
+        cursor: pointer;
+    }
+
+    .flowchart .link .link-bg {
+        fill: none;
+        stroke: transparent;
+        stroke-width: 10px;
+    }
+
+    .flowchart .link .link-arrow {
+        fill: none;
+        stroke: #c0c0c0;
+        stroke-width: 1px;
+    }
+
+    .flowchart .link .link-triangle {
+        fill: #c0c0c0;
+        stroke: none;
+    }
+
+    .flowchart .link text {
+        fill: #8c8c8c;
+        stroke: none;
+        text-anchor: middle;
+        font-size: 12px;
+    }
+
+    .flowchart .link .shadow {
+        stroke: #fff;
+        stroke-width: 7px;
+    }
+
+    .flowchart .link:hover .link-arrow {
+        stroke: #9c9c9c;
+    }
+
+    .flowchart .link:hover text {
+        fill: #9c9c9c;
+    }
+
+    .flowchart .link.active .link-arrow {
+        stroke: #167be0;
+    }
+
+    .flowchart .link.active text {
+        fill: #167be0;
+    }
+
+    .flowchart .marker {
+        fill: #c0c0c0;
+    }
+
+    .flowchart .marker.hover {
+        fill: #9c9c9c;
+    }
+
+    .flowchart .marker.active {
+        fill: #167be0;
+    }
+
+    .flowchart .marker.passed {
+        fill: #30aa54;
+    }
+
+    .flowchart.zooming, .flowchart.zooming .node, .flowchart.zooming .link, .flowchart.dragging-node, .flowchart.dragging-node .node, .flowchart.dragging-node .link {
+        cursor: -webkit-grabbing;
+        cursor: grabbing;
+    }
+
+    .flowchart.linking, .flowchart.linking .node, .flowchart.linking .link {
+        cursor: crosshair;
+    }
+
+    .flowchart.linking .link {
+        pointer-events: none;
+    }
+
+    .flowchart.linking.linking-from .node .branch {
+        visibility: visible;
+        fill: transparent;
+    }
+
+    .flowchart.linking.linking-from .node .branch text {
+        fill: transparent;
+    }
+
+    .flowchart.linking.linking-from .node .branch:hover .branch-endpoint, .flowchart.linking.linking-from .node .branch.hover .branch-endpoint, .flowchart.linking.linking-to .node .branch:hover .branch-endpoint, .flowchart.linking.linking-to .node .branch.hover .branch-endpoint {
+        visibility: visible;
+        fill: rgba(22, 123, 224, 0.5);
+    }
+
+    .flowchart .appending-link {
+        visibility: hidden;
+        stroke: #c0c0c0;
+        stroke-width: 1px;
+        pointer-events: none;
+    }
+
+    .flowchart .appending-link.active {
+        visibility: visible;
+    }
+
+    .flowchart.readonly .node, .flowchart.readonly .link {
+        pointer-events: none;
+    }
+
+    .flowchart.readonly .node .outline path {
+        stroke: none;
+        stroke-width: 0;
+        fill: #fff;
+    }
+
+    .flowchart.readonly .node text {
+        fill: #fff;
+    }
+
+    .flowchart.readonly .start .outline path {
+        fill: #fe6f0e;
+    }
+
+    .flowchart.readonly .task .outline path {
+        fill: #46b04a;
+    }
+
+    .flowchart.readonly .gateway.fork .outline path {
+        fill: #5783d9;
+    }
+
+    .flowchart.readonly .gateway.join .outline path {
+        fill: #c0c0c0;
+    }
+
+    .flowchart.readonly .gateway.join .outline path.filled {
+        fill: #fff;
+    }
+
+    .flowchart.readonly .gateway.join .outline path.stroked {
+        stroke: #fff;
+    }
+
+    .flowchart.editing .node .outline path {
+        stroke-width: 1.1px;
+        fill: #fff;
+    }
+
+    .flowchart.editing .node.temp {
+        cursor: -webkit-grabbing;
+        cursor: grabbing;
+    }
+
+    .flowchart.editing .node .branch {
+        visibility: visible;
+    }
+
+    .flowchart.editing .start .outline path {
+        stroke: #fe6f0e;
+    }
+
+    .flowchart.editing .task .outline path {
+        stroke: #46b04a;
+    }
+
+    .flowchart.editing .task text {
+        fill: #46b04a;
+    }
+
+    .flowchart.editing .gateway.fork .outline path {
+        stroke: #5783d9;
+    }
+
+    .flowchart.editing .gateway.fork text {
+        fill: #5783d9;
+    }
+
+    .flowchart.editing .gateway.join .outline path {
+        stroke: #c0c0c0;
+    }
+
+    .flowchart.editing .gateway.join .outline path.filled {
+        fill: #c0c0c0;
+    }
+
+    .flowchart.editing .gateway.join .outline path.stroked {
+        stroke: #c0c0c0;
+    }
+
+    .flowchart.execution .node .outline path {
+        stroke: #c0c0c0;
+        stroke-width: 1.1px;
+        fill: #fff;
+    }
+
+    .flowchart.execution .node .outline path.line-animated {
+        stroke-dasharray: 5;
+        animation: line-animated .2s infinite;
+    }
+
+    @keyframes line-animated {
+        0% {
+            stroke-dashoffset: 0;
+        }
+        100% {
+            stroke-dashoffset: -10;
+        }
+    }
+
+    .flowchart.execution .node text {
+        fill: #8c8c8c;
+    }
+
+    .flowchart.execution .node.success .outline path {
+        stroke: #30aa54;
+        fill: #effff4;
+    }
+
+    .flowchart.execution .node.success text {
+        fill: #30aa54;
+    }
+
+    .flowchart.execution .node.failed .outline path {
+        stroke: #dd5746;
+        fill: #fff3f2;
+    }
+
+    .flowchart.execution .node.failed text {
+        fill: #dd5746;
+    }
+
+    .flowchart.execution .node.executing .outline path {
+        stroke: #167be0;
+        fill: #f1f8ff;
+    }
+
+    .flowchart.execution .node.executing text {
+        fill: #167be0;
+    }
+
+    .flowchart.execution .start .outline path {
+        stroke: #30aa54;
+    }
+
+    .flowchart.execution .link {
+        pointer-events: none;
+    }
+
+    .flowchart.execution .link.passed .link-arrow {
+        stroke: #30aa54;
+    }
+
+    .flowchart.execution .link.passed .text {
+        fill: #30aa54;
+    }
+
+    .flowchart.editing .node.hover .outline path, .flowchart.editing .node:hover .outline path, .flowchart.execution .node.hover .outline path, .flowchart.execution .node:hover .outline path {
+        fill: #e2f0ff;
+        stroke: #e2f0ff;
+    }
+
+    .flowchart.editing .node.hover .outline path.filled, .flowchart.editing .node:hover .outline path.filled, .flowchart.execution .node.hover .outline path.filled, .flowchart.execution .node:hover .outline path.filled {
+        fill: #167be0;
+    }
+
+    .flowchart.editing .node.hover .outline path.stroked, .flowchart.editing .node:hover .outline path.stroked, .flowchart.execution .node.hover .outline path.stroked, .flowchart.execution .node:hover .outline path.stroked {
+        stroke: #167be0;
+    }
+
+    .flowchart.editing .node.hover text, .flowchart.editing .node:hover text, .flowchart.execution .node.hover text, .flowchart.execution .node:hover text {
+        fill: #167be0;
+    }
+
+    .flowchart.editing .node.active .outline path, .flowchart.execution .node.active .outline path {
+        fill: #e2f0ff;
+        stroke: #167be0;
+        stroke-width: 1.1px;
+    }
+
+    .flowchart.editing .node.active .outline path.filled, .flowchart.execution .node.active .outline path.filled {
+        fill: #167be0;
+    }
+
+    .flowchart.editing .node.active .outline path.stroked, .flowchart.execution .node.active .outline path.stroked {
+        stroke: #167be0;
+    }
+
+    .flowchart.editing .node.active text, .flowchart.execution .node.active text {
+        fill: #167be0;
+    }
+    </style>
+    <style type="text/css">.apps-topology, .apps-topology-html {
+        font-family: "HiraginoSansGB", "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+        font-size: 14px;
+    }
+
+    .apps-topology {
+        visibility: hidden;
+        display: none;
+        cursor: -webkit-grab;
+        cursor: grab;
+        /* &.dragging-area {
+          .area {
+            cursor: move;
+          }
+        } */
+        /* &.dragging-note {
+          .note {
+            cursor: move;
+          }
+        } */
+    }
+
+    .apps-topology .marker {
+        fill: #CBCBCB;
+    }
+
+    .apps-topology .marker.hover {
+        fill: #f16601;
+    }
+
+    .apps-topology .marker.active {
+        fill: #f16601;
+    }
+
+    .apps-topology .marker.success {
+        fill: #4bd126;
+    }
+
+    .apps-topology .marker.warn {
+        fill: #ff8c19;
+    }
+
+    .apps-topology .marker.danger {
+        fill: #ff0016;
+    }
+
+    .apps-topology .marker.one-on-one {
+        fill: #46b04a;
+    }
+
+    .apps-topology .marker.one-on-multiple {
+        fill: #fe6f0e;
+    }
+
+    .apps-topology .node {
+        cursor: pointer;
+    }
+
+    .apps-topology .node .shape {
+        fill: #167be0;
+        stroke: #ffffff;
+        stroke-width: 1.5px;
+    }
+
+    .apps-topology .node .shape.shape-dot {
+        fill: #ffffff;
+        stroke: none;
+        stroke-width: 0;
+    }
+
+    .apps-topology .node .shape.shape-dot-inner {
+        fill: #167be0;
+        stroke: none;
+        stroke-width: 0;
+    }
+
+    .apps-topology .node .node-text {
+        fill: #167be0;
+        text-anchor: middle;
+    }
+
+    .apps-topology .node .node-text.hidden {
+        visibility: hidden;
+    }
+
+    .apps-topology .node.hover .shape, .apps-topology .node:hover .shape {
+        stroke: #ffffff;
+        fill: #f16601;
+    }
+
+    .apps-topology .node.hover .shape.shape-dot, .apps-topology .node:hover .shape.shape-dot {
+        fill: #5f94fb;
+        stroke: #5f94fb;
+        stroke-width: 1.5px;
+    }
+
+    .apps-topology .node.hover .shape.shape-dot-inner, .apps-topology .node:hover .shape.shape-dot-inner {
+        fill: #fff;
+    }
+
+    .apps-topology .node.hover .node-text, .apps-topology .node:hover .node-text {
+        fill: #f16601;
+    }
+
+    .apps-topology .node.hover .shape-capacity-circle, .apps-topology .node:hover .shape-capacity-circle {
+        stroke: #f16601;
+    }
+
+    .apps-topology .node.hover .node-label .shape-label-bg, .apps-topology .node:hover .node-label .shape-label-bg {
+        stroke: #f16601;
+        fill: #ffffff;
+    }
+
+    .apps-topology .node.hover .node-label .shape-label-text, .apps-topology .node:hover .node-label .shape-label-text {
+        fill: #7e7e7e;
+    }
+
+    .apps-topology .node.active .shape {
+        stroke: #ffffff;
+        fill: #f16601;
+    }
+
+    .apps-topology .node.active .shape.shape-dot {
+        fill: #5f94fb;
+        stroke: #5f94fb;
+        stroke-width: 1.5px;
+    }
+
+    .apps-topology .node.active .shape.shape-dot-inner {
+        fill: #fff;
+    }
+
+    .apps-topology .node.active .node-text {
+        fill: #f16601;
+    }
+
+    .apps-topology .node.active .node-label .shape-label-bg {
+        stroke: #f16601;
+        fill: #ffffff;
+    }
+
+    .apps-topology .node.active .node-label .shape-label-text {
+        fill: #7e7e7e;
+    }
+
+    .apps-topology .node.active .shape-capacity-circle {
+        stroke: #f16601;
+    }
+
+    .apps-topology .node .shape-capacity-bg {
+        fill: #ffffff;
+        stroke-width: 1;
+        stroke: #c1c1c1;
+    }
+
+    .apps-topology .node .shape-capacity-circle {
+        fill: none;
+        stroke-width: 2;
+        stroke: #167be0;
+        stroke-linecap: round;
+    }
+
+    .apps-topology .node .shape-capacity-bg, .apps-topology .node .shape-capacity-circle {
+        visibility: hidden;
+    }
+
+    .apps-topology .node .node-label.hidden {
+        visibility: hidden;
+    }
+
+    .apps-topology .node .node-label .shape-label-bg {
+        fill: #ffffff;
+        stroke: #167be0;
+        stroke-width: 2px;
+    }
+
+    .apps-topology .node .node-label .shape-label-text {
+        fill: #7e7e7e;
+        text-anchor: middle;
+        font-size: 10px;
+    }
+
+    .apps-topology .node.visible .shape-capacity-bg, .apps-topology .node.visible .shape-capacity-circle {
+        visibility: visible;
+    }
+
+    .apps-topology .link {
+        cursor: pointer;
+    }
+
+    .apps-topology .link .link-arrow {
+        stroke: #CBCBCB;
+        stroke-width: 1px;
+    }
+
+    .apps-topology .link .link-arrow.success {
+        stroke: #4bd126;
+    }
+
+    .apps-topology .link .link-arrow.warn {
+        stroke: #ff8c19;
+    }
+
+    .apps-topology .link .link-arrow.danger {
+        stroke: #ff0016;
+    }
+
+    .apps-topology .link.one-on-one .link-arrow, .apps-topology .link.one-on-one:hover .link-arrow {
+        stroke: #46b04a;
+    }
+
+    .apps-topology .link.one-on-one .link-text, .apps-topology .link.one-on-one:hover .link-text {
+        fill: #46b04a;
+        font-weight: 300;
+    }
+
+    .apps-topology .link.one-on-one .link-text-bg {
+        fill: #eeffef;
+    }
+
+    .apps-topology .link.one-on-multiple .link-arrow, .apps-topology .link.one-on-multiple:hover .link-arrow {
+        stroke: #fe6f0e;
+    }
+
+    .apps-topology .link.one-on-multiple .link-text, .apps-topology .link.one-on-multiple:hover .link-text {
+        fill: #fe6f0e;
+        font-weight: 300;
+    }
+
+    .apps-topology .link.one-on-multiple .link-text-bg {
+        fill: #fff5ed;
+    }
+
+    .apps-topology .link .link-bg {
+        stroke: transparent;
+        stroke-linecap: round;
+        stroke-width: 10px;
+    }
+
+    .apps-topology .link .link-text-bg {
+        stroke: none;
+        fill: #fff5ed;
+    }
+
+    .apps-topology .link text {
+        fill: #909090;
+        font-size: 12px;
+        text-anchor: middle;
+        visibility: hidden;
+    }
+
+    .apps-topology .link:hover .link-arrow {
+        stroke: #f16601;
+    }
+
+    .apps-topology .link:hover .link-text {
+        fill: #f16601;
+    }
+
+    .apps-topology .link.active .link-arrow, .apps-topology .link.active:hover .link-arrow {
+        stroke: #f16601;
+    }
+
+    .apps-topology .link.active .link-text, .apps-topology .link.active:hover .link-text {
+        fill: #f16601;
+    }
+
+    .apps-topology .area .area-bg {
+        fill: #f9f9f9;
+        stroke: #dcdcdc;
+        stroke-dasharray: 5, 5;
+        stroke-width: 1;
+    }
+
+    .apps-topology .area .area-handle {
+        fill: transparent;
+        pointer-events: none;
+        stroke: none;
+        visibility: hidden;
+    }
+
+    .apps-topology .area .area-handle-north-west, .apps-topology .area .area-handle-south-east {
+        cursor: nwse-resize;
+    }
+
+    .apps-topology .area .area-handle-north-east, .apps-topology .area .area-handle-south-west {
+        cursor: nesw-resize;
+    }
+
+    .apps-topology .area .area-handle-north, .apps-topology .area .area-handle-south {
+        cursor: ns-resize;
+    }
+
+    .apps-topology .area .area-handle-west, .apps-topology .area .area-handle-east {
+        cursor: ew-resize;
+    }
+
+    .apps-topology .area.active .area-bg {
+        fill: #f9f9f9;
+        stroke: #dcdcdc;
+    }
+
+    .apps-topology .area.active .area-handle {
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .apps-topology .area:hover:not(.active) .area-bg {
+        fill: #f9f9f9;
+        stroke: #dcdcdc;
+    }
+
+    .apps-topology .note {
+        cursor: pointer;
+    }
+
+    .apps-topology .note .note-bg {
+        fill: #fffefe;
+        stroke: #A7B3BE;
+        stroke-width: 1.5px;
+    }
+
+    .apps-topology .note .note-text {
+        fill: #7a7e85;
+        text-anchor: middle;
+    }
+
+    .apps-topology .note .note-tspan {
+        text-anchor: middle;
+    }
+
+    .apps-topology .note .arrow-handle {
+        cursor: move;
+        fill: orange;
+        stroke: #999;
+        visibility: hidden;
+    }
+
+    .apps-topology .note.active .note-bg {
+        stroke: #f16601;
+    }
+
+    .apps-topology .note.active .note-text {
+        fill: #f16601;
+    }
+
+    .apps-topology .note.active.drag-note-arrow-enabled .arrow-handle {
+        visibility: visible;
+    }
+
+    .apps-topology .note:hover:not(.active) .note-bg {
+        stroke: #f16601;
+    }
+
+    .apps-topology .note:hover:not(.active) .note-text {
+        fill: #f16601;
+    }
+
+    .apps-topology .guide line {
+        stroke: red;
+        stroke-width: 1;
+        visibility: hidden;
+    }
+
+    .apps-topology .user-canvas line {
+        visibility: hidden;
+        stroke: #CBCBCB;
+        stroke-width: 1px;
+        pointer-events: none;
+    }
+
+    .apps-topology .user-canvas line.active {
+        visibility: visible;
+    }
+
+    .apps-topology .user-canvas rect {
+        visibility: hidden;
+        fill: none;
+        stroke: rgba(0, 0, 0, 0.8);
+        stroke-width: 1;
+        stroke-dasharray: 5, 5;
+        pointer-events: none;
+    }
+
+    .apps-topology .user-canvas rect.active {
+        visibility: visible;
+    }
+
+    .apps-topology.fixed {
+        display: inline;
+        visibility: visible;
+    }
+
+    .apps-topology.dragging-node, .apps-topology.dragging-area, .apps-topology.dragging-note, .apps-topology.dragging-note-arrow {
+        cursor: move;
+    }
+
+    .apps-topology.dragging-canvas {
+        cursor: -webkit-grabbing;
+        cursor: grabbing;
+    }
+
+    .apps-topology.dragging-node .guide line.active {
+        visibility: visible;
+    }
+
+    .apps-topology.dragging-node .node {
+        cursor: inherit;
+    }
+
+    .apps-topology.dragging-node .link, .apps-topology.dragging-node .area, .apps-topology.dragging-node .note {
+        pointer-events: none;
+    }
+
+    .apps-topology.linking, .apps-topology.linking .node, .apps-topology.linking .link, .apps-topology.linking .note {
+        cursor: crosshair;
+    }
+
+    .apps-topology.linking .area, .apps-topology.linking .link, .apps-topology.linking .note {
+        pointer-events: none;
+    }
+
+    .apps-topology.drawing-area {
+        cursor: crosshair;
+    }
+
+    .apps-topology.drawing-area .area {
+        pointer-events: none;
+    }
+
+    .apps-topology.dragging-area .node, .apps-topology.dragging-area .link, .apps-topology.dragging-area .note, .apps-topology.resizing-area .node, .apps-topology.resizing-area .link, .apps-topology.resizing-area .note, .apps-topology.drawing-area .node, .apps-topology.drawing-area .link, .apps-topology.drawing-area .note {
+        pointer-events: none;
+    }
+
+    .apps-topology.dragging-note .note, .apps-topology.dragging-note-arrow .note {
+        cursor: inherit;
+    }
+
+    .apps-topology.dragging-note .node, .apps-topology.dragging-note .link, .apps-topology.dragging-note .area, .apps-topology.dragging-note-arrow .node, .apps-topology.dragging-note-arrow .link, .apps-topology.dragging-note-arrow .area {
+        pointer-events: none;
+    }
+
+    .apps-topology.show-link-text .link text {
+        visibility: visible;
+    }
+
+    .apps-topology .hover-inactive.node, .apps-topology .hover-inactive.area, .apps-topology .hover-inactive.note {
+        opacity: 0.3;
+    }
+
+    .apps-topology .hover-inactive.link {
+        opacity: 0.15;
+    }
+
+    .apps-topology .hover-inactive.link .link-arrow {
+        stroke: #aaa;
+        marker-end: none;
+    }
+
+    .apps-topology .hover-inactive.link .link-text, .apps-topology .hover-inactive.link .link-text-bg {
+        visibility: hidden;
+    }
+
+    .apps-topology-html {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+    }
+
+    .apps-topology-html .input-text {
+        font-family: "HiraginoSansGB", "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        position: absolute;
+        width: 120px;
+        visibility: hidden;
+        text-align: center;
+    }
+
+    .apps-topology-html.active {
+        display: block;
+    }
+
+    .apps-topology-html.active .input-text.active {
+        visibility: visible;
+    }
+
+    .apps-topology-html.locating-note {
+        cursor: text;
+    }
+
+    .cmdb-graph .apps-topology .node .node-text {
+        fill: #878b8f;
+        font-size: 12px;
+    }
+
+    .cmdb-graph .guide line {
+        stroke: #e1e1e1;
+    }
+
+    .cmdb-graph-legend-container {
+        position: absolute;
+        top: 20px;
+        left: 25px;
+        z-index: 2;
+    }
+
+    .cmdb-graph-legend-container .legend-item {
+        position: relative;
+        float: left;
+        margin-right: 20px;
+        padding-left: 30px;
+    }
+
+    .cmdb-graph-legend-container .legend-item:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        height: 2px;
+        width: 20px;
+        margin-top: -1px;
+    }
+
+    .cmdb-graph-legend-container .legend-item.one-on-one:before {
+        background-color: #46b04a;
+    }
+
+    .cmdb-graph-legend-container .legend-item.one-on-multiple:before {
+        background-color: #fe6f0e;
+    }
+
+        li{
+            list-style: none;
+        }
+{#        li a{#}
+{#            color: #f7fafc;#}
+{#        }#}
+    </style>
+    {% block jsorcss %}
+    {% endblock %}
+</head>
+<body ng-app="app" ng-strict-di="" class="ng-scope" style="">
+{#<div  ng-controller="NavCtrl" class="ng-scope">#}
+{#    <div class="navbar ng-scope">#}
+{#        <div class="container-fluid">#}
+{#            <div class="navbar-header">#}
+{#                <a class="navbar-brand" ui-sref="home" ui-sref-opts="::{reload: true, inherit: false}"#}
+{#                   href="">#}
+{#                    <img src="" height="32">#}
+{#                </a>#}
+{#            </div>#}
+{##}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+<!-- uiView: -->
+<div class="main ng-scope" ui-view="">
+    <!-- Monitor父页 -->
+    <div class="content ng-scope">
+        <div class="content-inner">
+            <!-- uiView: -->
+            <div class="content-body ng-scope" ui-view=""><!-- uiView: -->
+                <ui-view class="ng-scope">
+                    <style type="text/css" class="ng-scope">
+                        .marquee {
+
+                            overflow: hidden;
+                            white-space: nowrap;
+                            box-sizing: border-box;
+                            text-overflow: ellipsis;
+                            margin-right: 20px;
+                        }
+
+                        .more-notice {
+                            position: absolute;
+                            right: 2px;
+                            top: 15px;
+                        }
+
+                    </style>
+
+                    {% block content %}
+                    {% endblock %}
+                </ui-view>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+
+        $('#dropdownMenu1').click(function(){//给d1绑定一个点击事件;
+                if($('#xingnenginfo').is(':hidden'))
+                {
+                  $('#xingnenginfo').slideDown('fast');
+                }else{
+                  $('#xingnenginfo').slideUp('fast');
+                    }
+
+        });
+
+        $('#fuwuqi').click(function () {//给d1绑定一个点击事件;
+            if ($('#fuwuqiinfo').is(':hidden')) {
+                $('#fuwuqiinfo').slideDown('fast');
+            } else {
+                $('#fuwuqiinfo').slideUp('fast');
+            }
+        });
+
+
+        $('#cunchu1').click(function () {//给d1绑定一个点击事件;
+            if ($('#cunchuinfo').is(':hidden')) {
+                $('#cunchuinfo').slideDown('fast');
+            } else {
+                $('#cunchuinfo').slideUp('fast');
+            }
+        });
+
+           $('#wlsb').click(function () {//给d1绑定一个点击事件;
+            if ($('#wlsbinfo').is(':hidden')) {
+                $('#wlsbinfo').slideDown('fast');
+            } else {
+                $('#wlsbinfo').slideUp('fast');
+            }
+        });
+
+
+        });
+</script>
+</body>
+</html>

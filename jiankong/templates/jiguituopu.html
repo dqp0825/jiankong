@@ -1,0 +1,903 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block jsorcss %}
+    <title>智能监控</title>
+    <script type="text/javascript" src="{% static '/assets/js/jquery.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static '/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/css/loader-style.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/js/stackable/stacktable.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/js/stackable/responsive-table.css' %}">
+    <link rel="stylesheet" href="{% static '/datetimepicker/bootstrap-datetimepicker.min.css' %}">
+    <link rel="shortcut icon" href="{% static '/assets/ico/minus.png' %}">
+    <!-- MAIN EFFECT -->
+    <script type="text/javascript" src="{% static '/assets/js/preloader.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/app.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/load.js' %}"></script>
+    <!-- /MAIN EFFECT -->
+    <script type="text/javascript" src="{% static '/assets/js/stackable/stacktable.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/commonTool.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/admin.js' %}"></script>
+
+    <script type="text/javascript"
+            src="{% static '/datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static '/datetimepicker/bootstrap-datetimepicker.zh-CN.js' %}"></script>
+    <script language="javascript" type="text/javascript"
+            src="{% static '/My97DatePicker/WdatePicker.js' %}"></script>
+
+{#    	<script src="{% static 'js/jquery.js' %}"></script>#}
+		<!--<script src="./echarts-2.2.7/build/dist/echarts.js"></script>-->
+		    <script src="{% static 'js/echarts.min.js' %}"></script>
+
+
+    {#    首页#}
+    <link rel="stylesheet" href="{% static 'css/map.css' %}"/>
+    <link rel="stylesheet" href="{% static 'js/zTree_v3/css/metroStyle/metroStyle.css' %}"/>
+    {#    <script src="js/echarts-2.2.7/doc/asset/js/jquery.js"></script>#}
+    <script src="{% static 'js/echarts-2.2.7/build/dist/echarts.js' %}"></script>
+    <script src="{% static 'js/echarts-2.2.7/doc/example/geoJson/china-main-city/china-main-city-map.js' %}"></script>
+
+    <script src="{% static 'js/TableSorterV2.js' %}"></script>
+    <style>
+        td {
+            text-align: center
+        }
+
+        button {
+            border: none
+        }
+
+        .paper-wrap1 {
+            height: 100%;
+        }
+
+        .gongneng {
+            float: right;
+            padding-left: 50px;
+        }
+
+        {#     body {#}
+        {#            background: url(img/sky.jpg);#}
+        {#        }#}
+
+        .img-box {
+            position: relative;
+            margin: 0 auto;
+            width: 100%;
+            height: 800px;
+        }
+
+        .main {
+            position: absolute;
+            left: 50%;
+            top: 49%;
+            margin-left: -330px;
+            margin-top: -350px;
+        }
+
+        .line1 {
+            position: absolute;
+            left: 20px;
+            top: 30px
+        }
+
+        .line2 {
+            position: absolute;
+            left: 20px;
+            bottom: 30px
+        }
+
+        .line3 {
+            position: absolute;
+            right: 20px;
+            top: 30px
+        }
+
+        .line4 {
+            position: absolute;
+            right: 20px;
+            bottom: 30px
+        }
+
+        .map-box {
+            width: 1100px;
+            height: 1000px;
+            position: relative;
+        }
+
+        #map {
+            width: 700px;
+            height: 700px;
+            margin: 200px 300px;
+        }
+        #right{
+            position: relative;
+            top: 100px;
+        }
+        #right li{
+            float: left;
+            margin:20px 30px;
+        }
+
+
+        .content {
+            padding: 20px 20px;
+            margin-left: -127px;
+        }
+
+        #network-class {
+            width: 450px;
+            height: 300px;
+        {#            background: red;#} float: left;
+            position: absolute;
+            top: 70px;
+            right: 5px;
+        }
+
+        #network-performance-top {
+            width: 300px;
+            height: 250px;
+            background: blue;
+            float: left;
+            position: absolute;
+            top: 365px;
+            right: 75px;
+        }
+
+        #network-speed-top {
+            width: 300px;
+            height: 250px;
+            background: green;
+            float: left;
+            position: absolute;
+            top: 660px;
+            right: 75px;
+        }
+
+        #latest-warning {
+            width: 650px;
+            height: 250px;
+            background: orange;
+            margin-left: 20px;
+        }
+
+        #performance-table {
+            width: 100%;
+            height: 100%;
+        }
+
+        th {
+            text-align: center;
+            font-size: 14px;
+            font-family: "Adobe 宋体 Std L";
+            font-style: normal;
+        }
+
+        #speed td, #speed th {
+            border: none;
+        }
+
+        table th {
+            text-shadow: none;
+        }
+    </style>
+
+    <script language="javascript" type="text/javascript">
+        window.onload = function () {
+            new TableSorter("tb1");
+
+            /*{
+             alert("table is sorted by " + c.innerHTML + " " + (t ? "Asc" : "Desc"));
+             }*/
+        }
+    </script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="page-title-container ng-scope">
+        <h3 class="page-title">机柜拓扑</h3>
+        <div class="page-btns">
+            <a class="btn btn-page-title" ui-sref="monitor.alarm.list({st: &#39;-3d&#39;})"
+               href="/topologyView/topologyView/">
+                <i class="fa fa-list-alt">地域拓扑</i>
+            </a>
+        </div>
+        <div class="page-btns">
+            <a class="btn btn-page-title" ui-sref="monitor.alarm.list({st: &#39;-3d&#39;})"
+               href="/topologyView/wltp/">
+                <i class="fa fa-list-alt">物理拓扑</i>
+            </a>
+        </div>
+    </div>
+
+
+
+    <div class="map-box">
+    <div id="map">
+        <img src="{% static 'img/jiguituopu.png' %}" alt="">
+    </div>
+{#        <div id="map" style="height:650px; width:650px;" class="map">#}
+{#           <div id="main" style="width:600px; height: 600px"></div>#}
+{##}
+{#        </div>#}
+{#        <div id="network-class">#}
+{#            <span>网络设备分类</span>#}
+{#        </div>#}
+
+{#        <div id="network-performance-top" class="panel panel-default">#}
+{#            <div class="panel-heading" style="background: blue;text-align: center">网络设备性能Top</div>#}
+{#            <table id="tb1" class="table table-striped" style="border: none">#}
+{#                <tr>#}
+{#                    <th style="cursor: pointer;">主机</th>#}
+{#                    <th style="cursor: pointer;">cpu</th>#}
+{#                    <th style="cursor: pointer;">内存</th>#}
+{#                    <th style="cursor: pointer;">延时</th>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机一</td>#}
+{#                    <td>91%</td>#}
+{#                    <td>50%</td>#}
+{#                    <td>2nm</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机三</td>#}
+{#                    <td>95%</td>#}
+{#                    <td>50%</td>#}
+{#                    <td>2nm</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机六</td>#}
+{#                    <td>97%</td>#}
+{#                    <td>50%</td>#}
+{#                    <td>2nm</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机九</td>#}
+{#                    <td>89%</td>#}
+{#                    <td>50%</td>#}
+{#                    <td>2nm</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机七</td>#}
+{#                    <td>100%</td>#}
+{#                    <td>50%</td>#}
+{#                    <td>2nm</td>#}
+{#                </tr>#}
+{#            </table>#}
+{#        </div>#}
+{#        <div id="network-speed-top">#}
+{#            <div class="panel-heading" style="background: blue;text-align: center">网络流速Top</div>#}
+{#            <table id="speed" class="table table-striped" style="border: none">#}
+{#                <tr>#}
+{#                    <th>主机</th>#}
+{#                    <th>端口</th>#}
+{#                    <th>出向流速</th>#}
+{#                    <th>入向流速</th>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机一</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机二</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机三</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机四</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机五</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{##}
+{#            </table>#}
+{#        </div>#}
+{#        <div id="latest-warning">#}
+{#            <div class="panel-heading" style="background: blue;text-align: center">最新网络告警时间</div>#}
+{#            <table id="speed" class="table table-striped" style="border: none">#}
+{#                <tr>#}
+{#                    <th>告警设备</th>#}
+{#                    <th>告警事件</th>#}
+{#                    <th>告警时间</th>#}
+{#                    <th>持续时长</th>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机一</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机二</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机三</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机四</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td>主机五</td>#}
+{#                    <td>G1/0/1</td>#}
+{#                    <td>1000</td>#}
+{#                    <td>1000</td>#}
+{#                </tr>#}
+{##}
+{#            </table>#}
+{#        </div>#}
+    </div>
+
+{#    <script>#}
+{##}
+{#        $(function () {#}
+{##}
+{#            require.config({#}
+{#                paths: {#}
+{#                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'#}
+{#                }#}
+{#            });#}
+{#            // 使用#}
+{#            require(#}
+{#                [#}
+{#                    'echarts',#}
+{#                    'echarts/chart/bar'#}
+{#                ],#}
+{#                function (ec) {#}
+{#                    var myChart1 = ec.init(document.getElementById('network-class'));#}
+{#                    var option = {#}
+{#                        title: {#}
+{#                            text: '网络设备分类数量',#}
+{#                            left: 'right'#}
+{#                        },#}
+{#                        xAxis: {#}
+{#                            type: 'category',#}
+{#                            data: ['防火墙', '路由器', '交换机', '负载均衡', '其他']#}
+{#                        },#}
+{#                        yAxis: {#}
+{#                            type: 'value'#}
+{#                        },#}
+{#                        series: [{#}
+{#                            data: [120, 200, 150, 80, 70],#}
+{#                            type: 'bar'#}
+{#                        }]#}
+{#                    };#}
+{#                    myChart1.setOption(option);#}
+{#                }#}
+{#            );#}
+{#        })#}
+{##}
+{##}
+{#    </script>#}
+{##}
+{#     <script>#}
+{#        $(function(){#}
+{##}
+{#					var myChart = echarts.init(document.getElementById('main'));#}
+{#					option = {#}
+{#    title: {#}
+{#        text: 'Graph 简单示例'#}
+{#    },#}
+{#    tooltip: {#}
+{#    	    trigger: 'item',#}
+{#            formatter: '{b},hostname:host1,ip:10.0.0.1'#}
+{#    },#}
+{#    animationDurationUpdate: 1500,#}
+{#    animationEasingUpdate: 'quinticInOut',#}
+{#    series : [#}
+{#        {#}
+{#            type: 'graph',#}
+{#            layout: 'none',#}
+{#            symbolSize: 50,#}
+{#            roam: true,#}
+{#            label: {#}
+{#                normal: {#}
+{#                    show: true#}
+{#                }#}
+{#            },#}
+{#            edgeSymbol: ['circle', 'arrow'],#}
+{#            edgeSymbolSize: [4, 10],#}
+{#            edgeLabel: {#}
+{#                normal: {#}
+{#                    textStyle: {#}
+{#                       fontSize: 20#}
+{#                    }#}
+{#                }#}
+{#            },#}
+{#            data: [{#}
+{##}
+{#              name:'PE-1',#}
+{#              value: 0.5,#}
+{##}
+{##}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://{% static 'img/luyouqi.png' %}',#}
+{#              symbolSize: [40, 40],#}
+{#              x:200,#}
+{#              y:0#}
+{#            },#}
+{#            {#}
+{##}
+{#              name:'PE-2',#}
+{#              value: 0.1,#}
+{##}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://{% static 'img/luyouqi.png' %}',#}
+{#              symbolSize: [40, 40],#}
+{#              x:400,#}
+{#              y:0#}
+{#            },#}
+{#            {#}
+{##}
+{#              name:'CE-1',#}
+{#              value: 0.2,#}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://{% static 'img/jiaohuanji.png' %}',#}
+{#              symbolSize: [40, 40],#}
+{#              x:150,#}
+{#              y:70#}
+{#            },#}
+{#             {#}
+{##}
+{#              name:'CE-2',#}
+{#              value: 0.3,#}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://{% static 'img/jiaohuanji.png' %}',#}
+{#              symbolSize: [40, 40],#}
+{#              x:250,#}
+{#              y:70#}
+{#            },#}
+{#             {#}
+{##}
+{#              name:'CE-3',#}
+{#              value: 0.5,#}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://{% static 'img/jiaohuanji.png' %}',#}
+{#              symbolSize: [40, 40],#}
+{#              x:350,#}
+{#              y:70#}
+{#            },#}
+{#             {#}
+{##}
+{#              name:'CE-4',#}
+{#              value: 0.6,#}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://{% static 'img/jiaohuanji.png' %}',#}
+{#              symbolSize: [40, 40],#}
+{#              x:450,#}
+{#              y:70#}
+{#            },#}
+{#             {#}
+{##}
+{#              name:'TO-ZENGZHI-FH',#}
+{#              value: 0.7,#}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://http://oow60tecr.bkt.clouddn.com/firewall.png',#}
+{#              symbolSize: [40, 40],#}
+{#              x:150,#}
+{#              y:140#}
+{#            },#}
+{#             {#}
+{##}
+{#              name:'B-M1',#}
+{#              value: 0.8,#}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://http://oow60tecr.bkt.clouddn.com/firewall.png',#}
+{#              symbolSize: [40, 40],#}
+{#              x:350,#}
+{#              y:140#}
+{#            },#}
+{#             {#}
+{##}
+{#              name:'B-M2',#}
+{#              value: 0.1,#}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://http://oow60tecr.bkt.clouddn.com/firewall.png',#}
+{#              symbolSize: [40, 40],#}
+{#              x:450,#}
+{#              y:140#}
+{#            }#}
+{#            ],#}
+{#            // links: [],#}
+{#            links: [{#}
+{#                source: 'PE-1',#}
+{#                target: 'CE-1',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#//                      show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'CE-1',#}
+{#                target: 'PE-1',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#//                      show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'PE-1',#}
+{#                target: 'CE-3',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#//                      show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'CE-3',#}
+{#                target: 'PE-1',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#//                      show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'PE-2',#}
+{#                target: 'CE-2',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#//                      show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'CE-2',#}
+{#                target: 'PE-2',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#//                      show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'PE-2',#}
+{#                target: 'CE-4',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#//                      show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'CE-4',#}
+{#                target: 'PE-2',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#//                      show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'CE-1',#}
+{#                target: 'CE-2',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#//                      show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'CE-2',#}
+{#                target: 'CE-1',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#                        // show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#             {#}
+{#                source: 'CE-3',#}
+{#                target: 'CE-4',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#                        // show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#             {#}
+{#                source: 'CE-4',#}
+{#                target: 'CE-3',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#                        // show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#             {#}
+{#                source: 'CE-1',#}
+{#                target: 'TO-ZENGZHI-FH',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#                        // show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#             {#}
+{#                source: 'TO-ZENGZHI-FH',#}
+{#                target: 'CE-1',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#                        // show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'CE-3',#}
+{#                target: 'B-M1',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#                        // show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'B-M1',#}
+{#                target: 'CE-3',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#                        // show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'CE-4',#}
+{#                target: 'B-M2',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#                        // show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            },#}
+{#            {#}
+{#                source: 'B-M2',#}
+{#                target: 'CE-4',#}
+{#                value:60,#}
+{#                tooltip: {#}
+{#    	    		trigger: 'item',#}
+{#            		formatter: '{c}'#}
+{#    				},#}
+{#                label: {#}
+{#                    normal: {#}
+{#                        // show: true#}
+{#                    }#}
+{#                },#}
+{#                lineStyle: {#}
+{#                    normal: { curveness: 0.2 }#}
+{#                }#}
+{#            }#}
+{#            ],#}
+{#            lineStyle: {#}
+{#                normal: {#}
+{#                    opacity: 0.9,#}
+{#                    width: 2,#}
+{#                    curveness: 0#}
+{#                }#}
+{#            }#}
+{#        }#}
+{#    ]#}
+{#};#}
+{#myChart.setOption(option, true);#}
+{#                 })#}
+{#    </script>#}
+{% endblock %}

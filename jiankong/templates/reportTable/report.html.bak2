@@ -1,0 +1,280 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+
+
+            <link rel="stylesheet" type="text/css" href="{% static 'EasyUI/easyui.css' %}"/>
+            <script type="text/javascript" src="{% static 'EasyUI/jquery.min.js' %}"></script>
+            <script type="text/javascript" src="{% static 'EasyUI/jquery.easyui.min.js' %}"></script>
+            <link rel="stylesheet" href="{% static "production/plugins/layui-v2.2.5/layui/css/layui.css" %}"  media="all">
+
+
+		<style>
+			.hide{
+				display: none;
+			}
+			
+			caption{
+				font-size: 30px;
+				font-weight: bold;
+				margin-bottom: 20px;
+			}
+		</style>
+                      <script type="text/javascript">
+//        $(function () {
+//            $('#group').combotree({
+//                valueField: "id", //Value字段
+//                textField: "text", //Text字段
+//                multiple: true,
+//                data: [{
+//                    "id": 0,
+//                    "text": "All",
+//                    "children": {{ grouplist|safe }}
+//                }]
+//                ,
+//                //                url: "tree_data2.json", //数据源
+//                onCheck: function (node, checked) {
+//                    //让全选不显示
+//                    $("#group").combotree("setText", $("#group").combobox("getText").toString().replace("全选,", ""));
+//                },
+//                onClick: function (node, checked) {
+//                    //让全选不显示
+//                    $("#group").combotree("setText", $("#group").combobox("getText").toString().replace("全选,", ""));
+//                }
+//            });
+//
+//               $('#host').combotree({
+//                valueField: "id", //Value字段
+//                textField: "text", //Text字段
+//                multiple: true,
+//                data: [{
+//                    "id": 1,
+//                    "text": "All",
+//                    "children": [{'id': '23297', 'text': 'host1'}, {'id': '23296', 'text': 'host2'}, {
+//                        'id': '23295',
+//                        'text': 'host3'
+//                    }, {'id': '23294', 'text': 'host4'}]
+//                }]
+//                ,
+//                //                url: "tree_data2.json", //数据源
+//                onCheck: function (node, checked) {
+//                    //让全选不显示
+//                    $("#host").combotree("setText", $("#host").combobox("getText").toString().replace("全选,", ""));
+//                },
+//                onClick: function (node, checked) {
+//                    //让全选不显示
+//                    $("#host").combotree("setText", $("#host").combobox("getText").toString().replace("全选,", ""));
+//                }
+//            });
+//
+//
+//        })
+    </script>
+		<!--<script>-->
+			<!--$(function(){-->
+				<!--var $div_li = $(".tab_menu option");-->
+				<!--$div_li.click(function(){-->
+					<!--$(this).addClass("selected").siblings().removeClass("selected");-->
+					<!--var index = $div_li.index(this);-->
+					<!--$(".tab_box > table").eq(index).show().siblings().hide();-->
+				<!--}).hover(function(){-->
+				<!--$(this).addClass("hover");-->
+			<!--},function(){-->
+				<!--$(this).removeClass("hover");-->
+			<!--})-->
+			<!--})-->
+		<!--</script>-->
+
+	</head>
+	<body>
+		<div class="layui-row" style="margin: 40px;">
+
+            <div class="form-inline" style="text-align: center;margin-top: 20px;margin-left: 30%">
+                <div class="form-group" style="float: left;">
+                    <label for="exampleInputName2">群组</label>
+                    <select name="city" lay-verify="" id="group" >
+                        <option></option>
+                        {% for g in grouplist %}
+                            {{g}}
+                            <option value="{{g.id}}">{{g.text}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group" style="float: left;margin-left: 30px">
+                    <label for="exampleInputEmail2">主机</label>
+                    <select id="host" class="form-control" style="width: 205px; height: 24px;">
+                    </select>
+                </div>
+
+   		</div>
+   		<div class="layui-row" style="height: 40px;line-height: 50px;margin-left: 30%">
+            <span>设备类型：</span>
+   			<select  id="dev-type" class="tab_menu" style="font-size: 12px;width: 150px">
+                {% for d in devicelist%}
+                    <option value="{{d.Type_id}}">{{d.TypeName}}</option>
+                {% endfor %}
+                <!--<option type="radio" id="btn1" name="radio" value="物理机" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;">物理机</option>-->
+                <!--<option type="radio" id="btn2" name="radio" value="宿主机" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">宿主机</option>-->
+                <!--<option type="radio" id="btn3" name="radio" value="云主机" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">云主机</option>-->
+                <!--<option type="radio" id="btn4" name="radio" value="交换机" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">交换机</option>-->
+                <!--<option type="radio" id="btn5" name="radio" value="防火墙" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">防火墙</option>-->
+                <!--<option type="radio" id="btn6" name="radio" value="路由器" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">路由器</option>-->
+                <!--<option type="radio" id="btn7" name="radio" value="负载均衡" style="width: 18px;height: 20px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">负载均衡</option>-->
+            </select>
+
+            <select class="form-group" style="margin-top: 5px;width: 50px">
+                <option value="1">日报</option>
+                <option value="2">周报</option>
+                <option value="3">月报</option>
+            </select>
+                <button id="btn-search" type="submit" class="layui-btn layui-btn-sm layui-btn-normal" style="height: 25px;width: 40px; color: #fff;margin-left: 5%">查询</button>
+                <button id="btn-export" type="submit" class="layui-btn layui-btn-sm layui-btn-normal" style="height: 25px;width: 40px; color: #fff;margin-left: 5%">导出</button>
+   		</div>
+
+        </div>
+        <div class="tab_box">
+            <table class="layui-hide" id="test-physical"></table>
+            <table class="layui-hide" id="test-host"></table>
+        </div>
+
+        <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js' %}" charset="utf-8"></script>
+
+        <script>
+            layui.use('table', function(){
+            var table = layui.table;
+
+            //方法级渲染
+            table.render({
+            elem: '#test1'
+            ,url: '/reportTable/serverrpt/'
+            ,cols: [[
+            {checkbox: true, fixed: true}
+            ,{field:'host_ip', title: '设备ip', sort: true, fixed: true}
+            ,{field:'hostname', title: '设备名'}
+            ,{field:'app_name', title: '所属应用'}
+            ,{field:'max_cpu', title: 'CPU最大利用率'}
+            ,{field:'min_cpu', title: 'CPU最小利用率'}
+            ,{field:'avg_cpu', title: 'CPU平均利用率'}
+            ,{field:'max_mem', title: '内存最大利用率'}
+            ,{field:'min_mem', title: '内存最小利用率'}
+            ,{field:'avg_mem', title: '内存平均利用率'}
+            ,{field:'now_disk', title: '磁盘使用率'}
+            ]]
+            ,id: 'testReload'
+            ,page: true
+            ,height: 315
+            });
+
+            var $ = layui.$, active = {
+            reload: function(){
+            var demoReload = $('#demoReload');
+
+            //执行重载
+            table.reload('testReload', {
+            page: {
+            curr: 1 //重新从第 1 页开始
+            }
+            ,where: {
+            key: {
+            id: demoReload.val()
+            }
+            }
+            });
+            }
+            };
+
+            $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+            });
+            });
+            </script>
+
+    <script>
+        $(function(){
+//            组和设备的联动全选
+            $('#group').change(function(){
+                $('#host').empty();
+                var groupname = $('#group option:selected').text()
+                $.ajax({
+                    url:'/reportTable/gethost/',
+                    type:'post',
+                    data:{
+                        groupname:groupname
+                    },
+                    success:function(res){
+                        for(var i=0; i<res.length;i++){
+                             $('#host').append("<option value='"+res[i].hostid+"'>"+res[i].hostname+"</option>")
+                        }
+                    }
+                })
+
+
+            })
+//            查询
+            var searchObj = {
+			        groupid:"",
+					host:"",
+                    devType:""
+				}
+            $('#btn-search').on('click',function () {
+                searchObj.group = $('#group option:selected').val()
+                searchObj.host = $('#host option:selected').text()
+                searchObj.devType = $('#dev-type option:selected').val()
+                console.log(searchObj)
+                getData()
+            })
+            function getData() {
+                var cols;
+                if(searchObj.devType == '0'){
+                    cols=[[ //表头
+						 {field:'hostip', title: '设备ip', }
+						  ,{field:'hostname', title: '设备名'}
+						  ,{field:'group', title: '所属组',}
+						  ,{field:'app', title: '所属应用',}
+						  ,{field:'cpuMax', title: 'CPU最大利用率',}
+						  ,{field:'cpuMin', title: 'CPU最小利用率',}
+						  ,{field:'cpuAver', title: 'CPU平均利用率',}
+						  ,{field:'memoryMax', title: '内存最大利用率',}
+						  ,{field:'memoryMin', title: '内存最小利用率',}
+						  ,{field:'memoryAver', title: '内存平均利用率',}
+						  ,{field:'disk', title: '磁盘空间使用率',}
+						]]
+                }
+//                else if(devType =='宿主机'){
+//
+//                }else if(devType =='云主机'){
+//
+//                }else if(devType =='交换机'){
+//
+//                }else if(devType =='防火墙'){
+//
+//                }else if(devType =='路由器'){
+//
+//                }else if(devType =='负载均衡'){
+//
+//                }
+                layui.use('table', function(){
+					var table = layui.table;
+					//第一个实例
+					table.render({
+						elem: '#test-physical'
+						,url: '/reportTable/reportTable/'
+						,method:'post'
+						//,limit:searchObj.limit
+						,where: searchObj
+						,page: true //开启分页
+						,cols: cols
+						,limits:[5,10,50,100,500]
+					});
+//
+					});
+            }
+
+        })
+    </script>
+	</body>
+</html>

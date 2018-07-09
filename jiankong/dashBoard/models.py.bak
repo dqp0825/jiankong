@@ -1,0 +1,2377 @@
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+
+# Create your models here.
+# class Jk_User_Role(models.Model):
+#     '''
+#     用户角色
+#     标识	Role_Id
+#     角色名称	Role_Name
+#     描述	DESC
+#     '''
+#     Role_Id = models.AutoField(primary_key=True)
+#     Role_Name = models.CharField(max_length=64, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_User(models.Model):
+#     '''
+#         用户信息
+#         标识	id
+#         用户ID	User_id
+#         用户名	name
+#         用户名密码	PWd
+#         用户角色	Role_Id
+#         所属用户组	Groups_id
+#         用户权限	Authority
+#         描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     User_id = models.IntegerField(null=False)
+#     name = models.CharField(max_length=64, null=False)
+#     Pwd = models.CharField(max_length=128, null=False)
+#     Role_Id = models.ForeignKey(Jk_User_Role, max_length=11, null=True,on_delete=models.CASCADE)
+#     Authority = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class JK_Shebei_Group(models.Model):
+#     '''
+#     设备组表
+#     标识	id
+#     组名称	Group_Name
+#     组标记	Group_id
+#     管理人	User_id
+#     描述	DESC
+#     服务端标识	Zabbix_id
+#     '''
+#     Group_Name = models.CharField(max_length=64, null=False)
+#     User_id = models.ForeignKey(Jk_User, null=True,on_delete=models.CASCADE)
+#     Group_id = models.IntegerField(null=True)
+#     Zabbix_id = models.IntegerField(null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Device_Type(models.Model):
+#     '''
+#         设备类型表
+#         设备类型ID
+#         设备类型名称：Server：服务器（物理机/宿主机/云主机/存储）
+#                       Switches:网络设备（交换机/负载均衡/防火墙/路由器）
+#         描述
+#     '''
+#     Type_id = models.IntegerField(null=True)
+#     TypeName = models.CharField(max_length=16, null=False)
+#     TypeDESC = models.CharField(max_length=64, null=True)
+
+
+# class Jk_App_lev(models.Model):
+#     '''
+#         应用级别表
+#         标识	App_lev_id
+#         级别名称	App_lev_Name
+#         描述	Desc
+#     '''
+#     App_lev_id = models.AutoField(primary_key=True)
+#     App_lev_Name = models.CharField(max_length=32, null=False)
+#     Desc = models.CharField(max_length=64, null=True)
+
+
+# class Jk_App(models.Model):
+#     '''
+#         应用表
+#         标识	Application_id
+#         应用名称	AppName
+#         应用级别	App_lev_id
+#         应用管理部门	App_Me_Dm
+#         应用维护部门	App_Mt_Dm
+#         园区	Data_yard
+#         应用管理人	App_admin
+#         应用维护人	App_person
+#         描述	AppDesc
+#     '''
+#     Application_id = models.AutoField(primary_key=True)
+#     AppName = models.CharField(max_length=32, null=False)
+#     App_lev_id = models.ForeignKey(Jk_App_lev,on_delete=models.CASCADE)
+#     App_Me_Dm = models.CharField(max_length=64, null=True)
+#     App_Mt_Dm = models.CharField(max_length=64, null=True)
+#     Data_yard = models.CharField(max_length=64, null=True)
+#     App_admin = models.CharField(max_length=64, null=True)
+#     App_person = models.CharField(max_length=64, null=True)
+#     AppDesc = models.CharField(max_length=64, null=True)
+
+
+# class Jk_Switches(models.Model):
+#     '''
+#         交换机
+#         标识	Switches_Id
+#                 Hostid
+#         交换机名称	SwitchesName
+#         Ip地址	Ip
+#         所属设备组	Group
+#         所属应用	Application
+#         所属用户	User_id
+#         备注	DESC
+#         SNMP状态	Status
+#     '''
+#     Switches_Id = models.AutoField(primary_key=True)
+#     Hostid = models.IntegerField()
+#     SwitchesName = models.CharField(max_length=64, null=False)
+#     Ip = models.CharField(max_length=32, null=True)
+#     Group = models.ForeignKey(JK_Shebei_Group, null=True,on_delete=models.CASCADE)
+#     Application = models.CharField(max_length=32, null=True)
+#     User_id = models.ForeignKey(Jk_User, null=True,on_delete=models.CASCADE)
+#     status = models.CharField(max_length=20, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Storage(models.Model):
+#     '''
+#         存储设备表
+#         存储标识	Storage_Id
+#         存储名称	StorageName
+#         Ip地址	Ip
+#         所属组	Group
+#         所属应用	Application_id
+#         所属用户	User_id
+#         备注	DESC
+#     '''
+#     Storage_Id = models.AutoField(primary_key=True)
+#     Hostid = models.IntegerField()
+#     StorageName = models.CharField(max_length=32, null=False)
+#     Ip = models.CharField(max_length=32, null=True)
+#     Group = models.ForeignKey(JK_Shebei_Group, null=True,on_delete=models.CASCADE)
+#     Application = models.CharField(max_length=32, null=True)
+#     User_id = models.ForeignKey(Jk_User, null=True,on_delete=models.CASCADE)
+#     Agent = models.CharField(max_length=20, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fz(models.Model):
+#     '''
+#    标识	Fz_id
+# 	    Hostid
+#     负载均衡名称	Fz_name
+#     Ip地址	Ip
+#     所属设备组	Group
+#     所属应用	Application
+#     所属用户	User_id
+#     备注	DESC
+#     SNMP状态	Status
+#     '''
+#     Fz_id = models.AutoField(primary_key=True)
+#     Hostid = models.IntegerField()
+#     Fz_name = models.CharField(max_length=64, null=False)
+#     Ip = models.CharField(max_length=32, null=True)
+#     Group = models.ForeignKey(JK_Shebei_Group, null=True,on_delete=models.CASCADE)
+#     Application = models.CharField(max_length=32, null=True)
+#     User_id = models.ForeignKey(Jk_User, null=True,on_delete=models.CASCADE)
+#     status = models.CharField(max_length=20, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Resource_Host(models.Model):
+#     '''
+#     宿主机ID	Resource_Id
+# 	            Hostid
+#     主机名	Resource_Name
+#     主机IP	Ip
+#     所属设备组	Group
+#     所属用户	User_id
+#     集群	ClusterNum
+#     数据中心	Center
+#     所属应用	Application
+#     描述	DESC
+#     Agent状态	Agent
+#     '''
+#     Resource_Id = models.AutoField(primary_key=True)
+#     Hostid = models.IntegerField()
+#     Resource_Name = models.CharField(max_length=32, null=False)
+#     Ip = models.CharField(max_length=32, null=True)
+#     Group = models.ForeignKey(JK_Shebei_Group, null=True,on_delete=models.CASCADE)
+#     User_id = models.ForeignKey(Jk_User, null=True,on_delete=models.CASCADE)
+#     ClusterNum = models.CharField(max_length=32, null=True)
+#     Center = models.CharField(max_length=32, null=True)
+#     Application = models.CharField(max_length=32, null=True)
+#     Agent = models.CharField(max_length=20, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Cloud_Device(models.Model):
+#     '''
+#     云主机表
+#     云主机ID	Cloud _Id
+#     云主机名称	CloudDevice Name
+#     集群编号	ClusterNum
+#     所属应用	Application_id
+#     所属用户	User_id
+#     主机IP	Ip
+#     所属组	Group
+#     所属园区	Part
+#     所属数据中心	Center
+#     描述	DESC
+#     '''
+#     Cloud_Id = models.AutoField(primary_key=True)
+#     Hostid = models.IntegerField()
+#     CloudDeviceName = models.CharField(max_length=32, null=False)
+#     ClusterNum = models.CharField(max_length=32, null=True)
+#     Application = models.CharField(max_length=32, null=True)
+#     User_id = models.ForeignKey(Jk_User, null=True,on_delete=models.CASCADE)
+#     Ip = models.CharField(max_length=32, null=True)
+#     Group = models.ForeignKey(JK_Shebei_Group, null=True,on_delete=models.CASCADE)
+#     Part = models.CharField(max_length=32, null=True)
+#     Center = models.CharField(max_length=32, null=True)
+#     Agent = models.CharField(max_length=20, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Device_Lev(models.Model):
+#     '''
+#         设备型号表
+#         主键名	PK_Jk_Device_ Lev      主键字段	DeviceLev_id
+#         标识	DeviceLev_id
+#         设备型号名称	DeviceLevName
+#         描述	DeviceLevDesc
+#     '''
+#     DeviceLev_id = models.AutoField(primary_key=True)
+#     DeviceLevName = models.CharField(max_length=32, null=False)
+#     DeviceLevDesc = models.CharField(max_length=64, null=True)
+
+
+# class Jk_Routing(models.Model):
+#     '''
+#         路由器
+#        标识	Routing_Id
+# 	        Hostid
+#         路由器名称	RoutingName
+#         Ip地址	Ip
+#         所属设备组	Group
+#         所属应用	Application
+#         所属用户	User_id
+#         备注	DESC
+#         SNMP状态	Status
+#     '''
+#     Routing_Id = models.AutoField(primary_key=True)
+#     Hostid = models.IntegerField()
+#     RoutingName = models.CharField(max_length=64, null=False)
+#     Ip = models.CharField(max_length=32, null=True)
+#     Group = models.ForeignKey(JK_Shebei_Group, null=True,on_delete=models.CASCADE)
+#     Application = models.CharField(max_length=32, null=True)
+#     User_id = models.ForeignKey(Jk_User, null=True,on_delete=models.CASCADE)
+#     status = models.CharField(max_length=20, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Server(models.Model):
+#     '''
+#         物理机表
+#         物理机标识	Server_Id
+#                      Hostid
+#         物理机名称	ServerName
+#         厂商	Vendor_Id
+#         设备类别	Type_id
+#         设备型号	DeviceLev_id
+#         设备IP	     IP
+#         设备数量	Num
+#         所属设备组	Group
+#         所属应用	Application_id
+#         所属用户	User_id
+#         描述	DESC
+#         Agent状态	Agent
+#     '''
+#     Server_id = models.AutoField(primary_key=True)
+#     Hostid = models.IntegerField()
+#     ServerName = models.CharField(max_length=16, null=False)
+#     Vendor_id = models.IntegerField(null=True)
+#
+#     Type_id = models.ForeignKey(Jk_Device_Type, null=True,on_delete=models.CASCADE)
+#     DeviceLev_id = models.ForeignKey(Jk_Device_Lev, null=True,on_delete=models.CASCADE)
+#
+#     IP = models.CharField(max_length=64, null=True)
+#     Num = models.IntegerField(null=True)
+#     Group = models.ForeignKey(JK_Shebei_Group, null=True,on_delete=models.CASCADE)
+#
+#     Application = models.CharField(max_length=32, null=True)
+#     User_id = models.ForeignKey(Jk_User, null=True,on_delete=models.CASCADE)
+#     Agent = models.CharField(max_length=20, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fw(models.Model):
+#     '''
+#     防火墙
+#     标识	Fw_id
+# 	        Hostid
+#     负载均衡名称	Fw_name
+#     Ip地址	Ip
+#     所属设备组	Group
+#     所属应用	Application
+#     所属用户	User_id
+#     备注	DESC
+#     SNMP状态	Status
+#     '''
+#     Fw_id = models.AutoField(primary_key=True)
+#     Hostid = models.IntegerField()
+#     Fw_name = models.CharField(max_length=64, null=False)
+#     Ip = models.CharField(max_length=32, null=True)
+#     Group = models.ForeignKey(JK_Shebei_Group, null=True,on_delete=models.CASCADE)
+#     Application = models.CharField(max_length=32, null=True)
+#     User_id = models.ForeignKey(Jk_User, null=True,on_delete=models.CASCADE)
+#     status = models.CharField(max_length=20, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_alert_lev(models.Model):
+#     '''
+#         告警级别表
+#         告警级别	Alert_lev_id
+#         级别名称	LevName
+#         描述	DESC
+#     '''
+#     Alert_lev_id = models.AutoField(primary_key=True)
+#     LevName = models.CharField(max_length=16, null=False)
+#     DESC = models.CharField(max_length=64, null=True)
+
+
+# class Jk_Fault(models.Model):
+#     '''
+#         故障等级时限表Jk_Fault
+#         故障等级ID	Fault_id
+#         故障等级	Fault_name
+#         描述	DESC
+#     '''
+#     Fault_id = models.AutoField(primary_key=True)
+#     Fault_name = models.CharField(max_length=64, null=False)
+#     DESC = models.CharField(max_length=64, null=True)
+
+
+# class Jk_alert(models.Model):
+#     '''
+#         告警信息表
+#         告警信息ID	Alert_id
+#         告警级别	Alert_lev_id
+#         所属应用	Application
+#         所属设备	Type_id
+#         事件Id      id
+#         zabbix_id   zabbix_id
+#         监控项	    item
+#         IP	        Type_ip
+#         告警内容	message
+#         发生时间	Oc_time
+#         受理时间	A_time
+#         通告人	    Sendto
+#         受理结果 	Status
+#         描述	    DESC
+#     '''
+#     Alert_id = models.AutoField(primary_key=True)
+#     Alert_lev_id = models.ForeignKey(Jk_alert_lev, null=False,on_delete=models.CASCADE)
+#     Application = models.CharField(max_length=32, null=True)
+#     item = models.CharField(max_length=128, null=True)
+#     eventid = models.CharField(max_length=20, null=True)
+#     zabbix_id = models.IntegerField()
+#     Type = models.CharField(max_length=126, null=True)
+#     Typename = models.CharField(max_length=128, null=True)
+#     Type_ip = models.CharField(max_length=20, null=False)
+#     message = models.TextField(null=True)
+#     Oc_time = models.IntegerField(null=False)
+#     A_time = models.IntegerField(null=True)
+#
+#     Sendto = models.CharField(max_length=64, null=True)
+#     Status = models.IntegerField(null=True)
+#     DESC = models.CharField(max_length=64, null=True)
+
+
+# class Jk_Alert_His(models.Model):
+#     '''
+#     告警信息历史表
+#     告警信息ID	Alert_His_id
+#     告警级别	Alert_lev_id
+#     所属应用	Application_id
+#     所属设备	Type_id
+#     IP          Type_ip
+#     告警内容	message
+#     发生时间	Oc_time
+#     结束时间	End_time
+#     受理时间	A_time
+#     通告人	Sendto
+#     受理结果 	Status
+#     处理人	Deal_Person
+#     处理详情	Deal_Details
+#     处理完成时间	Deal_End_time
+#     描述	DESC
+#     '''
+#     Alert_His_id = models.AutoField(primary_key=True)
+#     Alert_lev_id = models.ForeignKey(Jk_alert_lev, max_length=8, null=False,on_delete=models.CASCADE)
+#     Application = models.CharField(max_length=126, null=True)
+#     Type = models.CharField(max_length=32, null=True)
+#     eventid = models.CharField(max_length=20, null=True)
+#     zabbix_id = models.IntegerField()
+#     Typename = models.CharField(max_length=128, null=True)
+#     item = models.CharField(max_length=128, null=True)
+#     Type_ip = models.CharField(max_length=20, null=False)
+#     message = models.TextField(null=False)
+#     Oc_time = models.IntegerField(null=False)
+#     End_time = models.IntegerField(null=False)
+#     A_time = models.IntegerField(null=True)
+#     Sendto = models.CharField(max_length=64, null=False)
+#     Status = models.IntegerField(null=True)
+#     Deal_Person = models.CharField(max_length=64, null=True)
+#     Deal_Details = models.TextField(null=True)
+#     Deal_End_time = models.IntegerField(null=True)
+#     DESC = models.CharField(max_length=64, null=True)
+
+
+# class Jk_Pf(models.Model):
+#     '''
+#         监控表
+#         监控标识	Pf_Id
+#         服务器设备ID	Server_Id
+#          应用ID	Application_id
+#         云主机ID	Cloud _Id
+#         宿主机ID	Resource_Id
+#         存储ID	Storage_Id
+#         交换机ID	Switches_Id
+#         路由器ID	Routing_Id
+#         负载均衡ID	Fz_Id
+#         发生时间	Oc_time
+#         结束时间	End_time
+#         监控项	Pf_Ids _Id
+#         触发器 	trigger
+#         键值	Key_Value
+#         采集时间间隔	Interval_Time
+#         历史记录	His_record
+#         监控启用状态	Pf_Status
+#         描述	DESC
+#     '''
+#     Pf_Id = models.IntegerField(primary_key=True)
+#     Server_Id = models.ForeignKey(Jk_Server,max_length=8)
+#     Application_id = models.ForeignKey(Jk_App, max_length=8)
+#     Cloud_Id = models.ForeignKey(Jk_Cloud_Device, max_length=8)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8)
+#     Storage_Id = models.ForeignKey(Jk_Storage, max_length=8)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8)
+#     Fz_Id = models.ForeignKey(Jk_Fz, max_length=8)
+#     Oc_time = models.DateTimeField(null=False)
+#     End_time = models.DateTimeField(null=False)
+#     Pf_Ids_Id = models.CharField(max_length=64, null=True)
+#     trigger = models.CharField(max_length=64, null=True)
+#     Key_Value = models.CharField(max_length=64, null=False)
+#     Interval_Time = models.IntegerField(null=False)
+#     His_record = models.CharField(max_length=256, null=True)
+#     Pf_Status = models.CharField(max_length=64, null=False)
+#     DESC = models.CharField(max_length=256, null=True)
+
+
+# class Jk_Fcpu_Pf_Ids(models.Model):
+#     '''
+#         物理机CPU监控表
+#         标识	Id
+#         CPU监控项	Name
+#         设备名称	Server_Id
+#         时间戳	Clock
+#         数值	Value
+#          描述	DESC
+#     '''
+#     Name = models.CharField(max_length=64, null=False)
+#     Server_Id = models.ForeignKey(Jk_Server, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=512, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Ycpu_Pf_Ids(models.Model):
+#     '''
+#         云主机CPU监控表
+#         Id	int（64）
+#         Name	Varchar(64)
+#         Cloud _Id	int（8）
+#         Clock	Varchar(64)
+#         数值     Value
+#         DESC	Varchar(128)
+#     '''
+#     Name = models.CharField(max_length=64, null=False)
+#     Cloud_Id = models.ForeignKey(Jk_Cloud_Device, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=512, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Scpu_Pf_Ids(models.Model):
+#     '''
+#     宿主机CPU监控表
+#     Id	int（64）
+#     Name	Varchar(64)
+#     Resource_Id	int（8）
+#     Clock	Varchar(64)
+#     数值      Value
+#     DESC	Varchar(128)
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=64, null=False)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=512, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Ccpu_Pf_Ids(models.Model):
+#     '''
+#         存储表CPU监控表
+#         标识	Id
+#         CPU监控项	Name
+#         设备名称	Storage_Id
+#         时间戳	Clock
+#         数值   Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=64, null=False)
+#     Storage_Id = models.ForeignKey(Jk_Storage, max_length=8)
+#     Clock = models.CharField(max_length=64, null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Jcpu_Pf_Ids(models.Model):
+#     '''
+#         交换机CPU监控表
+#         标识	Id
+#         CPU监控项	Name
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         数值     Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=64, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Lcpu_Pf_Ids(models.Model):
+#     '''
+#         路由器CPU监控表
+#         标识	Id
+#         CPU监控项	Name
+#         设备名称	Routing_Id
+#         时间戳	Clock
+#         数值   Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fzcpu_Pf_Ids(models.Model):
+#     '''
+#         负载均衡CPU监控表
+#         标识	Id
+#         CPU监控项	Name
+#         设备名称	Fz_id
+#         时间戳	Clock
+#         数值    Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fwcpu_Pf_Ids(models.Model):
+#     '''
+#         防火墙CPU监控表
+#         标识	Id
+#         防火墙监控项	Name
+#         设备名称	Fw_id
+#         时间戳	Clock
+#         数值     Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fw_id = models.ForeignKey(Jk_Fw, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fmem_Pf_Ids(models.Model):
+#     '''
+#         物理机内存监控表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Server_Id
+#         时间戳	Clock
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Server_Id = models.ForeignKey(Jk_Server, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Ymem_Pf_Ids(models.Model):
+#     '''
+#         云主机内存监控表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Cloud _Id
+#         时间戳	Clock
+#         数值    Value
+#         描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Cloud_Id = models.ForeignKey(Jk_Cloud_Device, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Smem_Pf_Ids(models.Model):
+#     '''
+#         宿主机内存监控表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Resource_Id
+#         时间戳	Clock
+#         数值    Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Cmem_Pf_Ids(models.Model):
+#     '''
+#         存储内存监控表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Storage_Id
+#         时间戳	Clock
+#         键值	Key_Value
+#         数值    Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Storage_Id = models.ForeignKey(Jk_Storage, max_length=8)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Jmem_Pf_Ids(models.Model):
+#     '''
+#         交换机内存监控表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         数值    Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Lmem_Pf_Ids(models.Model):
+#     '''
+#         路由器内存监控表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Routing_Id
+#         时间戳	Clock
+#         数值  Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fzmem_Pf_Ids(models.Model):
+#     '''
+#         负载均衡内存监控表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Fz_id
+#         时间戳	Clock
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fwmem_Pf_Ids(models.Model):
+#     '''
+#         防火墙内存监控表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Fw_id
+#         时间戳	Clock
+#         数值     Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fw_id = models.ForeignKey(Jk_Fw, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fdisk_Pf_Ids(models.Model):
+#     '''
+#         物理机磁盘监控表
+#         标识	Id
+#         磁盘监控项	Name
+#         设备名称	Server_Id
+#         时间戳	Clock
+#         数值    Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Server_Id = models.ForeignKey(Jk_Server, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Sdisk_Pf_Ids(models.Model):
+#     '''
+#         宿主机磁盘监控表
+#         标识	Id
+#         文件系统监控项	Name
+#         设备名称	Resource_Id
+#         时间戳	Clock
+#         数值    Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Ydisk_Pf_Ids(models.Model):
+#     '''
+#         云主机磁盘监控表
+#         标识	Id
+#         文件系统监控项	Name
+#         设备名称	CLoud_Id
+#         时间戳	Clock
+#         数值    Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Cloud_Id = models.ForeignKey(Jk_Cloud_Device, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=1024, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Ftf_Pf_Ids(models.Model):
+#     '''
+#     物理机网络流量监控表
+#        标识	Id
+#         设备名称	Server_Id
+#         时间戳	Clock
+#         入流量数值	In_Value
+#         出流量数值	Out_Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Server_Id = models.ForeignKey(Jk_Server, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Name = models.CharField(max_length=128, null=True)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ytf_Pf_Ids(models.Model):
+#     '''
+#     云主机网络流量监控表
+#      标识	Id
+#     设备名称	Cloud_Id
+#     时间戳	Clock
+#     入流量数值	In_Value
+#     出流量数值	Out_Value
+#     描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Cloud_Id = models.ForeignKey(Jk_Cloud_Device, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Name = models.CharField(max_length=128, null=True)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Stf_Pf_Ids(models.Model):
+#     '''
+#         宿主机网络流量监控表
+#         标识	Id
+#         设备名称	Cloud_Id
+#         时间戳	Clock
+#         入流量数值	In_Value
+#         出流量数值	Out_Value
+#         描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Name = models.CharField(max_length=128, null=True)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ctf_Pf_Ids(models.Model):
+#     '''
+#         存储网络流量监控表
+#         标识	Id
+#         设备名称	Storage_Id
+#         时间戳	Clock
+#         入流量数值	In_Value
+#         出流量数值	Out_Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Storage_Id = models.ForeignKey(Jk_Storage, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Name = models.CharField(max_length=128, null=True)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Jtf_Pf_Ids(models.Model):
+#     '''
+#         交换机网络流量监控表
+#         标识	Id
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         入流量数值	In_Value
+#         出流量数值	Out_Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Name = models.CharField(max_length=128, null=True)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ltf_Pf_Ids(models.Model):
+#     '''
+#         路由器网络流量监控表
+#           标识	Id
+#         设备名称	Routing_Id
+#         时间戳	Clock
+#         入流量数值	In_Value
+#         出流量数值	Out_Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Name = models.CharField(max_length=128, null=True)
+#     Value = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Jdl_Pf_Ids(models.Model):
+#     '''
+#         交换机时延监控表
+#         标识	Id
+#         时延监控项	Name
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         数值	Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=236, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ldl_Pf_Ids(models.Model):
+#     '''
+#         路由器时延监控表
+#         标识	Id
+#         时延监控项	Name
+#         设备名称	Routing_Id
+#         时间戳	Clock
+#         数值	Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fzconn_Pf_Ids(models.Model):
+#     '''
+#     负载均衡实连接监控表
+#     标识	Id
+#     实连接监控项	Name
+#     设备名称	Fz_id
+#     时间戳	Clock
+#     数值	Value
+#      描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fzxconn_Pf_Ids(models.Model):
+#     '''
+#     负载均衡虚连接数监控表
+#     标识	Id
+#     虚连接数监控项	Name
+#     设备名称	Fz_id
+#     时间戳	Clock
+#     数值	Value
+#      描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Jping_Pf_Ids(models.Model):
+#     '''
+#     交换机ping监控表
+#     标识	Id
+#     ping监控项	Name
+#     设备名称	Switches_Id
+#     时间戳	Clock
+#     状态	Value
+#      描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Lping_Pf_Ids(models.Model):
+#     '''
+#     路由器ping监控表
+#     标识	Id
+#     CPU监控项	Name
+#     设备名称	Routing_Id
+#     时间戳	Clock
+#     状态	Value
+#     描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fzping_Pf_Ids(models.Model):
+#     '''
+#     负载均衡ping监控表
+#     标识	Id
+#     ping监控项	Name
+#     设备名称	Fz_id
+#     时间戳	Clock
+#     状态	Value
+#      描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fwping_Pf_Ids(models.Model):
+#     '''
+#         防火墙ping监控表
+#         标识	Id
+#         防火墙连通监控项	Name
+#         设备名称	Fw_id
+#         时间戳	Clock
+#         状态	Value
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fw_id = models.ForeignKey(Jk_Fw, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Jnet_Pf_Ids(models.Model):
+#     '''
+#     交换机带宽利用率监控表
+#    标识	Id
+#     带宽利用率监控项	Name
+#     设备名称	Switches_Id
+#     时间戳	Clock
+#     数值	Value
+#      描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Lnet_Pf_Ids(models.Model):
+#     '''
+#     路由器带宽利用率监控表
+#       标识	Id
+#     带宽利用率监控项	Name
+#     设备名称	Routing_Id
+#     时间戳	Clock
+#     数值	Value
+#      描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_FwSes_Pf_Ids(models.Model):
+#     '''
+#     防火墙会话数监控表
+#    标识	Id
+#     会话数监控项	Name
+#     设备名称	Fw_id
+#     时间戳	Clock
+#     数值	Value
+#     描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fw_id = models.ForeignKey(Jk_Fw, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Value = models.CharField(max_length=20, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fcpu(models.Model):
+#     '''
+#     物理机CPU均值表
+#     标识	Id
+#     CPU监控项	Name
+#     设备名称	Server_Id
+#     时间戳	Clock
+#     CPU最小值	Min_Cpu
+#     CPU平均值	AVG_Cpu
+#     CPU最大值	Max_Cpu
+#      描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Server_Id = models.ForeignKey(Jk_Server, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ycpu(models.Model):
+#     '''
+#     云主机CPU均值表
+#     标识	Id
+#     CPU监控项	Name
+#     设备名称	Cloud _Id
+#     时间戳	Clock
+#     CPU最小值	Min_Cpu
+#     CPU平均值	AVG_Cpu
+#     CPU最大值	Max_Cpu
+#      描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Cloud_Id = models.ForeignKey(Jk_Cloud_Device, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Scpu(models.Model):
+#     '''
+#         宿主机CPU均值表
+#         标识	Id
+#         CPU监控项	Name
+#         设备名称	Resource_Id
+#         时间戳	Clock
+#         CPU最小值	Min_Cpu
+#         CPU平均值	AVG_Cpu
+#         CPU最大值	Max_Cpu
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Jcpu(models.Model):
+#     '''
+#         交换机CPU趋势表
+#         标识	Id
+#         CPU监控项	Name
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         CPU最小值	Min_Cpu
+#         CPU平均值	AVG_Cpu
+#         CPU最大值	Max_Cpu
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Lcpu(models.Model):
+#     '''
+#     路由器CPU趋势表
+#     标识	Id
+#     CPU监控项	Name
+#     设备名称	Routing_Id
+#     时间戳	Clock
+#     CPU最小值	Min_Cpu
+#     CPU平均值	AVG_Cpu
+#     CPU最大值	Max_Cpu
+#      描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fzcpu(models.Model):
+#     '''
+#         负载均衡CPU趋势表
+#         标识	Id
+#         CPU监控项	Name
+#         设备名称	Fz_id
+#         时间戳	Clock
+#         CPU最小值	Min_Cpu
+#         CPU平均值	AVG_Cpu
+#         CPU最大值	Max_Cpu
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fwcpu(models.Model):
+#     '''
+#         防火墙CPU趋势表
+#         标识	Id
+#         防火墙监控项	Name
+#         设备名称	Fw_id
+#         时间戳	Clock
+#         CPU最小值	Min_Cpu
+#         CPU平均值	AVG_Cpu
+#         CPU最大值	Max_Cpu
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fw_id = models.ForeignKey(Jk_Fw, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fmem(models.Model):
+#     '''
+#         物理机内存趋势表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Server_Id
+#         时间戳	Clock
+#         内存最小值	Min_Mem
+#         内存平均值	AVG_Mem
+#         内存最大值	Max_Mem
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Server_Id = models.ForeignKey(Jk_Server, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Mem = models.CharField(max_length=128, null=True)
+#     AVG_Mem = models.CharField(max_length=128, null=True)
+#     Max_Mem = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ymem(models.Model):
+#     '''
+#         云主机内存均值表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Cloud _Id
+#         时间戳	Clock
+#         内存最小值	Min_Mem
+#         内存平均值	AVG_Mem
+#         内存最大值	Max_Mem
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Cloud_Id = models.ForeignKey(Jk_Cloud_Device, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Mem = models.CharField(max_length=128, null=True)
+#     AVG_Mem = models.CharField(max_length=128, null=True)
+#     Max_Mem = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Smem(models.Model):
+#     '''
+#         宿主机内存均值表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Resource_Id
+#         时间戳	Clock
+#           内存最小值	Min_Mem
+#         内存平均值	AVG_Mem
+#         内存最大值	Max_Mem
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Mem = models.CharField(max_length=128, null=True)
+#     AVG_Mem = models.CharField(max_length=128, null=True)
+#     Max_Mem = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Jmem(models.Model):
+#     '''
+#         交换机内存趋势表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         内存最小值	Min_Mem
+#         内存平均值	AVG_Mem
+#         内存最大值	Max_Mem
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Mem = models.CharField(max_length=128, null=True)
+#     AVG_Mem = models.CharField(max_length=128, null=True)
+#     Max_Mem = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Lmem(models.Model):
+#     '''
+#         路由器内存趋势表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Routing_Id
+#         时间戳	Clock
+#          内存最小值	Min_Mem
+#         内存平均值	AVG_Mem
+#         内存最大值	Max_Mem
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Mem = models.CharField(max_length=128, null=True)
+#     AVG_Mem = models.CharField(max_length=128, null=True)
+#     Max_Mem = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fzmem(models.Model):
+#     '''
+#         负载均衡内存趋势表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Fz_id
+#         时间戳	Clock
+#           内存最小值	Min_Mem
+#         内存平均值	AVG_Mem
+#         内存最大值	Max_Mem
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Mem = models.CharField(max_length=128, null=True)
+#     AVG_Mem = models.CharField(max_length=128, null=True)
+#     Max_Mem = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fwmem(models.Model):
+#     '''
+#         防火墙内存趋势表
+#         标识	Id
+#         内存监控项	Name
+#         设备名称	Fw_id
+#         时间戳	Clock
+#         内存最小值	Min_Mem
+#         内存平均值	AVG_Mem
+#         内存最大值	Max_Mem
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fw_id = models.ForeignKey(Jk_Fw, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Mem = models.CharField(max_length=128, null=True)
+#     AVG_Mem = models.CharField(max_length=128, null=True)
+#     Max_Mem = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fdisk(models.Model):
+#     '''
+#         物理机磁盘趋势表
+#         标识	Id
+#         磁盘监控项	Name
+#         设备名称	Server_Id
+#         时间戳	Clock
+#         磁盘最小值	Min_Disk
+#         磁盘平均值	AVG_Disk
+#         磁盘最大值	Max_Disk
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Server_Id = models.ForeignKey(Jk_Server, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Disk = models.CharField(max_length=128, null=True)
+#     AVG_Disk = models.CharField(max_length=128, null=True)
+#     Max_Disk = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Sdisk(models.Model):
+#     '''
+#         宿主机磁盘趋势表
+#         标识	Id
+#         文件系统监控项	Name
+#         设备名称	Resource_Id
+#         时间戳	Clock
+#        磁盘最小值	Min_Disk
+#         磁盘平均值	AVG_Disk
+#         磁盘最大值	Max_Disk
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Disk = models.CharField(max_length=128, null=True)
+#     AVG_Disk = models.CharField(max_length=128, null=True)
+#     Max_Disk = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ydisk(models.Model):
+#     '''
+#         云主机磁盘趋势表
+#         标识	Id
+#         文件系统监控项	Name
+#         设备名称	Cloud
+#         时间戳	Clock
+#        磁盘最小值	Min_Disk
+#         磁盘平均值	AVG_Disk
+#         磁盘最大值	Max_Disk
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Cloud_id = models.ForeignKey(Jk_Cloud_Device, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Disk = models.CharField(max_length=128, null=True)
+#     AVG_Disk = models.CharField(max_length=128, null=True)
+#     Max_Disk = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ftf(models.Model):
+#     '''
+#         物理机网络流量均值表
+#         标识	Id
+#         设备名称	Server_Id
+#         时间戳	Clock
+#         监控项名    Name
+#         网络流量入流量最小	Min_Int_In
+#         网络流量出流量最小	Min_Int_Out
+#         网络流量入流量平均值	AVG_Int_In
+#         网络流量出流量平均值	AVG_Int_Out
+#         网络流量入流量最大值	Max_Int_In
+#         网络流量出流量最大值	Max_Int_Out
+#          描述	DESC
+#     '''
+#     id = models.AutoField(primary_key=True)
+#     Server_Id = models.ForeignKey(Jk_Server, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Name = models.CharField(max_length=256, null=True)
+#     Min_Value = models.CharField(max_length=256, null=True)
+#     Min_Value = models.CharField(max_length=256, null=True)
+#     AVG_Value = models.CharField(max_length=256, null=True)
+#     AVG_Value = models.CharField(max_length=256, null=True)
+#     Max_Value = models.CharField(max_length=256, null=True)
+#     Max_Value = models.CharField(max_length=256, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ytf(models.Model):
+#     '''
+#         云主机网络流量均值表
+#           标识	Id
+#         设备名称	Cloud _Id
+#         时间戳	Clock
+#         监控项名    Name
+#         网络流量入流量最小	Min_Int_In
+#         网络流量出流量最小	Min_Int_Out
+#         网络流量入流量平均值	AVG_Int_In
+#         网络流量出流量平均值	AVG_Int_Out
+#         网络流量入流量最大值	Max_Int_In
+#         网络流量出流量最大值	Max_Int_Out
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Cloud_Id = models.ForeignKey(Jk_Cloud_Device, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Name = models.CharField(max_length=256, null=True)
+#     Min_Value = models.CharField(max_length=256, null=True)
+#     Min_Value = models.CharField(max_length=256, null=True)
+#     AVG_Value = models.CharField(max_length=256, null=True)
+#     AVG_Value = models.CharField(max_length=256, null=True)
+#     Max_Value = models.CharField(max_length=256, null=True)
+#     Max_Value = models.CharField(max_length=256, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Stf(models.Model):
+#     '''
+#         宿主机网络流量均值表
+#           标识	Id
+#         设备名称	Resource_Id
+#         监控项名    Name
+#         时间戳	Clock
+#         网络流量入流量最小	Min_Int_In
+#         网络流量出流量最小	Min_Int_Out
+#         网络流量入流量平均值	AVG_Int_In
+#         网络流量出流量平均值	AVG_Int_Out
+#         网络流量入流量最大值	Max_Int_In
+#         网络流量出流量最大值	Max_Int_Out
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Name = models.CharField(max_length=256, null=True)
+#     Min_Value = models.CharField(max_length=256, null=True)
+#     Min_Value = models.CharField(max_length=256, null=True)
+#     AVG_Value = models.CharField(max_length=256, null=True)
+#     AVG_Value = models.CharField(max_length=256, null=True)
+#     Max_Value = models.CharField(max_length=256, null=True)
+#     Max_Value = models.CharField(max_length=256, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ctf(models.Model):
+#     '''
+#         存储网络流量均值表
+#             标识	Id
+#         设备名称	Storage_Id
+#         时间戳	Clock
+#         网络流量入流量最小	Min_Int_In
+#         网络流量出流量最小	Min_Int_Out
+#         网络流量入流量平均值	AVG_Int_In
+#         网络流量出流量平均值	AVG_Int_Out
+#         网络流量入流量最大值	Max_Int_In
+#         网络流量出流量最大值	Max_Int_Out
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Storage_Id = models.ForeignKey(Jk_Storage, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Int_In = models.CharField(max_length=64, null=True)
+#     Min_Int_Out = models.CharField(max_length=64, null=True)
+#     AVG_Int_In = models.CharField(max_length=64, null=True)
+#     AVG_Int_Out = models.CharField(max_length=64, null=True)
+#     Max_Int_In = models.CharField(max_length=64, null=True)
+#     Max_Int_Out = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Jtf(models.Model):
+#     '''
+#         交换机网络流量均值表
+#         标识	Id
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         网络流量入流量最小	Min_Int_In
+#         网络流量入流量最小	Min_Int_In
+#         网络流量入流量平均值	AVG_Int_In
+#         网络流量出流量平均值	AVG_Int_Out
+#         网络流量入流量最大值	Max_Int_In
+#         网络流量出流量最大值	Max_Int_Out
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Int_In = models.CharField(max_length=64, null=True)
+#     Min_Int_Out = models.CharField(max_length=64, null=True)
+#     AVG_Int_In = models.CharField(max_length=64, null=True)
+#     AVG_Int_Out = models.CharField(max_length=64, null=True)
+#     Max_Int_In = models.CharField(max_length=64, null=True)
+#     Max_Int_Out = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ltf(models.Model):
+#     '''
+#         路由器网络流量均值表
+#          标识	Id
+#         设备名称	Routing_Id
+#         时间戳	Clock
+#         网络流量入流量最小	Min_Int_In
+#         网络流量入流量最小	Min_Int_In
+#         网络流量入流量平均值	AVG_Int_In
+#         网络流量出流量平均值	AVG_Int_Out
+#         网络流量入流量最大值	Max_Int_In
+#         网络流量出流量最大值	Max_Int_Out
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Int_In = models.CharField(max_length=64, null=True)
+#     Min_Int_Out = models.CharField(max_length=64, null=True)
+#     AVG_Int_In = models.CharField(max_length=64, null=True)
+#     AVG_Int_Out = models.CharField(max_length=64, null=True)
+#     Max_Int_In = models.CharField(max_length=64, null=True)
+#     Max_Int_Out = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Jdl(models.Model):
+#     '''
+#         交换机时延趋势表
+#         标识	Id
+#         时延监控项	Name
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         时延最小值	Min_Sy
+#         时延平均值	AVG_Sy
+#         时延最大值	Max_Sy
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Sy = models.CharField(max_length=128, null=True)
+#     AVG_Sy = models.CharField(max_length=128, null=True)
+#     Max_Sy = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Ldl(models.Model):
+#     '''
+#         路由器时延趋势表
+#         标识	Id
+#         时延监控项	Name
+#         设备名称	Routing_Id
+#         时间戳	Clock
+#        时延最小值	Min_Sy
+#         时延平均值	AVG_Sy
+#         时延最大值	Max_Sy
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Sy = models.CharField(max_length=128, null=True)
+#     AVG_Sy = models.CharField(max_length=128, null=True)
+#     Max_Sy = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fzconn(models.Model):
+#     '''
+#         负载均衡实连接均值表
+#         标识	Id
+#         实连接监控项	Name
+#         设备名称	Fz_id
+#         时间戳	Clock
+#         实连接最小值	Min_conn
+# 实连接平均值	AVG_conn
+# 实连接最大值	Max_conn
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Conn = models.CharField(max_length=128, null=True)
+#     AVG_Conn = models.CharField(max_length=128, null=True)
+#     Max_Conn = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Fzxconn(models.Model):
+#     '''
+#         负载均衡虚连接数均值表
+#         标识	Id
+#         虚连接数监控项	Name
+#         设备名称	Fz_id
+#         时间戳	Clock
+#         虚连接数最小值	Min_xconn
+# 虚连接数平均值	AVG_xconn
+# 虚连接数最大值	Max_xconn
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Xconn = models.CharField(max_length=128, null=True)
+#     AVG_Xconn = models.CharField(max_length=128, null=True)
+#     Max_Xconn = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Jping(models.Model):
+#     '''
+#         交换机ping趋势表
+#         标识	Id
+#         ping监控项	Name
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         CPU最小值	Min_Cpu
+#         CPU平均值	AVG_Cpu
+#         CPU最大值	Max_Cpu
+#          描述	DESC
+#     '''
+#     Id = models.IntegerField(primary_key=True)
+#     Name = models.CharField(max_length=64, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8)
+#     Clock = models.CharField(max_length=64, null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+#
+# class Jk_Lping(models.Model):
+#     '''
+#         路由器ping均值表
+#         标识	Id
+#         CPU监控项	Name
+#         设备名称	Routing_Id
+#         时间戳	Clock
+#         CPU最小值	Min_Cpu
+#         CPU平均值	AVG_Cpu
+#         CPU最大值	Max_Cpu
+#          描述	DESC
+#     '''
+#     Id = models.IntegerField(primary_key=True)
+#     Name = models.CharField(max_length=64, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8)
+#     Clock = models.CharField(max_length=64, null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+# class Jk_Fzping(models.Model):
+#     '''
+#         服务器ping均值表
+#         标识	Id
+#         ping监控项	Name
+#         设备名称	Fz_id
+#         时间戳	Clock
+#         CPU最小值	Min_Cpu
+#         CPU平均值	AVG_Cpu
+#         CPU最大值	Max_Cpu
+#          描述	DESC
+#     '''
+#     Id = models.IntegerField(primary_key=True)
+#     Name = models.CharField(max_length=64, null=False)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8)
+#     Clock = models.CharField(max_length=64, null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+# class Jk_Fwping(models.Model):
+#     '''
+#     防火墙ping均值表
+#     标识	Id
+#     防火墙连通监控项	Name
+#     设备名称	Fw_id
+#     时间戳	Clock
+#     CPU最小值	Min_Cpu
+#     CPU平均值	AVG_Cpu
+#     CPU最大值	Max_Cpu
+#      描述	DESC
+#     '''
+#     Id = models.IntegerField(primary_key=True)
+#     Name = models.CharField(max_length=64, null=False)
+#     Fw_id = models.ForeignKey(Jk_Fw, max_length=8)
+#     Clock = models.CharField(max_length=64, null=False)
+#     Min_Cpu = models.CharField(max_length=128, null=True)
+#     AVG_Cpu = models.CharField(max_length=128, null=True)
+#     Max_Cpu = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+# class Jk_Jnet(models.Model):
+#     '''
+#         交换机带宽利用率均值表
+#         标识	Id
+#         带宽利用率监控项	Name
+#         设备名称	Switches_Id
+#         时间戳	Clock
+#         带宽利用率最小值	Min_Dk
+# 带宽利用率平均值	AVG_Dk
+# 带宽利用率最大值	Max_Dk
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Dk = models.CharField(max_length=128, null=True)
+#     AVG_Dk = models.CharField(max_length=128, null=True)
+#     Max_Dk = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Lnet(models.Model):
+#     '''
+#         路由器带宽利用率均值表
+#         标识	Id
+#         带宽利用率监控项	Name
+#         设备名称	Routing_Id
+#         时间戳	Clock
+#         带宽利用率最小值	Min_Dk
+# 带宽利用率平均值	AVG_Dk
+# 带宽利用率最大值	Max_Dk
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Dk = models.CharField(max_length=128, null=True)
+#     AVG_Dk = models.CharField(max_length=128, null=True)
+#     Max_Dk = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_FwSes(models.Model):
+#     '''
+#         防火墙会话数均值表
+#         标识	Id
+#         会话数监控项	Name
+#         设备名称	Fw_id
+#         时间戳	Clock
+#         会话数最小值	Min_Hh
+#         会话数平均值	AVG_Hh
+#         会话数最大值	Max_Hh
+#          描述	DESC
+#     '''
+#     Id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=256, null=False)
+#     Fw_id = models.ForeignKey(Jk_Fw, max_length=8,on_delete=models.CASCADE)
+#     Clock = models.IntegerField(null=False)
+#     Min_Hh = models.CharField(max_length=128, null=True)
+#     AVG_Hh = models.CharField(max_length=128, null=True)
+#     Max_Hh = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128)
+
+
+# class Jk_Mt_Status(models.Model):
+#     '''
+#         维护状态表
+#         维护状态标识	Mt_id
+#         维护状态名称	Mt_Staus_Name
+#         描述	DESC
+#     '''
+#     Mt_id = models.AutoField(primary_key=True)
+#     Mt_Staus_Name = models.CharField(max_length=16, null=False)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Mt_Information(models.Model):
+#     '''
+#         维护状态表
+#         维护标识	Mt_ Information _id
+#         设备Ip	Ip
+#         设备名	Name
+#         发生时间	Oc_time
+#         结束时间	End_time
+#         维护状态	Mt_id
+#         上线标识    maintenanceid
+#         描述	DESC
+#         'Mt_Status_id':'维护标识',
+#         'Ip':'设备Ip',
+#         'Name':'设备名',
+#         'Oc_time':'发生时间',
+#         'End_time':'结束时间',
+#         'hostid':'hostid',
+#         'groupid':'所属设备组':
+#         'maintenanceid':'上线标识',
+#         'DESC':'描述',
+#     '''
+#     Mt_Status_id = models.AutoField(primary_key=True)
+#     # Mt_Information_id = models.IntegerField()
+#     IP = models.CharField(max_length=32, null=True)
+#     Name = models.CharField(max_length=256, null=True)
+#     Oc_time = models.IntegerField(null=True)
+#     End_time = models.IntegerField(null=True)
+#     hostid = models.IntegerField(null=True)
+#     groupid = models.ForeignKey(JK_Shebei_Group,on_delete=models.CASCADE)
+#     maintenanceid = models.IntegerField(null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Server_Rpt(models.Model):
+#     '''
+#         物理机报表
+#         物理机报表标识	Server_Rpt_Id
+#         物理机ID	Server_Id
+#         采集时间	Acquisition_time
+#         CPU最大利用率	Cpu_Max_Usage
+#         CPU最小利用率	Cpu_Min_Usage
+#         CPU平均利用率	Cpu_Avg_Usage
+#         内存最小利用率	Memory_Min_Usage
+#         内存最大利用率	Memory_Max_Usage
+#         内存平均利用率	Memory_Avg_Usage
+#         描述	DESC
+#     '''
+#     Server_Rpt_Id = models.AutoField(primary_key=True)
+#     Server_Id = models.ForeignKey(Jk_Server, max_length=8, null=True,on_delete=models.CASCADE)
+#     Acquisition_time = models.IntegerField(null=True)
+#     Cpu_Max_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Min_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Avg_Usage = models.CharField(max_length=64, null=True)
+#     Memory_Min_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Max_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Avg_Usage = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Cloud_DeviceRpt(models.Model):
+#     '''
+#         云主机报表
+#         云主机报表ID	Cloud_Rpt _Id
+#         云主机ID	Cloud _Id
+#         采集时间	Acquisition_time
+#         CPU最大利用率	Cpu_Max_Usage
+#         CPU最小利用率	Cpu_Min_Usage
+#         CPU平均利用率	Cpu_Avg_Usage
+#         内存最小利用率	Memory_Min_Usage
+#         内存最大利用率	Memory_Max_Usage
+#         内存平均利用率	Memory_Avg_Usage
+#         平均时延	Avg_Delay
+#         最大时延	Max_Delay
+#         最小时延	Min_Delay
+#         最大丢包	Max_Packet_loss
+#         最小丢包	Min_Packet_loss
+#         平均丢包	Avg_Packet_loss
+#         最大错包数	Max_Err_Packet
+#         平均错包数	Avg_Err_Packet
+#         最小错包数	Min_Err_Packet
+#         ping	conneted
+#         最大带宽利用率	Max_Net_Tf_Usage
+#         平均带宽利用率	Avg_Net_Tf_Usage
+#         最小带宽利用率	Min_Net_Tf_Usage
+#         备注	DESC
+#     '''
+#     Cloud_Rpt_Id = models.AutoField(primary_key=True)
+#     Cloud_Id = models.ForeignKey(Jk_Cloud_Device, max_length=8, null=True,on_delete=models.CASCADE)
+#     Acquisition_time = models.IntegerField(null=True)
+#     Cpu_Max_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Min_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Avg_Usage = models.CharField(max_length=64, null=True)
+#     Memory_Min_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Max_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Avg_Usage = models.CharField(max_length=128, null=True)
+#     Avg_Delay = models.CharField(max_length=64, null=True)
+#     Max_Delay = models.CharField(max_length=64, null=True)
+#     Min_Delay = models.CharField(max_length=64, null=True)
+#     Max_Packet_loss = models.CharField(max_length=64, null=True)
+#     Min_Packet_loss = models.CharField(max_length=64, null=True)
+#     Avg_Packet_loss = models.CharField(max_length=64, null=True)
+#     Max_Err_Packet = models.CharField(max_length=64, null=True)
+#     Avg_Err_Packet = models.CharField(max_length=64, null=True)
+#     Min_Err_Packet = models.CharField(max_length=64, null=True)
+#     conneted = models.CharField(max_length=64, null=True)
+#     Max_Net_Tf_Usage = models.CharField(max_length=64, null=True)
+#     Avg_Net_Tf_Usage = models.CharField(max_length=64, null=True)
+#     Min_Net_Tf_Usage = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Resource_Host_Rpt(models.Model):
+#     '''
+#         宿主机报表
+#         宿主机报表ID	Resource_Rpt_Id
+#         宿主机ID	Resource_Id
+#         采集时间	Acquisition_time
+#         CPU最大利用率	Cpu_Max_Usage
+#         CPU最小利用率	Cpu_Min_Usage
+#         CPU平均利用率	Cpu_Avg_Usage
+#         内存最小利用率	Memory_Min_Usage
+#         内存最大利用率	Memory_Max_Usage
+#         内存平均利用率	Memory_Avg_Usage
+#         描述	DESC
+#     '''
+#     # Resource_Id_Rpt = models.IntegerField(primary_key=True)
+#     Resource_Rpt_Id = models.AutoField(primary_key=True)
+#     Resource_Id = models.ForeignKey(Jk_Resource_Host, max_length=8, null=True,on_delete=models.CASCADE)
+#     Acquisition_time = models.IntegerField(null=True)
+#     Cpu_Max_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Min_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Avg_Usage = models.CharField(max_length=64, null=True)
+#     Memory_Min_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Max_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Avg_Usage = models.CharField(max_length=128, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Storage_Rpt(models.Model):
+#     '''
+#         存储报表
+#         存储报表标识	Storage_Rpt_Id
+#         存储ID	Storage_Id
+#         采集时间	Acquisition_time
+#         剩余磁盘空间	Disk_Free_Space
+#         描述	DESC
+#     '''
+#     Storage_Rpt_Id = models.AutoField(primary_key=True)
+#     Storage_Id = models.ForeignKey(Jk_Storage, max_length=8, null=True,on_delete=models.CASCADE)
+#     Acquisition_time = models.IntegerField(null=True)
+#     Disk_Free_Space = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Switches_Rpt(models.Model):
+#     '''
+#         交换机报表
+#         标识	Switches_Rpt_Id
+#         设备名称	Switches_Id
+#         采集时间	Acquisition_time
+#         CPU最大利用率	Cpu_Max_Usage
+#         CPU最小利用率	Cpu_Min_Usage
+#         CPU平均利用率	Cpu_Avg_Usage
+#         内存最小利用率	Memory_Min_Usage
+#         内存最大利用率	Memory_Max_Usage
+#         内存平均利用率	Memory_Avg_Usage
+#         平均时延	Avg_Delay
+#         最大时延	Max_Delay
+#         最小时延	Min_Delay
+#         最大丢包	Max_Packet_loss
+#         最小丢包	Min_Packet_loss
+#         平均丢包	Avg_Packet_loss
+#         最大错包数	Max_Err_Packet
+#         平均错包数	Avg_Err_Packet
+#         最小错包数	Min_Err_Packet
+#         ping	conneted
+#         最大带宽利用率	Max_Net_Tf_Usage
+#         平均带宽利用率	Avg_Net_Tf_Usage
+#         最小带宽利用率	Min_Net_Tf_Usage
+#         备注	DESC
+#     '''
+#     Switches_Rpt_Id = models.AutoField(primary_key=True)
+#     Switches_Id = models.ForeignKey(Jk_Switches, max_length=8, null=True,on_delete=models.CASCADE)
+#     Acquisition_time = models.IntegerField(null=True)
+#     Cpu_Max_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Min_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Avg_Usage = models.CharField(max_length=64, null=True)
+#     Memory_Min_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Max_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Avg_Usage = models.CharField(max_length=128, null=True)
+#     Avg_Delay = models.CharField(max_length=64, null=True)
+#     Max_Delay = models.CharField(max_length=64, null=True)
+#     Min_Delay = models.CharField(max_length=64, null=True)
+#     Max_Packet_loss = models.CharField(max_length=64, null=True)
+#     Min_Packet_loss = models.CharField(max_length=64, null=True)
+#     Avg_Packet_loss = models.CharField(max_length=64, null=True)
+#     Max_Err_Packet = models.CharField(max_length=64, null=True)
+#     Avg_Err_Packet = models.CharField(max_length=64, null=True)
+#     Min_Err_Packet = models.CharField(max_length=64, null=True)
+#     conneted = models.CharField(max_length=64, null=True)
+#     Max_Net_Tf_Usage = models.CharField(max_length=64, null=True)
+#     Avg_Net_Tf_Usage = models.CharField(max_length=64, null=True)
+#     Min_Net_Tf_Usage = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Routing_Rpt(models.Model):
+#     '''
+#         路由器报表
+#         报表标识	Routing_Rpt_Id
+#         交换机ID	Routing_Id
+#         采集时间	Acquisition_time
+#         CPU最大利用率	Cpu_Max_Usage
+#         CPU最小利用率	Cpu_Min_Usage
+#         CPU平均利用率	Cpu_Avg_Usage
+#         内存最小利用率	Memory_Min_Usage
+#         内存最大利用率	Memory_Max_Usage
+#         内存平均利用率	Memory_Avg_Usage
+#         平均时延	Avg_Delay
+#         最大时延	Max_Delay
+#         最小时延	Min_Delay
+#         最大丢包	Max_Packet_loss
+#         最小丢包	Min_Packet_loss
+#         平均丢包	Avg_Packet_loss
+#         最大错包数	Max_Err_Packet
+#         平均错包数	Avg_Err_Packet
+#         最小错包数	Min_Err_Packet
+#         ping	conneted
+#         最大带宽利用率	Max_Net_Tf_Usage
+#         平均带宽利用率	Avg_Net_Tf_Usage
+#         最小带宽利用率	Min_Net_Tf_Usage
+#         备注	DESC
+#     '''
+#     Routing_Rpt_Id = models.AutoField(primary_key=True)
+#     Routing_Id = models.ForeignKey(Jk_Routing, max_length=8, null=True,on_delete=models.CASCADE)
+#     Acquisition_time = models.IntegerField(null=True)
+#     Cpu_Max_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Min_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Avg_Usage = models.CharField(max_length=64, null=True)
+#     Memory_Min_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Max_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Avg_Usage = models.CharField(max_length=128, null=True)
+#     Avg_Delay = models.CharField(max_length=64, null=True)
+#     Max_Delay = models.CharField(max_length=64, null=True)
+#     Min_Delay = models.CharField(max_length=64, null=True)
+#     Max_Packet_loss = models.CharField(max_length=64, null=True)
+#     Min_Packet_loss = models.CharField(max_length=64, null=True)
+#     Avg_Packet_loss = models.CharField(max_length=64, null=True)
+#     Max_Err_Packet = models.CharField(max_length=64, null=True)
+#     Avg_Err_Packet = models.CharField(max_length=64, null=True)
+#     Min_Err_Packet = models.CharField(max_length=64, null=True)
+#     conneted = models.CharField(max_length=64, null=True)
+#     Max_Net_Tf_Usage = models.CharField(max_length=64, null=True)
+#     Avg_Net_Tf_Usage = models.CharField(max_length=64, null=True)
+#     Min_Net_Tf_Usage = models.CharField(max_length=64, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fz_Rpt(models.Model):
+#     '''
+#         负载均衡报告
+#         负载均衡报表标识	Fz_Rpt_id
+#         负载均衡ID	Fz_id
+#         采集时间	Acquisition_time
+#         CPU最大利用率	Cpu_Max_Usage
+#         CPU最小利用率	Cpu_Min_Usage
+#         CPU平均利用率	Cpu_Avg_Usage
+#         内存最小利用率	Memory_Min_Usage
+#         内存最大利用率	Memory_Max_Usage
+#         内存平均利用率	Memory_Avg_Usage
+#         Ping	Connected
+#         实连接数	Connect_Sum
+#         平均虚连接数	Avg_Vir_Conn
+#         最大虚连接数	Max_Vir_Conn
+#         最小虚连接数	Min_Vir_Conn
+#         备注	DESC
+#     '''
+#     Fz_Rpt_id = models.AutoField(primary_key=True)
+#     Fz_id = models.ForeignKey(Jk_Fz, max_length=8, null=True,on_delete=models.CASCADE)
+#     Acquisition_time = models.IntegerField(null=True)
+#     Cpu_Max_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Min_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Avg_Usage = models.CharField(max_length=64, null=True)
+#     Memory_Min_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Max_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Avg_Usage = models.CharField(max_length=128, null=True)
+#     conneted = models.CharField(max_length=64, null=True)
+#     Connect_Sum = models.IntegerField(null=True)
+#     Avg_Vir_Conn = models.IntegerField(null=True)
+#     Max_Vir_Conn = models.IntegerField(null=True)
+#     Min_Vir_Conn = models.IntegerField(null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Fw_Rpt(models.Model):
+#     '''
+#         防火墙报表
+#         防火墙报表标识	Fz_Rpt_id
+#         防火墙ID	Fw_id
+#         采集时间	Acquisition_time
+#         CPU最大利用率	Cpu_Max_Usage
+#         CPU最小利用率	Cpu_Min_Usage
+#         CPU平均利用率	Cpu_Avg_Usage
+#         内存最小利用率	Memory_Min_Usage
+#         内存最大利用率	Memory_Max_Usage
+#         内存平均利用率	Memory_Avg_Usage
+#         Ping	Connected
+#         会话数	Secssion_Sum
+#         备注	DESC
+#     '''
+#     Fz_Rpt_id = models.AutoField(primary_key=True)
+#     Fw_id = models.ForeignKey(Jk_Fw, max_length=8, null=True,on_delete=models.CASCADE)
+#     Acquisition_time = models.IntegerField(null=True)
+#     Cpu_Max_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Min_Usage = models.CharField(max_length=64, null=True)
+#     Cpu_Avg_Usage = models.CharField(max_length=64, null=True)
+#     Memory_Min_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Max_Usage = models.CharField(max_length=128, null=True)
+#     Memory_Avg_Usage = models.CharField(max_length=128, null=True)
+#     conneted = models.CharField(max_length=64, null=True)
+#     Connect_Sum = models.IntegerField(null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class Jk_Topology(models.Model):
+#
+#     '''
+#         拓扑表
+#         标识	id
+#         全国维度标识	Qg_topology_id
+#         全国维度名称	Qg_topology_name
+#         区域维度标识	Qy_topology_id
+#         区域维度名称	Qy_topology_name
+#         园区维度标识	Yq_topology_id
+#         园区维度名称	Yq_topology_name
+#         大楼标识	Dl_topology_id
+#         大楼名称	Dl_topology_name
+#         机房标识	Jf_topology_id
+#         机房名称	Jf_topology_name
+#         位置坐标X	Location_x
+#         位置坐标y	Location_y
+#         描述	DESC
+#     '''
+#     id = models.IntegerField(max_length=11, primary_key=True)
+#     Qg_topology_id = models.IntegerField(max_length=11, null=True)
+#     Qg_topology_name = models.CharField(max_length=64, null=True)
+#     Qy_topology_id = models.IntegerField(max_length=11, null=True)
+#     Qy_topology_name = models.CharField(max_length=64, null=True)
+#     Yq_topology_id = models.IntegerField(max_length=11, null=True)
+#     Yq_topology_name = models.CharField(max_length=64, null=True)
+#     Dl_topology_id = models.IntegerField(max_length=11, null=True)
+#     Dl_topology_name = models.CharField(max_length=64, null=True)
+#     Jf_topology_id = models.IntegerField(max_length=11, null=True)
+#     Jf_topology_name = models.CharField(max_length=64, null=True)
+#     Location_x = models.IntegerField(max_length=11, null=True)
+#     Location_y = models.IntegerField(max_length=11, null=True)
+#     DESC = models.CharField(max_length=128, null=True)
+
+
+# class ServerToZabbix(models.Model):
+#     """物理机"""
+#     hostname = models.CharField(max_length=64)  # Server Name
+#     host_ip = models.CharField(max_length=64, blank=True)
+#     app_name = models.CharField(max_length=64, blank=True)
+#     user = models.CharField(max_length=64, null=True, blank=True)
+#     park = models.CharField(max_length=64, null=True, blank=True)
+#     room = models.CharField(max_length=64, null=True, blank=True)  # Machine room
+#     rock = models.CharField(max_length=64, null=True, blank=True)  # Rcck Name
+#     U_start = models.CharField(max_length=64, blank=True)
+#     U_stop = models.CharField(max_length=64, blank=True)
+#     data_center = models.CharField(max_length=64, blank=True)
+#     vendors = models.CharField(max_length=128, null=True, blank=True)
+#     # sn = models.CharField(max_length=128, blank=True)  # Î¨Ò»×Ö¶Î
+#     cluster = models.CharField(max_length=128, blank=True)
+#
+#     class Meta:
+#         db_table = 'server_2_zabbix'
+
+
+# class CloudDeviceToZabbix(models.Model):
+#     """云主机"""
+#     hostname = models.CharField(max_length=64)  # Server Name
+#     host_ip = models.CharField(max_length=64, blank=True)
+#     app_name = models.CharField(max_length=64, blank=True)
+#     user = models.CharField(max_length=64, null=True, blank=True)
+#     park = models.CharField(max_length=64, null=True, blank=True)
+#     room = models.CharField(max_length=64, null=True, blank=True)  # Machine room
+#     rock = models.CharField(max_length=64, null=True, blank=True)  # Rcck Name
+#     U_start = models.CharField(max_length=64, blank=True)
+#     U_stop = models.CharField(max_length=64, blank=True)
+#     data_center = models.CharField(max_length=64, blank=True)
+#     vendors = models.CharField(max_length=128, null=True, blank=True)
+#     # sn = models.CharField(max_length=128, blank=True)  # Î¨Ò»×Ö¶Î
+#     cluster = models.CharField(max_length=128, blank=True)
+#
+#     class Meta:
+#         db_table = 'cloud_cevice_2_zabbix'
+
+
+# class ResourceHostToZabbix(models.Model):
+#     """宿主机"""
+#     hostname = models.CharField(max_length=64)  # Server Name
+#     host_ip = models.CharField(max_length=64, blank=True)
+#     app_name = models.CharField(max_length=64, blank=True)
+#     user = models.CharField(max_length=64, null=True, blank=True)
+#     park = models.CharField(max_length=64, null=True, blank=True)
+#     room = models.CharField(max_length=64, null=True, blank=True)  # Machine room
+#     rock = models.CharField(max_length=64, null=True, blank=True)  # Rcck Name
+#     U_start = models.CharField(max_length=64, blank=True)
+#     U_stop = models.CharField(max_length=64, blank=True)
+#     data_center = models.CharField(max_length=64, blank=True)
+#     vendors = models.CharField(max_length=128, null=True, blank=True)
+#     # sn = models.CharField(max_length=128, blank=True)  # Î¨Ò»×Ö¶Î
+#     cluster = models.CharField(max_length=128, blank=True, verbose_name=_("¼¯Èº"))
+#
+#     class Meta:
+#         db_table = 'resource_host_2_zabbix'
+
+
+# class StorageToZabbix(models.Model):
+#     """´存储"""
+#     hostname = models.CharField(max_length=64)  # Server Name
+#     host_ip = models.CharField(max_length=64, blank=True)
+#     app_name = models.CharField(max_length=64, blank=True)
+#     user = models.CharField(max_length=64, null=True, blank=True)
+#     park = models.CharField(max_length=64, null=True, blank=True)
+#     room = models.CharField(max_length=64, null=True, blank=True)  # Machine room
+#     rock = models.CharField(max_length=64, null=True, blank=True)  # Rcck Name
+#     U_start = models.CharField(max_length=64, blank=True)
+#     U_stop = models.CharField(max_length=64, blank=True)
+#     data_center = models.CharField(max_length=64, blank=True)
+#     vendors = models.CharField(max_length=128, null=True, blank=True)
+#     # sn = models.CharField(max_length=128, blank=True)  # Î¨Ò»×Ö¶Î
+#
+#     class Meta:
+#         db_table = 'storage_2_zabbix'
+
+
+# class NetworkDeviceToZabbix(models.Model):
+#     """网络设备¸"""
+#     hostname = models.CharField(max_length=64)  # Server Name
+#     host_ip = models.CharField(max_length=64, blank=True)
+#     app_name = models.CharField(max_length=64, blank=True)
+#     user = models.CharField(max_length=64, null=True, blank=True)
+#     park = models.CharField(max_length=64, null=True, blank=True)
+#     room = models.CharField(max_length=64, null=True, blank=True)  # Machine room
+#     rock = models.CharField(max_length=64, null=True, blank=True)  # Rcck Name
+#     U_start = models.CharField(max_length=64, blank=True)
+#     U_stop = models.CharField(max_length=64, blank=True)
+#     data_center = models.CharField(max_length=64, blank=True)
+#     vendors = models.CharField(max_length=128, null=True, blank=True)
+#     # sn = models.CharField(max_length=128, blank=True)  # Î¨Ò»×Ö¶Î
+#     device_type = models.CharField(max_length=64)  # Server Name
+#
+#     class Meta:
+#         db_table = 'network_nevice_2_zabbix'
+
+
+# class Jk_dw_server(models.Model):
+#     server_id = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=64, null=False)
+#     Type = models.CharField(max_length=64, null=True)
+#     fsstatus = models.CharField(max_length=32, null=True)
+#     dystatus = models.CharField(max_length=32, null=True)
+#     cpustatus = models.CharField(max_length=32, null=True)
+#     cpstatus = models.CharField(max_length=32, null=True)
+
+# class Jk_pass(models.Model):
+#     name = models.CharField(max_length=20)
+#     pwd = models.CharField(max_length=512)
+#     zabbix_id = models.IntegerField()
+#     url = models.CharField(max_length=126)
+
+
+
+
+# 重新导入的数据库

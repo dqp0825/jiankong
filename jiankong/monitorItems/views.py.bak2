@@ -1,0 +1,194 @@
+# coding:utf-8
+import base64
+
+from django.shortcuts import render,HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from pyzabbix import ZabbixAPI
+import json
+
+from dashBoard.models import Jk_Storage,Jk_Server,Jk_Cloud_Device,Jk_Resource_Host
+from dashBoard.models import Jk_Fw,Jk_Fz,Jk_Switches,JK_Shebei_Group,Jk_pass
+from dashBoard.models import ServerToZabbix,CloudDeviceToZabbix,ResourceHostToZabbix
+from dashBoard.models import StorageToZabbix,NetworkDeviceToZabbix,Jk_User
+from dashBoard.models import Jk_Server,Jk_Cloud_Device,Jk_Switches,Jk_Storage,Jk_Fw,Jk_Fz,Jk_Resource_Host
+from pyzabbix import ZabbixAPI
+import json
+# Create your views here.
+
+
+user = "admin"
+
+
+def getips(user):
+    userid = Jk_User.objects.filter(name=user).first().id
+    # print(userid)
+    serverip = Jk_Server.objects.filter(User_id_id=userid)
+    cloudip = Jk_Cloud_Device.objects.filter(User_id_id=userid)
+    resourceip = Jk_Resource_Host.objects.filter(User_id_id=userid)
+    storageip = Jk_Storage.objects.filter(User_id_id=userid)
+    switchip = Jk_Switches.objects.filter(User_id_id=userid)
+    fwip = Jk_Fw.objects.filter(User_id_id=userid)
+    fzip = Jk_Fz.objects.filter(User_id_id=userid)
+    resip = Jk_Resource_Host.objects.filter(User_id_id=userid)
+    iplist = {}
+    for server in serverip:
+        iplist[server.Hostid] = server.host_ip
+        # iplist.append({server.Hostid:(server.host_ip).replace('\t','')})
+    for cloud in cloudip:
+        # iplist.append((cloud.host_ip).replace('\t',''))
+        iplist[cloud.Hostid] = cloud.host_ip
+    for storage in storageip:
+        # iplist.append((storage.host_ip).replace('\t',''))
+        iplist[storage.Hostid] = storage.host_ip
+    for switch in switchip:
+        # iplist.append((network.host_ip).replace('\t',''))
+        iplist[switch.Hostid] = switch.host_ip
+    for resource in resourceip:
+        # iplist.append((resource.host_ip).replace('\t',''))
+        iplist[resource.Hostid] = resource.host_ip
+    for fw in fwip:
+        # iplist.append((resource.host_ip).replace('\t',''))
+        iplist[fw.Hostid] = fw.host_ip
+    for fz in fzip:
+        # iplist.append((resource.host_ip).replace('\t',''))
+        iplist[fz.Hostid] = fz.host_ip
+    for res in resip:
+        # iplist.append((resource.host_ip).replace('\t',''))
+        iplist[res.Hostid] = res.host_ip
+    return iplist
+
+
+
+#应用
+@csrf_exempt
+def monitorItems(request):
+        return render(request, 'monitorItems/monitoringIndicators.html')
+
+
+
+def gethostinfo(request):
+    hostip = request.GET.get("ip", "")
+    group = request.GET.get("group", "")
+    iplist = getips(user)
+    print(hostip,group)
+    if hostip:
+        storage = Jk_Storage.objects.filter(Ip=hostip)
+        server = Jk_Server.objects.filter(IP=hostip)
+        cloud = Jk_Cloud_Device.objects.filter(Ip=hostip)
+        resource = Jk_Resource_Host.objects.filter(Ip=hostip)
+        fw = Jk_Fw.objects.filter(Ip=hostip)
+        fz = Jk_Fz.objects.filter(Ip=hostip)
+        sw = Jk_Switches.objects.filter(Ip=hostip)
+        groupid = ''
+        hostid = ''
+        if storage:
+            for host in storage:
+                groupid = host.Group_id
+                hostid = host.Hostid
+
+        if server:
+            for host in server:
+                groupid = host.Group_id
+                hostid = host.Hostid
+
+        if cloud:
+            for host in cloud:
+                groupid = host.Group_id
+                hostid = host.Hostid
+
+        if resource:
+            for host in resource:
+                groupid = host.Group_id
+                hostid = host.Hostid
+
+        if fw:
+            for host in fw:
+                groupid = host.Group_id
+                hostid = host.Hostid
+
+        if fz:
+            for host in fz:
+                groupid = host.Group_id
+                hostid = host.Hostid
+
+        if sw:
+            for host in sw:
+                groupid = host.Group
+                hostid = host.Hostid
+
+        groupname = JK_Shebei_Group.objects.get(id=groupid).Group_Name
+        # print(hostip)
+        # print(groupid)
+        return HttpResponse(json.dumps([{"ip":hostip,"group":groupname,"hostid":hostid}]))
+
+
+
+
+    if group:
+        #获取查找的用户的设备组
+        if user == "admin" or user == "Admin":
+            groups = JK_Shebei_Group.objects.filter(Group_Name__contains=group)
+        else:
+            userid = Jk_User.objects.get(name=user)
+            groups = JK_Shebei_Group.objects.filter(User_id_id=userid.id).filter(Group_Name__contains=group)
+        groupidlist = []
+        groupdict = {}
+        for gp in groups:
+            groupidlist.append(gp.id)
+            groupdict[gp.id] = gp.Group_Name
+        # print(groupidlist)
+        storage = Jk_Storage.objects.filter(Group_id__in=groupidlist)
+        server = Jk_Server.objects.filter(Group_id__in=groupidlist)
+        cloud = Jk_Cloud_Device.objects.filter(Group_id__in=groupidlist)
+        resource = Jk_Resource_Host.objects.filter(Group_id__in=groupidlist)
+        fw = Jk_Fw.objects.filter(Group_id__in=groupidlist)
+        fz = Jk_Fz.objects.filter(Group_id__in=groupidlist)
+        sw = Jk_Switches.objects.filter(Group_id__in=groupidlist)
+        datalist = []
+
+        #获取查询组的设备信息
+        if storage:
+            for host in storage:
+                datalist.append({"hostid":host.Hostid,"ip":host.Ip,"group":groupdict[host.Group_id],"groupid":host.Group_id})
+        if server:
+            for host in server:
+                datalist.append({"hostid": host.Hostid, "ip": host.IP, "group": groupdict[host.Group_id],"groupid":host.Group_id})
+
+        if cloud:
+            for host in cloud:
+                datalist.append({"hostid": host.Hostid, "ip": host.Ip, "group": groupdict[host.Group_id],"groupid":host.Group_id})
+
+        if resource:
+            for host in resource:
+                datalist.append({"hostid": host.Hostid, "ip": host.Ip, "group": groupdict[host.Group_id],"groupid":host.Group_id})
+        if fw:
+            for host in fw:
+                datalist.append({"hostid": host.Hostid, "ip": host.Ip, "group":groupdict[host.Group_id],"groupid":host.Group_id})
+
+        if fz:
+            for host in fz:
+                datalist.append({"hostid": host.Hostid, "ip": host.Ip, "group": groupdict[host.Group_id],"groupid":host.Group_id})
+
+        if sw:
+            for host in sw:
+                datalist.append({"hostid": host.Hostid, "ip": host.Ip, "group": groupdict[host.Group_id],"groupid":host.Group_id})
+
+        return HttpResponse(json.dumps(datalist))
+    return HttpResponse([])
+
+
+#获取监控项
+def getitem(request):
+    hostid = request.GET.get("hostid", '')
+    groupid = request.GET.get("groupid", '')
+    print(hostid,groupid)
+    zabbix_id = JK_Shebei_Group.objects.filter(id=groupid).first()
+    zbxid = zabbix_id.Zabbix_id
+    print(zbxid)
+    urlob = Jk_pass.objects.filter(zabbix_id=zbxid).first()
+    zabbixurl = urlob.url
+    zapi = ZabbixAPI(zabbixurl)
+    zapi.login("admin", "zabbix")
+    items = zapi.item.get(hostids=hostid)
+
+    return HttpResponse(json.dumps(items))

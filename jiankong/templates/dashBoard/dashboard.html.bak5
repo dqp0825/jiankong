@@ -1,0 +1,1067 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+	    <!-- Font Awesome -->
+	    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+	    <!-- NProgress -->
+	    <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+	    <!-- bootstrap-daterangepicker -->
+	    <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+	
+	    <!-- Custom Theme Style -->
+	    <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+	    <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+	    <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+
+
+
+	</head>
+	<body>
+		<div style="width:100%;overflow-x: hidden;">
+		<div class="title_left">
+	        <h3>&nbsp;&nbsp;<small>仪表盘</small></h3>
+	     </div>
+		<div class="container">
+            <h4 style="margin-left: 100px;color: red;">近一周告警</h4>
+			<div class="row">
+				<div class="col-md-3 col-sm-3 col-xs-6"><div id="main1" style="height: 300px;"></div></div>
+				<div class="col-md-3 col-sm-3 col-xs-6"><div id="main2" style="height: 300px;"></div></div>
+				<div class="col-md-3 col-sm-3 col-xs-6"><div id="main3" style="height: 300px;"></div></div>
+				<div class="col-md-3 col-sm-3 col-xs-6"><div id="main4" style="height: 300px;"></div></div>
+			</div>
+			<div class="row">
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">整体告警</h5>
+					<div id="content1" style="height:400px; width:90%; margin:0  auto;"></div>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">在处理告警</h5>
+					<div id="content2" style="height: 400px;width:90%; margin:0  auto;">
+						<table class="layui-hide" id="test">
+{#							 <thead>#}
+{#						    <tr>#}
+{#						      <th lay-data="{field:'level', width:80, sort: true}">100</th>#}
+{#						      <th lay-data="{field:'application', width:80}">用户名</th>#}
+{#						      <th lay-data="{field:'ip', width:80, sort: true}">设备IP</th>#}
+{#						      <th lay-data="{field:'city'}">告警信息</th>#}
+{##}
+{#						    </tr>#}
+{#						  </thead>#}
+						</table>
+					</div></div>
+
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">服务器告警</h5>
+					<div id="content3" style="height: 400px;width:90%; margin:0  auto;"></div></div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">网络设备告警</h5>
+					<div id="content4" style="height: 400px;width:90%; margin:0  auto;"></div></div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">应用告警</h5>
+					<div id="content5" style="height: 400px;width:90%; margin:0  auto;"></div></div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">存储告警</h5>
+					<div id="content6" style="height: 400px;width:90%; margin:0  auto;"></div></div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">设备签退信息</h5>
+					<div id="content7" style="height: 400px;width:90%; margin:0  auto;">
+						<table class="layui-hide" id="test2">
+							 <thead>
+						    <tr>
+						      <th lay-data="{field:'level', width:80, sort: true}">100</th>
+						      <th lay-data="{field:'application', width:80}">用户名</th>
+						      <th lay-data="{field:'ip', width:80, sort: true}">设备IP</th>
+						      <th lay-data="{field:'city'}">告警信息</th>
+
+						    </tr>
+						  </thead>
+						</table>
+					</div></div>
+
+			</div>
+		</div>
+	</div>
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'production/build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>  
+
+
+	<script type="text/javascript">
+			require.config({
+				paths: {
+				'echarts': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/'%}",
+				'echarts/chart/line': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/line'%}",
+				'echarts/chart/pie': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/pie'%}",
+				'echarts/chart/bar': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/bar'%}",
+				'echarts/chart/gauge':"{% static 'production/plugins/echarts-2.2.7/build/dist/chart/gauge'%}",
+				}
+			});
+			//主要4个仪表盘
+			require(
+					[
+						'echarts',
+						'echarts/chart/gauge'
+					],
+					function (ec) {
+						var auChart = ec.init(document.getElementById('main1'));
+
+						option = {
+						    tooltip : {
+						        formatter: "{a} <br/>{b} : {c}%"
+						    },
+//						    toolbox: {
+//						        show : true,
+//						        feature : {
+//						            mark : {show: true},
+//						            restore : {show: true},
+//						            saveAsImage : {show: true}
+//						        }
+//						    },
+						    series : [
+						        {
+						            name:'业务指标',
+						            type:'gauge',
+						            splitNumber: 10,       // 分割段数，默认为5
+						            axisLine: {            // 坐标轴线
+						                lineStyle: {       // 属性lineStyle控制线条样式
+						                    color: [[0.2, '#228b22'],[0.8, '#48b'],[1, '#ff4500']],
+						                    width: 8
+						                }
+						            },
+						            axisTick: {            // 坐标轴小标记
+						                splitNumber: 10,   // 每份split细分多少段
+						                length :12,        // 属性length控制线长
+						                lineStyle: {       // 属性lineStyle控制线条样式
+						                    color: 'auto'
+						                }
+						            },
+						            axisLabel: {           // 坐标轴文本标签，详见axis.axisLabel
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    color: 'auto'
+						                }
+						            },
+						            splitLine: {           // 分隔线
+						                show: true,        // 默认显示，属性show控制显示与否
+						                length :30,         // 属性length控制线长
+						                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+						                    color: 'auto'
+						                }
+						            },
+						            pointer : {
+						                width : 5
+						            },
+						            title : {
+						                show : true,
+						                offsetCenter: [0, '90%'],       // x, y，单位px
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    fontWeight: 'bolder'
+						                }
+						            },
+						            detail : {
+						                formatter:'{value}',
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    color: 'auto',
+						                    fontWeight: 'bolder'
+						                }
+						            },
+						            data:[{value: {{ zdallalertcount }}, name: '重大告警完成数'}]
+						        }
+						    ]
+						};
+
+//						clearInterval(timeTicket);
+//						timeTicket = setInterval(function (){
+{#						    option.series[0].data[0].value = (Math.random()*100).toFixed(0);#}
+						    auChart.setOption(option,true);
+//						},2000)
+//						auChart.setOption(option);
+					}
+
+			);
+			require(
+					[
+						'echarts',
+						'echarts/chart/gauge'
+					],
+					function (ec) {
+						var auChart = ec.init(document.getElementById('main2'));
+
+						option = {
+						    tooltip : {
+						        formatter: "{a} <br/>{b} : {c}%"
+						    },
+//						    toolbox: {
+//						        show : true,
+//						        feature : {
+//						            mark : {show: true},
+//						            restore : {show: true},
+//						            saveAsImage : {show: true}
+//						        }
+//						    },
+						    series : [
+						        {
+						            name:'业务指标',
+						            type:'gauge',
+						            splitNumber: 10,       // 分割段数，默认为5
+						            axisLine: {            // 坐标轴线
+						                lineStyle: {       // 属性lineStyle控制线条样式
+						                    color: [[0.2, '#228b22'],[0.8, '#48b'],[1, '#ff4500']],
+						                    width: 8
+						                }
+						            },
+						            axisTick: {            // 坐标轴小标记
+						                splitNumber: 10,   // 每份split细分多少段
+						                length :12,        // 属性length控制线长
+						                lineStyle: {       // 属性lineStyle控制线条样式
+						                    color: 'auto'
+						                }
+						            },
+						            axisLabel: {           // 坐标轴文本标签，详见axis.axisLabel
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    color: 'auto'
+						                }
+						            },
+						            splitLine: {           // 分隔线
+						                show: true,        // 默认显示，属性show控制显示与否
+						                length :30,         // 属性length控制线长
+						                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+						                    color: 'auto'
+						                }
+						            },
+						            pointer : {
+						                width : 5
+						            },
+						            title : {
+						                show : true,
+						                offsetCenter: [0, '90%'],       // x, y，单位px
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    fontWeight: 'bolder'
+						                }
+						            },
+						            detail : {
+						                formatter:'{value}',
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    color: 'auto',
+						                    fontWeight: 'bolder'
+						                }
+						            },
+						            data:[{value: {{ zdcsalert }}, name: '重大告警超时数'}]
+						        }
+						    ]
+						};
+
+//						clearInterval(timeTicket);
+//						timeTicket = setInterval(function (){
+{#						    option.series[0].data[0].value = (Math.random()*100).toFixed(2) - 0;#}
+						    auChart.setOption(option,true);
+//						},2000)
+//						auChart.setOption(option);
+					}
+
+			);
+			require(
+					[
+						'echarts',
+						'echarts/chart/gauge'
+					],
+					function (ec) {
+						var auChart = ec.init(document.getElementById('main3'));
+
+						option = {
+						    tooltip : {
+						        formatter: "{a} <br/>{b} : {c}%"
+						    },
+//						    toolbox: {
+//						        show : true,
+//						        feature : {
+//						            mark : {show: true},
+//						            restore : {show: true},
+//						            saveAsImage : {show: true}
+//						        }
+//						    },
+						    series : [
+						        {
+						            name:'业务指标',
+						            type:'gauge',
+						            splitNumber: 10,       // 分割段数，默认为5
+						            axisLine: {            // 坐标轴线
+						                lineStyle: {       // 属性lineStyle控制线条样式
+						                    color: [[0.2, '#228b22'],[0.8, '#48b'],[1, '#ff4500']],
+						                    width: 8
+						                }
+						            },
+						            axisTick: {            // 坐标轴小标记
+						                splitNumber: 10,   // 每份split细分多少段
+						                length :12,        // 属性length控制线长
+						                lineStyle: {       // 属性lineStyle控制线条样式
+						                    color: 'auto'
+						                }
+						            },
+						            axisLabel: {           // 坐标轴文本标签，详见axis.axisLabel
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    color: 'auto'
+						                }
+						            },
+						            splitLine: {           // 分隔线
+						                show: true,        // 默认显示，属性show控制显示与否
+						                length :30,         // 属性length控制线长
+						                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+						                    color: 'auto'
+						                }
+						            },
+						            pointer : {
+						                width : 5
+						            },
+						            title : {
+						                show : true,
+						                offsetCenter: [0, '90%'],       // x, y，单位px
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    fontWeight: 'bolder'
+						                }
+						            },
+						            detail : {
+						                formatter:'{value}',
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    color: 'auto',
+						                    fontWeight: 'bolder'
+						                }
+						            },
+						            data:[{value: {{ yzallalertcount }}, name: '严重告警完成数'}]
+						        }
+						    ]
+						};
+
+//						clearInterval(timeTicket);
+//						timeTicket = setInterval(function (){
+{#						    option.series[0].data[0].value = (Math.random()*100).toFixed(0);#}
+						    auChart.setOption(option,true);
+//						},2000)
+//						auChart.setOption(option);
+					}
+
+			);
+			require(
+					[
+						'echarts',
+						'echarts/chart/gauge'
+					],
+					function (ec) {
+						var auChart = ec.init(document.getElementById('main4'));
+
+						option = {
+						    tooltip : {
+						        formatter: "{a} <br/>{b} : {c}%"
+						    },
+//						    toolbox: {
+//						        show : true,
+//						        feature : {
+//						            mark : {show: true},
+//						            restore : {show: true},
+//						            saveAsImage : {show: true}
+//						        }
+//						    },
+						    series : [
+						        {
+						            name:'业务指标',
+						            type:'gauge',
+						            splitNumber: 10,       // 分割段数，默认为5
+						            axisLine: {            // 坐标轴线
+						                lineStyle: {       // 属性lineStyle控制线条样式
+						                    color: [[0.2, '#228b22'],[0.8, '#48b'],[1, '#ff4500']],
+						                    width: 8
+						                }
+						            },
+						            axisTick: {            // 坐标轴小标记
+						                splitNumber: 10,   // 每份split细分多少段
+						                length :12,        // 属性length控制线长
+						                lineStyle: {       // 属性lineStyle控制线条样式
+						                    color: 'auto'
+						                }
+						            },
+						            axisLabel: {           // 坐标轴文本标签，详见axis.axisLabel
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    color: 'auto'
+						                }
+						            },
+						            splitLine: {           // 分隔线
+						                show: true,        // 默认显示，属性show控制显示与否
+						                length :30,         // 属性length控制线长
+						                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+						                    color: 'auto'
+						                }
+						            },
+						            pointer : {
+						                width : 5
+						            },
+						            title : {
+						                show : true,
+						                offsetCenter: [0, '90%'],       // x, y，单位px
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    fontWeight: 'bolder'
+						                }
+						            },
+						            detail : {
+						                formatter:'{value}',
+						                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+						                    color: 'auto',
+						                    fontWeight: 'bolder'
+						                }
+						            },
+						            data:[{value: {{ yzcsalert }}, name: '严重告警超时数'}]
+						        }
+						    ]
+						};
+
+//						clearInterval(timeTicket);
+//						timeTicket = setInterval(function (){
+{#						    option.series[0].data[0].value = (Math.random()*100).toFixed(0) ;#}
+						    auChart.setOption(option,true);
+//						},2000)
+//						auChart.setOption(option);
+					}
+
+			);
+
+			//整体告警
+			require(
+                [
+                    'echarts',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('content1'));
+                    var option = {
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+
+                        toolbox: {
+                            show : true,
+                        },
+                        calculable : false,
+                        series : [
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                selectedMode: 'single',
+                                radius : [0, 70],
+
+                                // for funnel
+                                x: '20%',
+                                width: '40%',
+                                funnelAlign: 'right',
+                                max: 1548,
+
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            position : 'inner'
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    }
+                                },
+                                data:[
+                                    {value:{{ alertzd }}, name:'重大',
+                                        itemStyle: {
+                                            normal: {
+                                                color: 'red'
+                                            }
+                                        }
+                                    },
+                                    {value:{{ alertyz }}, name:'严重',
+                                        itemStyle: {
+                                            normal: {
+                                                color: '#FFA500'
+                                            }
+                                        }
+                                    },
+                                    {value:{{ alertyb }}, name:'一般',
+                                        itemStyle: {
+                                            normal: {
+                                                color: '#FFFF00'
+                                            }
+                                        }
+                                    },
+                                    {value:{{ alertqt }}, name:'其它',
+                                        itemStyle: {
+                                            normal: {
+                                                color: '#00FF00'
+                                            }
+                                        }
+                                    },
+{#                                    {value:{{ alert }}, name:'正常',#}
+{#                                        itemStyle: {#}
+{#                                            normal: {#}
+{#                                                color: '#32CD32'#}
+{#                                            }#}
+{#                                        }#}
+{#                                    ,selected:true}#}
+                                ]
+                            },
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                radius : [100, 140],
+
+                                // for funnel
+                                x: '60%',
+                                width: '35%',
+                                funnelAlign: 'left',
+                                max: 1048,
+
+                                data:[
+{#                                    {value:2, name:'物理机'},#}
+{#                                    {value:2, name:'云主机'},#}
+{#                                    {value:2, name:'中间件'},#}
+{#                                    {value:2, name:'数据库'},#}
+{#                                    {value:1, name:'应用组件'},#}
+{#                                    {value:1, name:'存储'},#}
+{#                                    {value:2, name:'物理机'},#}
+{#                                    {value:4, name:'云主机'},#}
+{#                                    {value:4, name:'中间件'},#}
+{#                                    {value:4, name:'数据库'},#}
+{#                                    {value:2, name:'应用组件'},#}
+{#                                    {value:2, name:'存储'},#}
+{#                                    {value:30, name:'一般',#}
+{#                                        itemStyle: {#}
+{#                                            normal: {#}
+{#                                                color: '#FFA500'#}
+{#                                            }#}
+{#                                        }#}
+{#                                    },#}
+{#                                    {value:10, name:'其它',#}
+{#                                        itemStyle: {#}
+{#                                            normal: {#}
+{#                                                color: '#FFD700'#}
+{#                                            }#}
+{#                                        }#}
+{#                                    },#}
+{#                                    {value:20, name:'正常',#}
+{#                                        itemStyle: {#}
+{#                                            normal: {#}
+{#                                                color: '#FFFF00'#}
+{#                                            }#}
+{#                                        }#}
+{#                                    },#}
+                                    {% for zd in zdlist %}
+                                    {% ifnotequal zd.value 0 %}
+                                    {{ zd|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                {% for yz in yzlist %}
+                                    {% ifnotequal yz.value 0 %}
+                                    {{ yz|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                {% for yb in yblist %}
+                                    {% ifnotequal yb.value 0 %}
+                                    {{ yb|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                {% for qt in qtlist %}
+                                    {% ifnotequal qt.value 0 %}
+                                    {{ qt|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                         ]
+                            }
+                        ]
+                    };
+
+                    myChart1.setOption(option);
+                }
+            );
+
+			//服务器告警
+			require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('content3'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['重大','严重','一般','其它'],
+                        y:'bottom'
+                    },
+                    toolbox: {
+                        show : true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['物理机','宿主机','云主机']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'重大',
+                            type:'bar',
+                            stack: '服务器',
+                            data:{{ zd|safe }},
+                            itemStyle: {
+                                normal: {
+                                    color: 'red'
+                                }
+                            }
+                        },
+                        {
+                            name:'严重',
+                            type:'bar',
+                            stack: '服务器',
+                            data:{{ yz|safe }},
+                               itemStyle:{
+                                normal:{
+                                    color:'#FFA500'
+                                }
+                            }
+                        },
+                        {
+                            name:'一般',
+                            type:'bar',
+                            stack: '服务器',
+                            data:{{ yb|safe }},
+                               itemStyle:{
+                                normal:{
+                                    color:'#FFFF00'
+                                }
+                            }
+                        },
+{#                        {#}
+{#                            name:'正常',#}
+{#                            type:'bar',#}
+{#                            stack: '广告',#}
+{#                            data:[150, 232, 201, 154, 190],#}
+{#                               itemStyle:{#}
+{#                                normal:{#}
+{#                                    color:'#FFFF00'#}
+{#                                }#}
+{#                            }#}
+{#                        },#}
+                        {
+                            name:'其他',
+                            type:'bar',
+                            stack: '服务器',
+                            data:{{ qt|safe }},
+                               itemStyle:{
+                                normal:{
+                                    color:'#00FF00'
+                                }
+                            }
+                        },
+
+
+                    ]
+                };
+                    myChart1.setOption(option);
+                }
+            );
+         	//网络设备告警
+         	require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('content4'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['重大','严重','一般','其它'],
+                        y:'bottom'
+
+                    },
+                    toolbox: {
+                        show : true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['防火墙','路由器','交换机','负载均衡']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'重大',
+                            type:'bar',
+                            stack: '网络设备',
+                            data:{{ zdn|safe }},
+                            itemStyle:{
+                                normal:{
+                                    color:'red'
+                                }
+                            }
+                        },
+                        {
+                            name:'严重',
+                            type:'bar',
+                            stack: '网络设备',
+                            data:{{ yzn|safe }},
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFA500'
+                                }
+                            }
+                        },
+                        {
+                            name:'一般',
+                            type:'bar',
+                            stack: '网络设备',
+                            data:{{ ybn|safe }},
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFFF00'
+                                }
+                            }
+                        },
+{#                        {#}
+{#                            name:'正常',#}
+{#                            type:'bar',#}
+{#                            stack: '网络设备',#}
+{#                            data:[150, 232, 201, 154, 190, 330, 410],#}
+{#                              itemStyle:{#}
+{#                                normal:{#}
+{#                                    color:'#FFFF00'#}
+{#                                }#}
+{#                            }#}
+{#                        },#}
+                        {
+                            name:'其他',
+                            type:'bar',
+                            stack: '网络设备',
+                            data:{{ qtn|safe }},
+                              itemStyle:{
+                                normal:{
+                                    color:'#00FF00'
+                                }
+                            }
+                        },
+
+
+                    ]
+                };
+                    myChart1.setOption(option);
+                }
+            );
+			//应用告警
+			require(
+                [
+                    'echarts',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('content5'));
+                    var option = {
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+
+
+
+
+
+                        toolbox: {
+                            show : true,
+                        },
+                        calculable : false,
+                        series : [
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                selectedMode: 'single',
+                                radius : [0, 70],
+
+                                // for funnel
+                                x: '20%',
+                                width: '40%',
+                                funnelAlign: 'right',
+                                max: 1548,
+
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            position : 'inner'
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    }
+                                },
+                                data:[
+                                    {value:4, name:'重大',
+                                        itemStyle:{
+                                        normal:{
+                                            color:'red'
+                                        }
+                                    }
+                                    },
+                                    {value:4, name:'严重',
+                                        itemStyle:{
+                                        normal:{
+                                            color:'#FFA500'
+                                        }
+                                    }
+                                    },
+                                    {value:4, name:'一般',
+                                        itemStyle:{
+                                        normal:{
+                                            color:'#FFFF00'
+                                        }
+                                    }
+                                    },
+                                    {value:4, name:'其它',
+                                        itemStyle:{
+                                        normal:{
+                                            color:'red'
+                                        }
+                                    }
+                                    },
+{#                                    {value:0, name:'正常',#}
+{#                                        itemStyle:{#}
+{#                                        normal:{#}
+{#                                            color:'#00FF00'#}
+{#                                        }#}
+{#                                    }#}
+{#                                    }#}
+                                ]
+                            },
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                radius : [100, 140],
+
+                                // for funnel
+                                x: '60%',
+                                width: '35%',
+                                funnelAlign: 'left',
+                                max: 1048,
+
+                                data:[
+                                    {value:1, name:'应用一'},
+                                    {value:1, name:'应用二'},
+                                    {value:1, name:'应用三'},
+                                    {value:1, name:'应用四'},
+                                     {value:1, name:'应用一'},
+                                    {value:1, name:'应用二'},
+                                    {value:1, name:'应用三'},
+                                    {value:1, name:'应用四'},
+                                     {value:1, name:'应用一'},
+                                    {value:1, name:'应用二'},
+                                    {value:1, name:'应用三'},
+                                    {value:1, name:'应用四'},
+                                     {value:1, name:'应用一'},
+                                    {value:1, name:'应用二'},
+                                    {value:1, name:'应用三'},
+                                    {value:1, name:'应用四'},
+                                ]
+                            }
+                        ]
+                    };
+
+                    myChart1.setOption(option);
+                }
+            );
+			//存储告警
+			require(
+                [
+                    'echarts',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('content6'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        x : 'center',
+                        y : 'bottom',
+                        data:['重大','严重','一般','其它','正常']
+                    },
+                    calculable : true,
+                    series : [
+
+                        {
+                            name:'面积模式',
+                            type:'pie',
+                            radius : [30, 100],
+                            center : ['55%', 200],
+                            roseType : 'area',
+                            x: '50%',               // for funnel
+                            max: 40,                // for funnel
+                            sort : 'ascending',     // for funnel
+                            data:[
+                                {value:1, name:'重大',
+                                    itemStyle: {
+                                        normal: {
+                                            color: 'red'
+                                        }
+                                    }
+                                },
+                                {value:5, name:'严重',
+                                    itemStyle: {
+                                        normal: {
+                                            color: '#FFA500'
+                                        }
+                                    }
+                                },
+                                {value:1, name:'一般',
+                                    itemStyle: {
+                                        normal: {
+                                            color: '#FFFF00'
+                                        }
+                                    }
+                                },
+                                {value:2, name:'其它',
+                                    itemStyle: {
+                                        normal: {
+                                            color: '#00FF00'
+                                        }
+                                    }
+                                },
+{#                                {value:3, name:'正常',#}
+{#                                    itemStyle: {#}
+{#                                        normal: {#}
+{#                                            color: '#FFFF00'#}
+{#                                        }#}
+{#                                    }#}
+{#                                },#}
+                            ]
+                        }
+                    ]
+                };
+
+                    myChart1.setOption(option);
+                }
+            );
+			//
+
+
+
+	</script>
+
+	<script>
+		layui.use('table', function(){
+		  var table = layui.table;
+
+		  table.render({
+		    elem: '#test'
+		    ,url:'/dashBoard/dealalarm/'
+		    ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+		      layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+		      //,curr: 5 //设定初始在第 5 页
+		      ,groups: 1 //只显示 1 个连续页码
+		      ,first: false //不显示首页
+		      ,last: false //不显示尾页
+
+		    }
+		    ,cols: [[
+		      {field:'Alert_lev_id', width:110, title: '故障等级', sort: true}
+		      ,{field:'Application', width:115, title: '所属应用'}
+		      ,{field:'ip', width:110, title: '设备IP', sort: true}
+		      ,{field:'message', width:130, title: '告警信息'}
+
+		    ]]
+
+		  });
+		});
+	layui.use('table', function(){
+		  var table = layui.table;
+
+		  table.render({
+		    elem: '#test2'
+		    ,url:'/dashBoard/maintaininfo/'
+		    ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+		      layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+		      //,curr: 5 //设定初始在第 5 页
+		      ,groups: 1 //只显示 1 个连续页码
+		      ,first: false //不显示首页
+		      ,last: false //不显示尾页
+
+		    }
+		    ,cols: [[
+		    {field:'name', width:120, title: '设备名', sort: true}
+		    ,{field:'ip', width:120, title: '设备IP', sort: true}
+		    ,{field:'oc_time', width:140, title: '开始时间'}
+		    ,{field:'end_time', width:140, title: '结束时间'}
+
+		    ]]
+
+		  });
+		});
+</script>
+
+
+
+	</body>
+</html>

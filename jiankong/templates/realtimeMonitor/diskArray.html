@@ -1,0 +1,249 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+        <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+        <!-- NProgress -->
+        <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+        <!-- bootstrap-daterangepicker -->
+        <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+    
+        <!-- Custom Theme Style -->
+        <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+        <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+        <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+	</head>
+	<body>
+		<div style="width: 100%; overflow-x: hidden;">
+		<div class="title_left">
+        	<h3 style="margin: 10px auto;">&nbsp;&nbsp;<small>磁盘阵列</small></h3>
+    	</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3 col-sm-3 col-xs-3 col-md-offset-1">
+					<input type="text" placeholder="设备IP" name="country" id="txt-machine" class="form-control col-md-10" autocomplete="off">
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2" >
+                	<select class="form-control" id="osel-group">
+							<option value="" selected>全部</option>
+							{% for g in  group %}
+							<option value="{{g.id}}">{{g.Group_Name}}</option>
+	                        <!--<option value="">主机组</option>-->
+	                        <!--<option value="1">group1</option>-->
+	                        <!--<option value="2">group2</option>-->
+	                        <!--<option value="3">group3</option>-->
+							{% endfor %}
+
+					</select>
+            	</div>
+				
+				<div class="col-md-1 col-sm-1 col-xs-1">
+					<button type="submit" class="btn btn-success" id="btn-search">查询</button>
+				</div>
+				
+				
+			</div>
+			<div class="row">
+				
+			</div>
+			<div class="row">
+				<div style="width: 90%; margin: 0 auto;">
+					<table class="layui-hide" id="test"></table>
+				</div>
+				
+			</div>
+			<div class="row" style="text-align: center;">
+				<div style="width: 100%; margin: 0 auto;">
+					<div class="col-md-1 col-sm-1 col-xs-1 col-md-1">
+						<p  style="width: 100%; text-align: center; line-height: 32px;">性能展示</p>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-2">                        			                     			
+						<input placeholder="发生时间" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="startTime">				                    				
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-2">                        			                     			
+						<input placeholder="结束时间" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="endTime">				                    				
+					</div>
+					<div class="col-md-1 col-sm-1 col-xs-1">
+						<div class="checkbox">
+						  <label>
+						    <input type="checkbox" value="">
+						    CPU
+						  </label>
+						</div>
+					</div>
+					<div class="col-md-1 col-sm-1 col-xs-1">
+						<div class="checkbox">
+						  <label>
+						    <input type="checkbox" value="">
+						    内存
+						  </label>
+						</div>
+					</div>
+					<div class="col-md-1 col-sm-1 col-xs-1">
+						<div class="checkbox">
+						  <label>
+						    <input type="checkbox" value="">
+						    磁盘
+						  </label>
+						</div>
+					</div>
+					<div class="col-md-1 col-sm-1 col-xs-1">
+						<div class="checkbox">
+						  <label>
+						    <input type="checkbox" value="">
+						    网络流量
+						  </label>
+						</div>
+					</div>
+					
+					
+					<div class="col-md-2 col-sm-1 col-xs-1">
+						<button type="submit" class="btn btn-success">导出数据报表</button>
+					</div>
+				</div>
+			<div class="row" style="height: 400px;">
+				<div class="col-md-6 col-sm-6 col-xs-6" id="p1" style="height:400px;"></div>
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p2" style="height:400px;"></div>
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p3" style="height:400px;"></div>
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p4" style="height:400px;"></div>
+			</div>	
+			
+        </div>
+			
+
+
+		</div>
+		</div>
+            <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+            <!-- Bootstrap -->
+            <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+            <!-- FastClick -->
+            <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+            <!-- NProgress -->
+            <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+            <!-- Chart.js -->
+            <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+            <!-- jQuery Sparklines -->
+            <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+            <!-- Flot -->
+            <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+            <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+            <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+            <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+            <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+            <!-- Flot plugins -->
+            <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+            <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+            <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+            <!-- DateJS -->
+            <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+            <!-- bootstrap-daterangepicker -->
+            <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+            <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+            
+            <!-- Custom Theme Scripts -->
+            <script src="{% static 'production/build/js/custom.min.js'%}"></script>
+            <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+            <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+            <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>  
+    		<script type="text/html" id="tmpFun">
+		<a href="#" class="layui-table-link" onclick="testClick({{d.id}})">修改</a>
+		<a href="#" class="layui-table-link" onclick="testClick(1)">删除</a>
+		<a href="#" class="layui-table-link" onclick="testClick(1)">上传</a>
+	</script>
+    		<script type="text/javascript">
+
+		function testClick(id) {
+			alert("id is " + id)
+        }
+
+    	$(function(){
+    	    var searchObj = {
+			        ip:"",
+					group:""
+				}
+			$('#btn-search').on('click',function(){
+					searchObj.ip = $('#txt-machine').val()
+					searchObj.group = $('#osel-group option:selected').val()
+					getData()
+					getCharts()
+				})
+			function getData(){
+
+					layui.use('table', function(){
+					var table = layui.table;
+					//第一个实例
+					table.render({
+						elem: '#test'
+						,url: '/realtimeMonitor/diskArray/'
+						,method:'post'
+						//,limit:searchObj.limit
+						,where: searchObj
+						,page: true //开启分页
+						,cols: [[ //表头
+						 {field:'hostname', title: '主机名', }
+						  ,{field:'ip', title: '主机IP'}
+						  ,{field:'group', title: '所属组',}
+						  ,{field:'status', title: 'Agent状态',}
+						  ,{field:'id',  title: '功能', templet: function (d) {
+								return '<div>'+
+									'<a href="#" class="layui-btn layui-btn-sm"  onclick="testClick('+d.id+')">告警详情</a>'+
+									'<a href="#" class="layui-btn layui-btn-sm" onclick="testClick('+d.id+')">导出</a>'+
+									'<a href="#" class="layui-btn layui-btn-sm"  onclick="testClick('+d.id+')">签退</a>'+
+									'</div>'
+                            }}
+						]]
+						,limits:[5,10,50,100,500]
+					});
+//
+					});
+////
+////
+				}
+			function getCharts(){
+			    var ip = $('#txt-machine').val()
+				var startTime = $('#startTime').val()
+				var endTime =$('#endTime').val()
+
+				var n = 7
+				if(endTime == '' && startTime != '' ){
+			        	var date = new Date(startTime)
+			        	startTime = date.getTime()
+						endTime = startTime+n*86400
+						alert(startTime)
+						alert(endTime)
+
+
+				}else if(endTime != '' && startTime == '' ){
+				    	var date = new Date(endTime)
+				    	endTime = date.getTime()
+						startTime  = endTime - n*86400
+						alert(startTime)
+						alert(endTime)
+
+				}else if(endTime == '' && startTime == ''){
+				    	var date = new Date()
+						endTime = date.getTime()
+						startTime = endTime - n*86400
+						alert(startTime)
+						alert(endTime)
+				}
+			$('#p1').attr('src',"http://10.249.4.212:3000/dashboard-solo/db/fu-wu-qi?orgId=1&var-group=Discovered%20hosts&var-group=ucloud-paas%E5%B9%B3%E5%8F%B0%3A%E7%89%A9%E7%90%86%E6%9C%BA&var-hosts="+ip+"&var-Application=CPU%E4%BF%A1%E6%81%AF&var-items=CPU%E5%88%A9%E7%94%A8%E7%8E%87&panelId=1&from="+startTime+"&to="+endTime)
+			$('#p2').attr('src',"http://10.249.4.212:3000/dashboard-solo/db/fu-wu-qi?orgId=1&var-group=Discovered%20hosts&var-group=ucloud-paas%E5%B9%B3%E5%8F%B0%3A%E7%89%A9%E7%90%86%E6%9C%BA&var-hosts="+ip+"&var-Application=CPU%E4%BF%A1%E6%81%AF&var-items=CPU%E5%88%A9%E7%94%A8%E7%8E%87&panelId=2&from="+startTime+"&to="+endTime)
+			$('#p3').attr('src',"http://10.249.4.212:3000/dashboard-solo/db/fu-wu-qi?orgId=1&var-group=Discovered%20hosts&var-group=ucloud-paas%E5%B9%B3%E5%8F%B0%3A%E7%89%A9%E7%90%86%E6%9C%BA&var-hosts="+ip+"&var-Application=CPU%E4%BF%A1%E6%81%AF&var-items=CPU%E5%88%A9%E7%94%A8%E7%8E%87&panelId=3&from="+startTime+"&to="+endTime)
+			$('#p4').attr('src',"http://10.249.4.212:3000/dashboard-solo/db/fu-wu-qi?orgId=1&var-group=Discovered%20hosts&var-group=ucloud-paas%E5%B9%B3%E5%8F%B0%3A%E7%89%A9%E7%90%86%E6%9C%BA&var-hosts="+ip+"&var-Application=CPU%E4%BF%A1%E6%81%AF&var-items=CPU%E5%88%A9%E7%94%A8%E7%8E%87&panelId=4&from="+startTime+"&to="+endTime)
+			}
+			getData();
+		})
+	</script>
+
+
+
+
+	</body>
+</html>

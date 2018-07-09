@@ -1,0 +1,289 @@
+﻿{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+	    <!-- Font Awesome -->
+	    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+	    <!-- NProgress -->
+	    <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+	    <!-- bootstrap-daterangepicker -->
+	    <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+	
+	    <!-- Custom Theme Style -->
+	    <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+	    <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+	    <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+	</head>
+	<body>
+		<div class="container" style="overflow: hidden;">
+			
+			<div class="title_left">
+    	<h3 style="margin: 10px auto;">&nbsp;&nbsp;<small>自动发现</small></h3>
+	</div>
+	<div class="row">
+		<div class="col-md-10 col-ls-10 col-xs-10 col-md-offset-1">
+				  
+			      <div class="row"style="margin: 10px 0" >
+			      	<div class="col-md-2 col-xs-2 col-ls-2">
+			      		<h5 style=" height: 32px; line-height: 32px;">按照IP自动发现:</h5>
+			      	</div>
+			      	<div class="col-md-9 col-xs-9 col-ls-9" >
+			      		<div class="row">
+			      			<div class="col-md-4 col-sm-4 col-xs-4"><input style="width: 100%" type="text" name="password" lay-verify="pass" placeholder="设备IP" autocomplete="off" class="layui-input" style="border: 1px solid #C6C6C6; height: 32px;"></div>
+			      			<div class="col-md-4 col-sm-4 col-xs-4"><input style="width: 100%" type="text" name="password" lay-verify="pass" placeholder="开始IP" autocomplete="off" class="layui-input" style="border: 1px solid #C6C6C6; height: 32px;"></div>
+			      			<div class="col-md-4 col-sm-4 col-xs-4"><input style="width: 100%" type="text" name="password" lay-verify="pass" placeholder="终止IP" autocomplete="off" class="layui-input" style="border: 1px solid #C6C6C6; height: 32px;"></div>
+			      		</div>
+					
+		      		</div>
+		      		<div class="col-md-1 col-xs-1 col-ls-1">
+		      			<button type="submit" class="btn btn-success" style="display: inline-block;margin-left: 1%">发现</button>
+		      		</div>
+			      </div>
+			      <div class="row" style="margin: 10px 0">
+			      	<div class="col-md-2 col-xs-2 col-ls-2">
+			      		<h5 style="height: 32px; line-height: 32px;">按照时间自动发现:</h5>
+			      	</div>
+{#			      	<div class="col-md-2 col-sm-3 col-xs-3" >#}
+{#						<input placeholder="开始时间" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"#}
+{#                        style="width: 113%">#}
+{#			      	</div>#}
+                      <div class="layui-input-inline col-md-3 col-sm-3 col-xs-3">
+                          <input class="layui-input" id="startTime" placeholder="开始时间"
+                                 type="text">
+                      </div>
+                      <div class="layui-input-inline col-md-3 col-sm-3 col-xs-3">
+                          <input class="layui-input" id="endTime" placeholder="结束时间"
+                                 type="text">
+                      </div>
+{#			      	<div class="col-md-2 col-sm-3 col-xs-3">#}
+{#						<input style="width: 113%;margin-left: 14%" placeholder="结束时间" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">#}
+{#			      	</div>#}
+			      	<div class="col-md-3 col-sm-3 col-xs-3">
+			      		<select name="city" lay-verify="" style="width:100% ; height: 32px;">
+					        <option value="">每天03:00</option>
+					        <option value="">每周六03:00</option>
+					        <option value="">每月15日03:00</option>
+						</select>    
+			      	</div>
+			      	<div class="col-md-1 col-xs-1 col-ls-1">
+		      			<button type="submit" class="btn btn-success" style=" display: inline-block;">发现</button>
+		      		</div>
+			      </div>
+			       
+				  <div style="height: 40px; line-height:40px;width:100%; margin:0  auto;background:#E0FFFF;padding-left: 20px; margin-top: 20px;">
+	    				<h5 style="line-height: 40px; display: inline-block;">自动发现</h5>
+	    			    <button type="submit" class="btn btn-success" style="float: right;  display: inline-block; margin-top: 3px;" id="btn-Install">安装</button>
+	    		  </div>
+{#				<table class="layui-hide" id="test"></table>#}
+            <table class="layui-table"
+                   lay-data="{width: 892, height:332, url:'/autoDiscovery/getautodiscovery/', page:true, id:'idTest'}"
+                   lay-filter="demo">
+                <thead>
+                <tr>
+                    <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                    <th lay-data="{field:'ip',sort: true, fixed: true}">主机IP</th>
+                    <th lay-data="{field:'hostname'}">主机名</th>
+                    <th lay-data="{field:'os',sort: true}">操作系统</th>
+{#                    <th lay-data="{field:'city', width:80}">城市</th>#}
+{#                    <th lay-data="{field:'sign', width:160}">签名</th>#}
+{#                    <th lay-data="{field:'experience', width:80, sort: true}">积分</th>#}
+{##}
+{#                    <th lay-data="{field:'classify', width:80}">职业</th>#}
+{#                    <th lay-data="{field:'wealth', width:135, sort: true}">财富</th>#}
+{#                    <th lay-data="{field:'score', width:80, sort: true, fixed: 'right'}">评分</th>#}
+                    <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}"></th>
+                </tr>
+                </thead>
+            </table>
+				</div>
+	</div>
+		</div>
+	
+
+
+
+
+
+       
+          
+	<script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'production/build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>  
+	
+{#	<table class="layui-hide" id="test"></table>#}
+
+        <script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">添加组</a>
+  <a class="layui-btn layui-btn-xs" lay-event="edit">选择模板</a>
+{#  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>#}
+</script>
+
+
+        <script>
+            layui.use('table', function(){
+  var table = layui.table;
+  //监听表格复选框选择
+  table.on('checkbox(demo)', function(obj){
+    console.log(obj)
+  });
+  //监听工具条
+  table.on('tool(demo)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'detail'){
+      addgroup()
+    } else if(obj.event === 'del'){
+     selectmodel()
+    } else if(obj.event === 'edit'){
+      selectmodel()
+    }
+  });
+
+  var $ = layui.$, active = {
+    getCheckData: function(){ //获取选中数据
+      var checkStatus = table.checkStatus('idTest')
+      ,data = checkStatus.data;
+      layer.alert(JSON.stringify(data));
+    }
+    ,getCheckLength: function(){ //获取选中数目
+      var checkStatus = table.checkStatus('idTest')
+      ,data = checkStatus.data;
+      layer.msg('选中了：'+ data.length + ' 个');
+    }
+    ,isAll: function(){ //验证是否全选
+      var checkStatus = table.checkStatus('idTest');
+      layer.msg(checkStatus.isAll ? '全选': '未全选')
+    }
+  };
+
+  $('.demoTable .layui-btn').on('click', function(){
+    var type = $(this).data('type');
+    active[type] ? active[type].call(this) : '';
+  });
+});
+        </script>
+
+
+        <script>
+               function addgroup(){
+        	layui.use('layer', function(){
+						  var layer = layui.layer;
+		        	 layer.open({
+			            title: '选择群组',
+
+			            btn:["添加","关闭"]
+			          , content: '<div class="modal-body">       '
+			                     + '<div class="row" style="margin-left: 30px">'
+			                     + ' 选择已有主机组：       '
+			                     + '  <select name="" id="">       '
+			                     + ' <option value="">主机组1</option> '
+			                     + ' <option value="">主机组2</option> '
+			                     + '</select> '
+			                     + '</div> '
+			                     + ' <span style="margin-left: 30px"></span>创建主机组： '
+			                     + ' <input type="text" style="margin-left: 10px;margin-top: 20px"> '
+			                     + ' <button class="btn btn-default" style="width: 60px;height: 30px; ">创建组</button> '
+			                     + ' <div class="modal-footer" > '
+{#			                     + ' <button type="submit" class="btn btn-default" onclick="">添加</button>'#}
+{#			                     + '  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button></div>'#}
+			                     + '  </div>'
+			        });
+			      })
+        }
+
+
+
+           function selectmodel(){
+        	layui.use('layer', function(){
+						  var layer = layui.layer;
+		        	 layer.open({
+			            title: '选择模板',
+
+			            btn:["添加","关闭"]
+			          , content: '<div class="modal-body">       '
+			                     + '<div class="row" style="margin-left: 30px">'
+			                     + ' 选择模板：       '
+			                     + '  <input type="checkbox" id="checkAll1" >模板一      '
+			                     + ' <input type="checkbox" id="checkAll2" >模板二'
+			                     + '</div> '
+			                     + '  </div>'
+			        });
+			      })
+        }
+
+
+
+
+        </script>
+
+	<script>
+	$(function(){
+	    $('#btn-Install').on('click', function () {
+//	        layer.open({
+//	            title: '选择Agent版本',
+//
+//	            btn:["安装","关闭"]
+//	          , content: '<select name="city" lay-verify="">        '
+//	                     + ' <option value="">Linux 1.0(适用于Linux,Centos6以上)</option> '
+//	                     + ' <option value="010">Linux 2.0(适用于Linux,Centos7以上)</option>        '
+//	                     + ' <option value="021">Windows 1.0(适用于Winserver2008以上)</option>        '
+//	                     + ' <option value="0571">Windows 2.0(适用于Winserver2012)</option>       '
+//	                     + '</select> '
+//	        });
+
+	        window.parent.autohtml()
+
+
+		})
+	})
+	</script>
+	   <script>
+            layui.use('laydate', function () {
+                var laydate = layui.laydate;
+                //日期时间选择器
+                laydate.render({
+                    elem: '#startTime'
+                    , type: 'datetime'
+                });
+                //日期时间选择器
+                laydate.render({
+                    elem: '#endTime'
+                    , type: 'datetime'
+                });
+            })
+        </script>
+	</body>
+	
+</html>

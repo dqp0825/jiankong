@@ -1,0 +1,1125 @@
+{% load staticfiles %}
+{#<!--{% static ''%}-->#}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<!-- Bootstrap -->
+	    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+	    <!-- Font Awesome -->
+	    <!--<link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">-->
+	    <!-- NProgress -->
+	    <!--<link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">-->
+	    <!-- bootstrap-daterangepicker -->
+	    <!--<link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">-->
+	
+	    <!-- Custom Theme Style -->
+	    <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+	    <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+	    <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}">
+	    <style type="text/css">
+		*{margin:0;padding:0;list-style:none;}
+		html{background-color:#E3E3E3; font-size:14px; color:#000; font-family:'微软雅黑'}
+		h2{line-height:30px; font-size:20px;}
+		a,a:hover{ text-decoration:none;}
+		pre{font-family:'微软雅黑'}
+
+		.box a{padding-right:20px;}
+		.demo1,.demo2,.demo3,.demo4,.demo5,.demo6{margin:25px 0;}
+		h3{margin:10px 0;}
+		.layinput{height: 30px;line-height: 30px;width: 150px;margin: 0;}
+		.ack-color{font-size:14px; color:#000; margin-bottom: 8px; font-family:'微软雅黑'}
+
+		.layui-table-cell {
+		height: auto;
+		line-height: 28px;
+		padding: 0 15px;
+		position: relative;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		box-sizing: border-box;
+		}
+
+		</style>
+	</head>
+	<body style="width: 100%; overflow-x: hidden;">
+		<!--受理弹出框-->
+		<div id="ack_box" style="display: none;"style="overflow-x: hidden;">
+		</div>
+		<!--详情弹出框-->
+		<div id="detail_box" style="display: none;"style="overflow-x: hidden;">
+		</div>
+		<!--签退弹出框-->
+		<div id="form_box" style="display: none;"style="overflow-x: hidden;">
+            <!--<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-bottom: 10px;">-->
+			<!--<label class="col-md-3 col-sm-3 col-xs-3 ">维护开始时间:&emsp;</label>-->
+			<!--<div class="col-md-7 col-sm7 col-xs-7 " >-->
+				<!--<input class="laydate-icon form-control col-md-10" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="form_startTime">-->
+			<!--</div>-->
+		<!--</div>-->
+			<!--<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-bottom: 10px;">-->
+				<!--<label class="col-md-3 col-sm-3 col-xs-3 ">维护结束时间:&emsp;</label>-->
+				<!--<div class="col-md-7 col-sm7 col-xs-7 ">-->
+					<!--<input class="laydate-icon form-control col-md-10" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="form_endTime">-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-bottom: 10px;">-->
+			<!--<label class="col-md-3 col-sm-3 col-xs-3 ">维护内容:&emsp;</label>-->
+			<!--<div class="col-md-7 col-sm7 col-xs-7 " >-->
+				<!--<textarea name="" required lay-verify="required" class="layui-textarea" id="form_DESC" ></textarea>-->
+			<!--</div>-->
+		<!--</div>-->
+		</div>
+
+		<!--<div  style="overflow-x: hidde;">-->
+		<div class="title_left">
+	        <h3>&nbsp;&nbsp;<small>告警事件</small></h3>
+	    </div>
+	    <div class="container">
+	    	<div class="row">
+	    		<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_content">
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="false">当前告警</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="true">历史告警</a>
+                        </li>
+
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+						 <!--当前告警 -->
+                        <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                          <div class="container">
+						  <!--图表-->
+						  <div class="row">
+	                          	<div class="col-md-6 col-sm-6 col-xs-12">
+									<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">设备告警</h5>
+									<div id="divone" style="height:400px; width:500px; margin:0  auto;"></div>
+								</div>
+								<div class="col-md-6 col-sm-6 col-xs-12">
+									<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">告警处理进度</h5>
+									<div id="divtwo" style="height:400px; width:500px; margin:0  auto;"></div>
+								</div>
+						 	</div>
+						  <!--自定义搜索-->
+						  <div class="row">
+							<div style="width: 90%; margin: 0 auto;">
+
+								<div class="col-md-2 col-sm-2 col-xs-2" >
+									<select class="select2_group form-control" id="Device_Type">
+							 			<option value="">所有设备</option>
+										{% for Device_Type in Device_Type_list %}
+										<option value="{{ Device_Type.TypeName }}"> {{ Device_Type.TypeName }} </option>
+										{% endfor %}
+				                    </select>
+								</div>
+								<!--<div class="col-md-2 col-sm-2 col-xs-2" >-->
+									<!--<input  placeholder="受理时间起始" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="startTime">-->
+								<!--</div>-->
+								<!--<div class="col-md-2 col-sm-2 col-xs-2">-->
+									<!--<input placeholder="受理时间结束" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="endTime">-->
+								<!--</div>-->
+								<div class="col-md-2 col-sm-2 col-xs-2">
+									<select class="form-control" id="alert_lev">
+										<option value=''>全部告警等级</option>
+										{% for alert_lev in alert_lev_list %}
+										<option value="{{ alert_lev.Alert_lev_id }}"> {{ alert_lev.LevName }} </option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-2 pull-right " >
+									<div class="col-md-5 col-sm-5 col-xs-5 pull-right">
+										<button type="submit" class="layui-btn layui-btn-sm" id="btn-sea">导出</button>
+									</div>
+									<div class="col-md-5 col-sm-5 col-xs-5 pull-right">
+										<button type="submit" class="layui-btn layui-btn-sm" id="btn-search">查询</button>
+									</div>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-2 pull-right ">
+									<input type="text" placeholder="告警内容" name="country"  class="form-control col-md-10" autocomplete="off" id="txt-machine">
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-2 pull-right ">
+									<input type="text" placeholder="主机IP" name="country"  class="form-control col-md-10" autocomplete="off" id="txt-ip">
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-2 pull-right ">
+									<input type="text" placeholder="主机名" name="country"  class="form-control col-md-10" autocomplete="off" id="txt-hostname">
+								</div>
+
+							</div>
+						  </div>
+
+                          	 <!--表格-->
+							<div class="row">
+								<div style="width: 90%; margin: 0 auto;">
+									<table class="layui-hide" lay-size="sm" id="test">
+
+									</table>
+								</div>
+
+							</div>
+							 <!--表格止-->
+                          </div>
+                        </div>
+						<!--历史告警 -->
+                        <div role="tabpanel" class="tab-pane fade " id="tab_content2" aria-labelledby="profile-tab">
+							<div class="container">
+								<!--自定义搜索-->
+								<div class="row">
+									<div style="width: 90%; margin: 0 auto;">
+
+										<div class="col-md-3 col-sm-3 col-xs-3" >
+											<select class="select2_group form-control" id="Device_Type1">
+												<option value="">所有设备</option>
+												{% for Device_Type in Device_Type_list %}
+												<option value="{{ Device_Type.TypeName }}"> {{ Device_Type.TypeName }} </option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-3">
+												<select class="form-control" id="alert_lev1">
+													<option value=''>告警等级</option>
+													{% for alert_lev in alert_lev_list %}
+													<option value="{{ alert_lev.Alert_lev_id }}"> {{ alert_lev.LevName }} </option>
+													{% endfor %}
+												</select>
+											</div>
+{#										<div class="col-md-1 col-sm-1 col-xs-1 pull-right">#}
+{#											<button type="submit" class="layui-btn layui-btn-sm" id="btn-sea1">导出</button>#}
+{#										</div>#}
+{#										<div class="col-md-2 col-sm-2 col-xs-2 pull-left">#}
+{#											<input placeholder="结束时间" class="laydate-icon form-control col-md-10" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="endTime">#}
+{#										</div>#}
+                                        <div class="layui-inline col-md-6 col-sm-6 col-xs-6">
+{#                                            <label class="layui-form-label" style="font-size: 12px">开始</label>#}
+                                            <div class="layui-input-inline">
+                                                <input class="layui-input" id="startTime" placeholder="开始时间"
+                                                       type="text">
+                                            </div>
+{#                                        </div>#}
+{#										<div class="col-md-2 col-sm-2 col-xs-2 pull-right" >#}
+{#											<input  placeholder="起始时间" class="laydate-icon form-control col-md-10" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="startTime">#}
+{#										</div>#}
+{#                                        <div class="layui-inline col-md-3 col-sm-3 col-xs-3">#}
+{#                                            <label class="layui-form-label" style="font-size: 12px">结束</label>#}
+                                            <div class="layui-input-inline">
+                                                <input class="layui-input" id="endTime" placeholder="终止时间"
+                                                       type="text">
+                                            </div>
+                                        </div>
+									</div>
+								</div>
+								<div class="row">
+									<div style="width: 90%; margin: 0 auto;">
+                                        <div class="col-md-1 col-sm-1 col-xs-1 pull-right">
+											<button type="submit" class="layui-btn layui-btn-sm" id="btn-sea2">导出</button>
+										</div>
+										<div class="col-md-1 col-sm-1 col-xs-1 pull-right">
+											<button type="submit" class="layui-btn layui-btn-sm" id="btn-search1">查询</button>
+										</div>
+
+										<div class="col-md-4 col-sm-4 col-xs-4 pull-right ">
+											<input type="text" placeholder="告警内容" name="country"  class="form-control col-md-11" autocomplete="off" id="txt-machine1">
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-3 pull-right ">
+											<input type="text" placeholder="主机IP" name="country"  class="form-control col-md-10" autocomplete="off" id="txt-ip1">
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-3 pull-right ">
+											<input type="text" placeholder="主机名" name="country"  class="form-control col-md-10" autocomplete="off" id="txt-hostname1">
+										</div>
+
+									</div>
+								</div>
+
+								 <!--表格-->
+								<div class="row">
+									<div style="width: 90%; margin: 0 auto;">
+										<table class="layui-hide" lay-size="sm" id="test1">
+
+										</table>
+									</div>
+
+								</div>
+								 <!--表格止-->
+							</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+	    	</div>
+	    </div>
+
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <!--<script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>-->
+    <!-- NProgress -->
+    <!--<script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>-->
+    <!-- Chart.js -->
+    <!--<script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>-->
+    <!-- jQuery Sparklines -->
+    <!--<script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>-->
+    <!-- Flot -->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>-->
+    <!-- Flot plugins -->
+    <!--<script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>-->
+    <!-- DateJS -->
+    <!--<script src="{% static 'vendors/DateJS/build/date.js'%}"></script>-->
+    <!-- bootstrap-daterangepicker -->
+    <!--<script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>-->
+    <!--<script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>-->
+
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>
+	<script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js' %}" charset="utf-8"></script>
+	<script type="text/javascript">
+		require.config({
+			paths: {
+				'echarts': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/'%}",
+				'echarts/chart/line': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/line'%}",
+				'echarts/chart/pie': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/pie'%}",
+				'echarts/chart/bar': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/bar'%}",
+				'echarts/chart/gauge':"{% static 'production/plugins/echarts-2.2.7/build/dist/chart/gauge'%}",
+			}
+		});
+		//主要4个仪表盘
+	require(
+            [
+                'echarts',
+                'echarts/chart/pie'
+            ],
+            function (ec) {
+                var myChart1 = ec.init(document.getElementById('divone'));
+                var option = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+
+
+
+
+
+
+                    toolbox: {
+                        show : true,
+                    },
+                    calculable : false,
+                    series : [
+                        {
+                            name:'访问来源',
+                            type:'pie',
+                            selectedMode: 'single',
+                            radius : [0, 70],
+
+                            // for funnel
+                            x: '20%',
+                            width: '40%',
+                            funnelAlign: 'right',
+                            max: 1548,
+
+                            itemStyle : {
+                                normal : {
+                                    label : {
+                                        position : 'inner'
+                                    },
+                                    labelLine : {
+                                        show : false
+                                    }
+                                }
+                            },
+                            data:[
+                                {value:{{ alertzd }}, name:'重大',
+                                      itemStyle: {
+                                        normal: {
+                                            color: 'red'
+                                        }
+                                    }
+                                },
+                                {value:{{ alertyz }}, name:'严重',
+                                      itemStyle: {
+                                        normal: {
+                                            color: '#FF7F50'
+                                        }
+                                    }
+                                },
+                                {value:{{ alertyb }}, name:'一般',
+                                      itemStyle: {
+                                        normal: {
+                                            color: '#FFA500'
+                                        }
+                                    }
+                                ,selected:true},
+                                {value:{{ alertqt }}, name:'其它',
+                                      itemStyle: {
+                                        normal: {
+                                            color: '#FFD700'
+                                        }
+                                    }
+                                },
+                            ]
+                        },
+                        {
+                            name:'访问来源',
+                            type:'pie',
+                            radius : [100, 140],
+
+                            // for funnel
+                            x: '60%',
+                            width: '35%',
+                            funnelAlign: 'left',
+                            max: 1048,
+
+                            data:[
+                                {% for zd in zdlist %}
+                                    {% ifnotequal zd.value 0 %}
+                                    {{ zd|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                {% for yz in yzlist %}
+                                    {% ifnotequal yz.value 0 %}
+                                    {{ yz|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                {% for yb in yblist %}
+                                    {% ifnotequal yb.value 0 %}
+                                    {{ yb|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                                {% for qt in qtlist %}
+                                    {% ifnotequal qt.value 0 %}
+                                    {{ qt|safe }},
+                                    {% endifnotequal %}
+                                {% endfor %}
+                            ]
+                        }
+                    ]
+                };
+
+                myChart1.setOption(option);
+            }
+        );
+
+	require(
+            [
+                'echarts',
+                'echarts/chart/pie'
+            ],
+            function (ec) {
+                var myChart1 = ec.init(document.getElementById('divtwo'));
+                var option = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+
+
+
+
+
+
+                    toolbox: {
+                        show : true,
+                    },
+                    calculable : false,
+                    series : [
+                        {
+                            name:'访问来源',
+                            type:'pie',
+                            selectedMode: 'single',
+                            radius : [0, 70],
+
+                            // for funnel
+                            x: '20%',
+                            width: '40%',
+                            funnelAlign: 'right',
+                            max: 1548,
+
+                            itemStyle : {
+                                normal : {
+                                    label : {
+                                        position : 'inner'
+                                    },
+                                    labelLine : {
+                                        show : false
+                                    }
+                                }
+                            },
+                            data:[
+{#                                {value:10, name:'超时'},#}
+{#                                {value:20, name:'未超时'},#}
+                                {% ifnotequal cs.value 0 %}
+                                {{ cs|safe }},
+                                {% endifnotequal %}
+                                {% ifnotequal wcs.value 0 %}
+                                {{ wcs|safe }}
+                                {% endifnotequal %}
+                            ]
+                        },
+
+                        {
+                            name:'访问来源',
+                            type:'pie',
+                            radius : [100, 140],
+
+                            // for funnel
+                            x: '60%',
+                            width: '35%',
+                            funnelAlign: 'left',
+                            max: 1048,
+
+                            data:[
+                                {% ifnotequal cszd.value 0 %}
+                                {{ cszd|safe }},
+                                {% endifnotequal %}
+                            {% ifnotequal csyz.value 0 %}
+                                {{ csyz|safe }},
+                                {% endifnotequal %}
+                            {% ifnotequal csyb.value 0 %}
+                                {{ csyb|safe}},
+                                {% endifnotequal %}
+                            {% ifnotequal csqt.value 0 %}
+                                {{ csqt|safe }},
+                                {% endifnotequal %}
+                            {% ifnotequal wcszd.value 0 %}
+                                {{ wcszd|safe }},
+                                {% endifnotequal %}
+                            {% ifnotequal wcsyz.value 0 %}
+                                {{ wcsyz|safe }},
+                                {% endifnotequal %}
+                            {% ifnotequal wcsyb.value 0 %}
+                                {{ wcsyb|safe }},
+                                {% endifnotequal %}
+                            {% ifnotequal wcsqt.value 0 %}
+                                {{ wcsqt|safe }}
+                                {% endifnotequal %}
+
+
+
+                            ]
+                        }
+                    ]
+                };
+
+                myChart1.setOption(option);
+            }
+        );
+	</script>
+{#	<script type="text/javascript">#}
+{#		layui.use('table', function(){#}
+{#		  var table = layui.table;#}
+{#		  #}
+{#		  table.render({#}
+{#		    elem: '#test-now'#}
+{#		    ,url:'/alarmEvents/getalarm'#}
+{#		    ,cols: [[#}
+{#		      {type:'checkbox'}#}
+{#		      ,{field:'Alert_lev_id', title: '告警等级', sort: true}#}
+{#		      ,{field:'Application', title: '所属应用'}#}
+{#		      ,{field:'Type', title: '告警设备', sort: true}#}
+{#		      ,{field:'city',  title: '监控项'}#}
+{#		      ,{field:'message', title: '告警内容', minWidth: 100}#}
+{#		      ,{field:'Oc_time', title: '发生时间', sort: true}#}
+{#		      ,{field:'A_time',  title: '受理时间', sort: true}#}
+{#		      ,{field:'Sendto', title: '通知人'}#}
+{#		      ,{field:'Status',  title: '解决'}#}
+{#		      ,{field:'wealth',  title: '受理'}#}
+{#		    ]]#}
+{#		    ,page: true#}
+{#		  });#}
+{#		  table.render({#}
+{#		    elem: '#test-history'#}
+{#		    ,url:'/demo/table/user/'#}
+{#		    ,cols: [[#}
+{#		      {type:'checkbox'}#}
+{#		      ,{field:'id', width:100, title: '告警等级', sort: true}#}
+{#		      ,{field:'username', width:100, title: '所属应用'}#}
+{#		      ,{field:'sex', width:100, title: '告警设备', sort: true}#}
+{#		      ,{field:'city', width:100, title: '监控项'}#}
+{#		      ,{field:'sign', width:100,title: '告警内容', minWidth: 100}#}
+{#		      ,{field:'experience', width:100, title: '发生时间', sort: true}#}
+{#		      ,{field:'score', width:100, title: '告警时长', sort: true}#}
+{#		      ,{field:'classify', width:100, title: '通知人'}#}
+{#		      ,{field:'wealth', width:105, title: '受理'}#}
+{#		      ,{field:'wealth', width:105, title: '解决'}#}
+{#		    ]]#}
+{#		    ,page: true#}
+{#		  });#}
+{#		});#}
+{#	</script>#}
+
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+layui.use('table', function(){
+  var table = layui.table;
+  //监听表格复选框选择
+  table.on('checkbox(demo)', function(obj){
+    console.log(obj)
+  });
+  //监听工具条
+  table.on('tool(demo)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'detail'){
+      layer.msg('ID：'+ data.id + ' 的查看操作');
+    } else if(obj.event === 'del'){
+      layer.confirm('真的删除行么', function(index){
+        obj.del();
+        layer.close(index);
+      });
+    } else if(obj.event === 'edit'){
+      layer.alert('编辑行：<br>'+ JSON.stringify(data))
+    }
+  });
+
+  var $ = layui.$, active = {
+    getCheckData: function(){ //获取选中数据
+      var checkStatus = table.checkStatus('idTest')
+      ,data = checkStatus.data;
+      layer.alert(JSON.stringify(data));
+    }
+    ,getCheckLength: function(){ //获取选中数目
+      var checkStatus = table.checkStatus('idTest')
+      ,data = checkStatus.data;
+      layer.msg('选中了：'+ data.length + ' 个');
+    }
+    ,isAll: function(){ //验证是否全选
+      var checkStatus = table.checkStatus('idTest');
+      layer.msg(checkStatus.isAll ? '全选': '未全选')
+    }
+  };
+
+  $('.demoTable .layui-btn').on('click', function(){
+    var type = $(this).data('type');
+    active[type] ? active[type].call(this) : '';
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+	// <!-- 当前告警-->
+$(function(){
+	var searchObj = {
+			machine:"",
+			hostname:"",
+			ip:"",
+			alert_lev:"",
+			Device_Type:""
+		}
+	// 查找
+	$('#btn-search').on('click',function(){
+			searchObj.machine = $('#txt-machine').val();
+			searchObj.hostname = $('#txt-hostname').val();
+			searchObj.ip = $('#txt-ip').val();
+			searchObj.alert_lev = $('#alert_lev option:selected').val();
+			searchObj.Device_Type = $('#Device_Type option:selected').val();
+			getData()
+		});
+	// 导出
+	$('#btn-sea').on('click',function(){
+			searchObj.machine = $('#txt-machine').val();
+			searchObj.hostname = $('#txt-hostname').val();
+			searchObj.ip = $('#txt-ip').val();
+			searchObj.alert_lev = $('#alert_lev option:selected').val();
+			searchObj.Device_Type = $('#Device_Type option:selected').val();
+			var table = layui.table;
+			var alerts_id = [];
+			var checkStatus = table.checkStatus('test');
+			datajson = JSON.stringify(checkStatus.data);
+			$.each(checkStatus.data, function (index, obj) {
+            alerts_id.push(obj.Alert_id)
+        	});
+			var ajax_data ={alerts_id:alerts_id,
+							machine:searchObj.machine,
+							hostname:searchObj.hostname,
+							ip:searchObj.ip,
+							alert_lev:searchObj.alert_lev,
+							Device_Type:searchObj.Device_Type};
+			$.ajax({
+				url: '{% url "alarmEvents:alarmEvents_export" %}',
+				method: 'POST',
+				data: JSON.stringify(ajax_data),
+				dataType: "json",
+				success: function (data, textStatus) {
+					window.open(data.redirect)
+				},
+				error: function () {
+					toastr.error('Export failed');
+				}
+            })
+		});
+	// 加载表格
+	function getData(){
+
+			layui.use('table', function(){
+			var table = layui.table;
+			//第一个实例
+			table.render({
+				elem: '#test'
+				,url: '/alarmEvents/alarmEvent/'
+				,method:'post'
+				//,limit:searchObj.limit
+				,where: searchObj
+				,page: true //开启分页
+				,cellMinWidth:'100%'
+				,cols: [[ //表头
+					{checkbox: true , width:'4%', minWidth:10}
+					,{field:'Alert_lev_id', title: '级别', width:'6%', minWidth:10}
+					,{field:'Application', title: '所属应用', width:'10%', minWidth:10}
+					,{field:'Type_ip', title: '告警设备', width:'12%', minWidth:10}
+					,{field:'message', title: '告警内容', width:'14%', minWidth:10}
+					,{field:'Oc_time', title: '发生时间', width:'12%', minWidth:10}
+					,{field:'A_time', title: '受理时间', width:'12%', minWidth:10}
+					,{field:'Sendto', title: '受理人', width:'8%', minWidth:10}
+					,{field:'state', title: '解决', width:'8%', minWidth:10}
+					,{field:'Alert_id',  title: '功能', width:'14%', minWidth:10,templet: function (d) {
+					    if(d.A_time && d.sign_out=="0"){
+					        return '<div>'+
+							'<a href="#" class="layui-btn layui-btn-sm btn_det"  data-alert_lev="'+d.Alert_lev_id+
+							'" data-item="'+d.item+'" data-application="'+d.Application+'" data-message="'+d.message+
+							'" data-sendto="'+d.Sendto+'" data-oc_time="'+d.Oc_time+'" data-desc="'+d.DESC+
+							'" data-state="'+d.state+'" data-status="'+d.Status+'" data-a_time="'+d.A_time+'" data-type_ip="'+d.Type_ip+'">查看</a>'+
+							'<a href="#" class="layui-btn layui-btn-sm btn_sign "  data-hostid="'+d.hostid+
+							'" data-ip="'+d.Type_ip+'" data-zabbix_id="'+d.zabbix_id+'">签退</a>'+
+							'</div>'
+						}else if(d.A_time && d.sign_out=="1"){
+					        return '<div>'+
+							'<a href="#" class="layui-btn layui-btn-sm btn_det"  data-alert_lev="'+d.Alert_lev_id+
+							'" data-item="'+d.item+'" data-application="'+d.Application+'" data-message="'+d.message+
+							'" data-sendto="'+d.Sendto+'" data-oc_time="'+d.Oc_time+'" data-desc="'+d.DESC+
+							'" data-state="'+d.state+'" data-status="'+d.Status+'" data-a_time="'+d.A_time+'" data-type_ip="'+d.Type_ip+'">查看</a>'+
+							'</div>'
+						}else if(!d.A_time && d.sign_out=="1"){
+					        return '<div>'+
+							'<a href="#" class="layui-btn layui-btn-sm btn_sl"  data-request_user="'+d.request_user+
+							'" data-message="'+d.message+'" data-eventids="'+d.eventid+'" data-alert_lev="'+
+							d.Alert_lev_id+ '" data-type_ip="'+d.Type_ip+'" data-zabbix_id="'+d.zabbix_id+'">受理</a>'+
+							'</div>'
+						}else{
+					        return '<div>'+
+							'<a href="#" class="layui-btn layui-btn-sm btn_sl"  data-request_user="'+d.request_user+
+							'" data-message="'+d.message+'" data-eventids="'+d.eventid+'" data-alert_lev="'+
+							d.Alert_lev_id+ '" data-type_ip="'+d.Type_ip+'" data-zabbix_id="'+d.zabbix_id+'">受理</a>'+
+							'<a href="#" class="layui-btn layui-btn-sm btn_sign "  data-hostid="'+d.hostid+
+							'" data-ip="'+d.Type_ip+'" data-zabbix_id="'+d.zabbix_id+'">签退</a>'+
+							'</div>'
+						}
+
+						// '<a href="#" class="layui-btn layui-btn-sm" onclick="testClick('+d.hostid+')">导出</a>'+
+					}}
+
+				]]
+				,limits:[5,10,50,100,500]
+			});
+//
+			});
+////
+////
+	}
+
+	getData();
+})
+	.on('click', '.btn_sign', function () {
+				var ip = $(this).data('ip');
+				var hostid = $(this).data('hostid');
+				var zabbix_id = $(this).data('zabbix_id');
+				var oc_time = '';
+				var end_time = '';
+				var name = '';
+				var desc = '';
+				// var name_input = '<input type="text" readonly  name="country" id="form_name" value="'+ name +'" id="form_name">'
+				var form_html = '<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-top: 20px; margin-bottom: 10px;">'+
+					'<label class="col-md-3 col-sm-3 col-xs-3 ">维护名称:&emsp;</label>'+
+					'<div class="col-md-7 col-sm7 col-xs-7 " >'+
+					'<input type="text" name="country" id="form_name" value="'+ name +'" id="form_name">' +
+					'</div>' +
+					'</div>' +
+					'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-bottom: 10px;">'+
+					'<label class="col-md-3 col-sm-3 col-xs-3 ">维护开始时间:&emsp;</label>'+
+					'<div class="col-md-7 col-sm7 col-xs-7 " >'+
+					'<input class="laydate-icon form-control col-md-10" value="'+ oc_time +'" onclick="laydate({istime: true, format: \'YYYY-MM-DD hh:mm:ss\'})" id="form_startTime">'+
+					'</div>'+
+					'</div>'+
+					'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-bottom: 10px;">'+
+					'<label class="col-md-3 col-sm-3 col-xs-3 ">维护结束时间:&emsp;</label>'+
+					'<div class="col-md-7 col-sm7 col-xs-7 ">'+
+					'<input class="laydate-icon form-control col-md-10" value="'+ end_time +'" onclick="laydate({istime: true, format: \'YYYY-MM-DD hh:mm:ss\'})" id="form_endTime">'+
+					'</div>'+
+					'</div>'+
+					'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-bottom: 10px;">'+
+					'<label class="col-md-3 col-sm-3 col-xs-3 ">描述:&emsp;</label>'+
+					'<div class="col-md-7 col-sm7 col-xs-7 " >'+
+					'<textarea name="" required lay-verify="required" class="layui-textarea" id="form_DESC">'+ desc + '</textarea>'+
+					'</div>'+
+					'</div>';
+				$('#form_box').html(form_html);
+				layer.open({
+					title: '主机维护' + ip,
+					type:1,
+					area: ['600px'],
+					btn:['签退'],
+					content: $('#form_box'),
+					yes: function(index, layero){
+						var form_name = $('#form_name').val();
+						var form_endTime = $('#form_endTime').val();
+						var form_startTime = $('#form_startTime').val();
+						var description = $('#form_DESC').val();
+						if(!form_endTime || !form_startTime){
+							layer.open({
+								title: '开始时间或结束时间不能为空',
+								type: 1,
+								time: 5000
+							});
+						}else if(!form_name){
+						    layer.open({
+								title: '维护内容不能为空',
+								type: 1,
+								time: 5000
+							})
+						}else if(form_endTime && form_startTime){
+							if(form_endTime <= form_startTime){
+								// layer.msg('结束时间不能早于开始时间',{
+								//   time: 5000,
+								//   btn: ['明白了']
+								// });
+								layer.open({
+									title: '结束时间不能早于开始时间',
+									type: 1,
+									time: 5000
+								});
+							}else{
+							    $.get("/signbackInformation/host_maintenance/",
+									{ hostids: hostid, zabbix_id: zabbix_id, active_since: form_startTime,
+									active_till: form_endTime, name: ip +'主机:'+ form_name, description: description},
+									function(res){
+								if(res['maintenanceids']){
+									layer.msg('ip为：'+ ip +'的设备签退成功',{
+										 type: 1,
+										 time: 5000,
+										 btn: ['确定'],
+										 btn1: function(index, layero){
+										     layer.closeAll();
+										 }
+											});
+
+									setTimeout("window.location.reload()",3000)
+								}
+								if(res['mgs']){
+									   layer.msg('ip为（'+ ip +'）的设备出错了：' + res['mgs'],{
+										   type: 1,
+										   time: 50000,
+										   btn: ['明白了']
+										});
+									// alert('hostid为（'+ hostid +'）的设备出错了：' + res['mgs'])
+								}
+							}
+
+								);
+							}
+						}
+
+					}
+				});
+
+        	})
+	.on('click', '.btn_det', function () {
+			var type_ip = $(this).data('type_ip');
+			var alert_lev = $(this).data('alert_lev');
+			var application = $(this).data('application');
+			var message = $(this).data('message');
+			var item = $(this).data('item');
+			var oc_time = $(this).data('oc_time');
+			var sendto = $(this).data('sendto');
+			var a_time = $(this).data('a_time');
+			var status = $(this).data('status');
+			var state = $(this).data('state');
+			var desc = $(this).data('desc');
+			var detail_html = '<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >设备IP:&emsp;&emsp;</label><label >' + type_ip + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >告警级别:&emsp;&emsp;</label><label >' + alert_lev + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >所属应用:&emsp;&emsp;</label><label >' + application + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >监控项:&emsp;&emsp;</label><label >' + item + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >发生时间:&emsp;&emsp;</label><label >' + oc_time + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理人:&emsp;&emsp;</label><label >' + sendto + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理结果:&emsp;&emsp;</label><label >' + status + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理时间:&emsp;&emsp;</label><label >' + a_time + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >解决情况:&emsp;&emsp;</label><label >' + state + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理内容:&emsp;&emsp;</label><label >' + desc + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >告警内容:&emsp;&emsp;</label><label >' + message + '</label></div>';
+			$('#detail_box').html(detail_html);
+			// alert($(this).data('eventids'));
+			layer.open({
+				title: '告警详情',
+				type:1,
+				area: ['780px'],
+				btn:['关闭'],
+			    content: $('#detail_box'),
+				btn1: function(index, layero){
+					layer.closeAll();
+  				}
+
+			});
+
+        })
+	.on('click', '.btn_sl', function () {
+			var eventids = $(this).data('eventids');
+			var zabbix_id = $(this).data('zabbix_id');
+			var type_ip = $(this).data('type_ip');
+			var alert_lev = $(this).data('alert_lev');
+			var message = $(this).data('message');
+			var request_user = $(this).data('request_user');
+			var ack_html = '<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1 ack-color"><label >设备IP:&emsp;&emsp;</label><label >' + type_ip + '</label></div>' +
+				'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1 ack-color"><label >告警级别:&emsp;&emsp;</label><label >' + alert_lev + '</label></div>' +
+				'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1 ack-color"><label >告警内容:&emsp;&emsp;</label><label >' + message + '</label></div>' +
+				'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1 ack-color"><label >受理人:&emsp;&emsp;</label><label >' + request_user + '</label></div>' +
+				'<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1 ack-color"><label >受理内容:</label>' +
+				'<textarea name="" required lay-verify="required" placeholder="请输入受理内容" class="layui-textarea" style="width: 500px;" id="ack_DESC" ></textarea>' +
+				'</div>';
+			$('#ack_box').html(ack_html)
+			// alert(eventids);
+			layer.open({
+				title: '受理信息',
+				type:1,
+				area: ['600px'],
+				btn:['提交受理'],
+			    content: $('#ack_box'),
+				btn1: function(index, layero){
+					var message = $('#ack_DESC').val();
+					$.get("/alarmEvents/host_acknowledge/",
+						{ message: message, eventids: eventids, zabbix_id: zabbix_id},
+						function(ret){
+					    if(res['eventids']){
+									layer.msg(ret['eventids'] + '受理成功',{
+										 type: 1,
+										 time: 5000,
+										 btn: ['确定'],
+										 btn1: function(index, layero){
+										     layer.closeAll();
+										 }
+											});
+
+									setTimeout("window.location.reload()",3000)
+								}
+								if(res['mgs']){
+									   layer.msg('ip为（'+ ip +'）的设备出错了：' + res['mgs'],{
+										   type: 1,
+										   time: 50000,
+										   btn: ['明白了']
+										});
+									// alert('hostid为（'+ hostid +'）的设备出错了：' + res['mgs'])
+								}
+						}
+						);
+					layer.closeAll();
+					window.location.reload();
+  				}
+
+			});
+
+        });
+<!-- 历史告警-->
+$(function(){
+	var searchObj = {
+			machine:"",
+			alert_lev:"",
+			Device_Type:"",
+			startTime:"",
+			endTime:"",
+			hostname:"",
+			ip:"",
+		};
+	// 查找
+	$('#btn-search1').on('click',function(){
+// {#			searchObj.endTime = Date.parse(new Date(($('#endTime').val()).replace(/-/g, '/')))/1000;#}
+// {#			searchObj.startTime = Date.parse(new Date(($('#startTime').val()).replace(/-/g, '/')))/1000;#}
+			searchObj.endTime = $('#endTime').val();
+			searchObj.startTime = $('#startTime').val();
+			searchObj.machine = $('#txt-machine1').val();
+			searchObj.hostname = $('#txt-hostname1').val();
+			searchObj.ip = $('#txt-ip1').val();
+			searchObj.alert_lev = $('#alert_lev1 option:selected').val();
+			searchObj.Device_Type = $('#Device_Type1 option:selected').val()
+			getData1()
+		});
+	// 导出
+	$('#btn-sea2').on('click',function(){
+			searchObj.endTime = $('#endTime').val();
+			searchObj.startTime = $('#startTime').val();
+			searchObj.machine = $('#txt-machine1').val();
+			searchObj.hostname = $('#txt-hostname1').val();
+			searchObj.ip = $('#txt-ip1').val();
+			searchObj.alert_lev = $('#alert_lev1 option:selected').val();
+			searchObj.Device_Type = $('#Device_Type1 option:selected').val()
+			var table = layui.table;
+			var alert_his_ids = [];
+			var checkStatus = table.checkStatus('test1');
+			$.each(checkStatus.data, function (index, obj) {
+            	alert_his_ids.push(obj.Alert_His_id)
+        	});
+			var ajax_data ={alert_his_ids:alert_his_ids,
+							startTime:searchObj.startTime,
+							endTime:searchObj.endTime,
+							machine:searchObj.machine,
+							hostname:searchObj.hostname,
+							ip:searchObj.ip,
+							alert_lev:searchObj.alert_lev,
+							Device_Type:searchObj.Device_Type};
+			$.ajax({
+				url: '{% url "alarmEvents:alarm_his_export" %}',
+				method: 'POST',
+				data: JSON.stringify(ajax_data),
+				dataType: "json",
+				success: function (data, textStatus) {
+					window.open(data.redirect)
+				},
+				error: function () {
+					toastr.error('Export failed');
+				}
+            })
+		});
+	// 加载表格
+	function getData1(){
+			layui.use('table', function(){
+			var table1 = layui.table;
+			//第一个实例
+			table1.render({
+				elem: '#test1'
+				,url: '/alarmEvents/alarm_his/'
+				,method:'post'
+				//,limit:searchObj.limit
+				,where: searchObj
+				,page: true //开启分页
+				,cellMinWidth:'100%'
+				,cols: [[ //表头
+					{checkbox: true, width:45}
+					,{field:'Alert_lev_id', title: '级别', width:60}
+					,{field:'Application', title: '所属应用', width:130}
+					,{field:'Type_ip', title: '告警设备IP', width:130}
+					// ,{field:'item', title: '监控项', width:110}
+					,{field:'message', title: '告警内容', width:180}
+					,{field:'Oc_time', title: '发生时间', width:130}
+					,{field:'End_time', title: '结束时间', width:130}
+					,{field:'Sendto', title: '受理人', width:80}
+					,{field:'A_time', title: '受理时间', width:130}
+					// ,{field:'state', title: '解决', width:80}
+					// ,{field:'Deal_Person', title: '处理人', width:80}
+					// ,{field:'Deal_Details', title: '处理详情', width:180}
+					// ,{field:'Deal_End_time', title: '处理完成时间', width:150}
+					// ,{field:'DESC', title: '描述'}
+					,{field:'Alert_id',  title: '查看', width:75, templet: function (d) {
+						return '<div>'+
+							'<a href="#" class="layui-btn layui-btn-sm btn_detail"  data-alert_lev="'+d.Alert_lev_id+
+							'" data-item="'+d.item+'" data-application="'+d.Application+'" data-message="'+d.message+
+							'" data-sendto="'+d.Sendto+'" data-end_time="'+d.End_time+'" data-oc_time="'+d.Oc_time+'" data-desc="'+d.DESC+
+							'" data-deal_end_time="'+d.Deal_End_time+'" data-deal_details="'+d.Deal_Details+'" data-deal_person="'+d.Deal_Person+
+							'" data-state="'+d.state+'" data-status="'+d.Status+'" data-a_time="'+d.A_time+'" data-type_ip="'+d.Type_ip+'">详情</a>'+
+							'</div>'
+						// '<a href="#" class="layui-btn layui-btn-sm" onclick="testClick('+d.hostid+')">导出</a>'+
+					}}
+
+				]]
+				,limits:[5,10,50,100,500]
+			});
+	//
+			});
+	////
+	////
+		}
+
+	getData1();
+})
+	.on('click', '.btn_detail', function () {
+			var type_ip = $(this).data('type_ip');
+			var alert_lev = $(this).data('alert_lev');
+			var application = $(this).data('application');
+			var message = $(this).data('message');
+			var item = $(this).data('item');
+			var oc_time = $(this).data('oc_time');
+			var end_time = $(this).data('end_time');
+			var sendto = $(this).data('sendto');
+			var a_time = $(this).data('a_time');
+			var status = $(this).data('status');
+			var deal_person = $(this).data('deal_person');
+			var deal_details = $(this).data('deal_details');
+			var state = $(this).data('state');
+			var desc = $(this).data('desc');
+			var detail_html = '<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >设备IP:&emsp;&emsp;</label><label >' + type_ip + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >告警级别:&emsp;&emsp;</label><label >' + alert_lev + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >所属应用:&emsp;&emsp;</label><label >' + application + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >监控项:&emsp;&emsp;</label><label >' + item + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >发生时间:&emsp;&emsp;</label><label >' + oc_time + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >结束时间:&emsp;&emsp;</label><label >' + end_time + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理人:&emsp;&emsp;</label><label >' + sendto + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理结果:&emsp;&emsp;</label><label >' + status + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理时间:&emsp;&emsp;</label><label >' + a_time + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >解决情况:&emsp;&emsp;</label><label >' + state + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >处理人:&emsp;&emsp;</label><label >' + deal_person + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >告警内容:&emsp;&emsp;</label><label >' + message + '</label></div>' +
+					// '<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理内容:&emsp;&emsp;</label><label >' + desc + '</label></div>' +
+					'<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-1 ack-color"><label >受理内容:&emsp;&emsp;</label><label >' + deal_details + '</label></div>';
+			$('#detail_box').html(detail_html);
+			// alert($(this).data('eventids'));
+			layer.open({
+				title: '告警历史详情',
+				type:1,
+				area: ['780px'],
+				btn:['关闭'],
+			    content: $('#detail_box'),
+				btn1: function(index, layero){
+					layer.closeAll();
+  				}
+
+			});
+
+        })
+
+</script>
+<script>
+	layui.use('laydate', function () {
+		var laydate = layui.laydate;
+		//日期时间选择器
+		laydate.render({
+			elem: '#startTime'
+			, type: 'datetime'
+		});
+		//日期时间选择器
+		laydate.render({
+			elem: '#endTime'
+			, type: 'datetime'
+		});
+	})
+</script>
+<!--<script>-->
+	<!--layui.use('laydate', function () {-->
+		<!--var laydate = layui.laydate;-->
+		<!--//日期时间选择器-->
+		<!--laydate.render({-->
+			<!--elem: '#form_startTime'-->
+			<!--, type: 'datetime'-->
+		<!--});-->
+		<!--//日期时间选择器-->
+		<!--laydate.render({-->
+			<!--elem: '#form_endTime'-->
+			<!--, type: 'datetime'-->
+		<!--});-->
+	<!--})-->
+<!--</script>-->
+</body>
+</html>

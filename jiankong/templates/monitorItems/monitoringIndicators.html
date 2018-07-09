@@ -1,0 +1,214 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html style="width: 98%;">
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+        <script src="{% static 'bootstrap-table/jquery.js' %}"></script>
+{#	    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">#}
+	    <!-- Font Awesome -->
+	    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+	    <!-- NProgress -->
+	    <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+	    <!-- bootstrap-daterangepicker -->
+	    <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+	
+	    <!-- Custom Theme Style -->
+	    <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+	    <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+	    <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="{% static 'bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'bootstrap.js' %}">
+       <link rel="stylesheet" href="{% static 'bootstrap-table/dist/bootstrap-table.min.css' %}">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="{% static 'bootstrap-table/dist/bootstrap-table.min.js' %}"></script>
+
+        <!-- Latest compiled and minified Locales -->
+        <script src="{% static 'bootstrap-table/dist/locale/bootstrap-table-zh-CN.min.js' %}"></script>
+
+	</head>
+
+	<body style="height: auto;">
+		<!--监控指标-->
+
+
+
+		<div class="title_left">
+        	<h3 style="margin: 10px auto;">&nbsp;&nbsp;<small>监控指标</small></h3>
+    	</div>
+		<div class="row">
+		<div class="col-xs-10  col-md-10 col-sm-10 col-md-offset-1">
+
+		<div class="demoTable">
+			搜索IP：
+			<div class="layui-inline">
+				<input class="layui-input" name="id" id="ip" autocomplete="off" placeholder="请输入设备ip" style="width: 250px">
+			</div>
+
+			搜索设备组：
+			<div class="layui-inline">
+				<input class="layui-input" name="id" id="group" autocomplete="off" placeholder="请输入设备组名">
+			</div>
+			<button type="submit" class="layui-btn layui-btn-sm" onclick="cx();"  style="display: inline-block;">查询</button>
+		</div>
+		<!--设备信息-->
+             <div class="box-body" style="padding: 5px;margin-top: 20px">
+                        <div class="table-responsive" style="">
+                            <form name="dataform" id="dataform" method="post">
+                                <table id="test1Table"
+                                       data-toggle="table"
+                                       data-classes="table table-hover"
+                                       data-sort-order="asc"
+                                       data-method="get"
+                                       data-data-type="json"
+                                       data-pagination="true"
+                                       data-minimum-count-columns="3"
+                                       data-locale="zh-CN"
+                                       data-striped="true"
+                                       data-page-size="5"
+                                       data-page-list="[10]"
+                                       data-show-pagination-switch="false"
+                                ></table>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+{#            监控项信息#}
+
+            <div class="box-body" style="padding: 5px;margin-top: 20px;display: none" id="test2">
+                        <div class="table-responsive" style=";width:80%;margin-left: 10%">
+                            <form name="dataform" id="dataform" method="post">
+                                <table id="test2Table"
+                                       data-toggle="table"
+                                       data-classes="table table-hover"
+                                       data-sort-order="asc"
+                                       data-method="get"
+                                       data-data-type="json"
+                                       data-pagination="true"
+                                       data-minimum-count-columns="3"
+                                       data-locale="zh-CN"
+                                       data-striped="true"
+                                       data-page-size="20"
+                                       data-page-list="[10]"
+                                       data-show-pagination-switch="false">
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+        <script>
+             $("#test1Table").bootstrapTable({
+                columns: [{
+                    field: 'ip',
+                    title: '设备ip',
+                    align: 'center',
+        {#            checkbox: true#}
+                }, {
+                    field: 'group',
+                    title: '设备组',
+                    align: 'center',
+        {#            formatter: stateFormatter#}
+                }, {
+                    field: 'hostid',
+                    title: '查看监控项',
+                    align: 'center',
+                    formatter: stateFormatter
+                }]
+            });
+
+             function stateFormatter(value, row, index) {
+                 return [
+                     '<button type="button" class="layui-btn layui-btn-sm" onclick="cl(' + row.hostid + ',' + row.groupid + ')"><span ></span>查看</button>'
+                 ].join('');
+             }
+        </script>
+        <script>
+            function cx() {
+                $('#test1Table').bootstrapTable('refreshOptions', {
+                    url: "/monitorItems/gethostinfo/",
+                    queryParams: function (params) {
+                        return $.extend({}, params, {
+                            ip: document.getElementById("ip").value,
+                            group: document.getElementById("group").value,
+
+                        });
+                    }
+                });
+    }
+        </script>
+        <script>
+            $("#test2Table").bootstrapTable({
+                columns: [ {
+                    field: 'name',
+                    title: '监控项',
+                    align: 'center',
+
+                },
+{#                    {#}
+{#                    field: 'hostid',#}
+{#                    title: '触发器',#}
+{#                    align: 'center',#}
+{##}
+{#                }, #}
+{#                    {#}
+{#                    field: 'trigger',#}
+{#                    title: '键值',#}
+{#                    align: 'center',#}
+{##}
+{#                },#}
+                    {
+                    field: 'delay',
+                    title: '搜集时间间隔',
+                    align: 'center',
+
+                }, {
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    formatter: status,
+                }
+                ]
+            });
+
+             function status(value, row, index) {
+                   if (value == 1) {
+                return [
+                    '<button style="color:#5bc0de;">停用</button>'
+                ].join('');
+                    } else{
+                return [
+                    '<button style="color:#5bc0de;">启用</button>'
+                ].join('');
+            }
+            }
+{#            $("[name='my-checkbox']").bootstrapSwitch('state', true, true);#}
+        </script>
+{#        查看监控项#}
+         <script>
+            function cl(hostid,groupid) {
+                $("#test2").hide()
+                $("#test2").show()
+                $.ajax({
+                 type: "get",
+                 url: "/monitorItems/getitem/",
+                 data: {hostid : hostid,
+                        groupid:groupid},
+                 dataType:"json",
+                 success : function(json) {
+
+                            $("#test2Table").bootstrapTable('load', json);
+                        }
+                    });
+                 }
+
+        </script>
+        </div>
+	</body>
+
+</html>

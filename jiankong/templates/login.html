@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+<meta http-equiv="Pragma" content="no-cache"> 
+<meta http-equiv="Cache-Control" content="no-cache"> 
+<meta http-equiv="Expires" content="0"> 
+<title>网络监控登陆</title>
+<link href="{% static 'css/login.css' %}" rel="stylesheet" type="text/css" />
+<script src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+{#<script src="{% static 'js/login.js' %}"></script>#}
+</head>
+
+<body>
+<div class="login_box">
+      <div class="login_l_img"><img src="{% static 'images/login-img.png' %}" /></div>
+      <div class="login">
+          <div class="login_logo"><a href="#"><img src="{% static 'images/login_logo.png' %}" /></a></div>
+          <div class="login_name">
+               <p>网络监控系统</p>
+          </div>
+          <form form action="/users/login" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="text" name="{{ form.username.html_name }}" id="username" placeholder="用户名" >
+               <input type="password" name="{{ form.password.html_name }}" placeholder="登陆密码" value="" >
+               <input type="submit" value="登录">
+          </form>
+      </div>
+      
+</div>
+</body>
+</html>

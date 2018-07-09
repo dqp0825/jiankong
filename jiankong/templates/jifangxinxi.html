@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+	<meta charset="UTF-8">
+	<title>3D机房</title>
+	<link href="{% static 'css/msj3D.css' %}" rel="stylesheet" />
+	<script src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+	<script src="{% static 'js/three.min.js' %}"></script>
+	<script src="{% static 'js/stats.min.js' %}"></script>
+	<script src="{% static 'js/OrbitControls.js' %}"></script>
+	<script src="{% static 'js/ThreeBSP.js' %}"></script>
+	<script src="{% static 'js/tween.min.js' %}"></script>
+	<script src="{% static 'js/msj3D.js' %}"></script>
+	<script src="{% static 'js/data.js' %}"></script>
+</head>
+<body onload="threeStart()" style="width:100%;height:100%;">
+<div id="canvas-frame" class="canvas_frame" style="width:100%;height:100%;"></div>
+</body>
+</html>

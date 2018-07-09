@@ -1,0 +1,332 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'EasyUI/easyui.css' %}"/>
+    <script type="text/javascript" src="{% static 'EasyUI/jquery.min.js' %}"></script>
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <script type="text/javascript" src="{% static 'EasyUI/jquery.easyui.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static "production/plugins/layui-v2.2.5/layui/css/layui.css" %}"  media="all">
+    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>
+		<style>
+			.hide{
+				display: none;
+			}
+			
+			caption{
+				font-size: 30px;
+				font-weight: bold;
+				margin-bottom: 20px;
+			}
+		</style>
+
+
+	</head>
+	<body style="background: white">
+		<div class="layui-row" style="margin: 40px;">
+
+            <div class="form-inline" style="text-align: center;margin-top: 20px;margin-left: 31%">
+
+
+   		</div>
+
+            <div class="layui-row"  style="margin-left:-3%;">
+                 <div class="tab_menu" style="float: left;margin-top: 10px">
+                    <label for="exampleInputEmail2">群组:</label>
+                    <select type="text" style="border: 1px solid #c6c6c6;height: 35px;" id="group">
+                        {% for i in grouplist %}
+                            {% ifequal forloop.counter 3  %}
+                                <option value="" selected="selected">{{ i.text }}</option>
+                                {% else %}
+                                <option>{{ i.text }}</option>
+                            {% endifequal %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="tab_menu" style="float: left;margin-left:0.5%;margin-top: 10px">
+                    <label for="exampleInputEmail2">设备IP:</label>
+                    <input type="text" style="border: 1px solid #C6C6C6;height: 35px;width: 100px" id="host">
+
+                </div>
+
+
+                <div class="layui-input-inline col-md-3 col-sm-3 col-xs-3" style="margin-left: 0.5%;margin-top: 10px">
+                    <input class="layui-input" id="startTime" placeholder="开始时间"
+                           type="text">
+                </div>
+                <div class="layui-input-inline col-md-3 col-sm-3 col-xs-3"  style="margin-left: 0.5%;margin-top: 10px">
+                    <input class="layui-input" id="endTime" placeholder="结束时间"
+                           type="text">
+                </div>
+
+
+            <button type="submit" class="layui-btn layui-btn-sm" id="btn-search" style="margin-top: 10px">查询</button>
+            <button  id="export" class="layui-btn layui-btn-sm" data-type="getCheckData" style="margin-top: 10px" onclick="exportfile()">导出</button>
+
+   		</div>
+
+        </div>
+        <div class="tab_box">
+            <table class="layui-hide"  id="test1" lay-filter="user" style="display: none;width: 100%"></table>
+            {% csrf_token %}
+        </div>
+
+        <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js' %}" charset="utf-8"></script>
+
+
+    <script>
+            layui.use('laydate', function () {
+                var laydate = layui.laydate;
+                //日期时间选择器
+                laydate.render({
+                    elem: '#startTime'
+                    , type: 'datetime'
+                });
+                //日期时间选择器
+                laydate.render({
+                    elem: '#endTime'
+                    , type: 'datetime'
+                });
+            })
+        </script>
+
+        <script>
+    $(function(){
+	var searchObj = {
+			group:"",
+            host:"",
+{#            type:""#}
+           startTime:"",
+           endTime:""
+		}
+	$('#btn-search').on('click',function(){
+			searchObj.group = $("#group option:selected").text()
+            searchObj.host = $("#host").val()
+            searchObj.startTime = $("#startTime").val()
+            searchObj.endTime = $("#endTime").val()
+            console.log(searchObj.group,searchObj.host,searchObj.startTime,searchObj.endTime)
+			getData1()
+		})
+	function getData1(){
+
+			layui.use('table', function(){
+			var table = layui.table;
+			//第一个实例
+            type = document.getElementById('group').selectedIndex;
+
+
+            switch (type){
+                case 0:
+                    table.render({
+				elem: '#test1'
+				,url: '{{ url3 }}'
+				,method:'post'
+				//,limit:searchObj.limit
+                ,limit:10
+				,where: searchObj
+                ,limits:[5,10,50,100,500]
+                ,id:'idTest'
+				,page: {
+                          layout: ['limit', 'count', 'prev', 'page', 'next', 'skip']
+
+                          ,groups: 1
+                          ,first: false
+                          ,last: false
+
+                        }
+				,cols: {{ code3|safe }}
+
+			});
+                    break;
+                case 1:
+                    table.render({
+				elem: '#test1'
+				,url: '{{ url2 }}'
+				,method:'post'
+
+				,where: searchObj
+				,page: true
+				,cols: {{ code2|safe }}
+				,limits:[10,50,100,500]
+			});
+                    break;
+                case 2:
+                    table.render({
+				elem: '#test1'
+				,url: '{{ url1 }}'
+				,method:'post'
+				//,limit:searchObj.limit
+				,where: searchObj
+				,limits:[5,10,50,100,500]
+                ,page:true
+				,cols: {{ code1|safe }}
+
+			});
+                    break;
+                case 3:
+                    table.render({
+				elem: '#test1'
+				,url: '/test/'
+				,method:'post'
+
+				,where: searchObj
+				,page: true //开启分页
+				,cols: {{ code1|safe }}
+				,limits:[10,50,100,500]
+			});
+                    break;
+                case 4:
+                    table.render({
+				elem: '#test1'
+				,url: '/test/'
+				,method:'post'
+
+				,where: searchObj
+				,page: true //开启分页
+				,cols: {{ code4|safe }}
+				,limits:[10,50,100,500]
+			});
+                    break;
+                case 5:
+                    table.render({
+				elem: '#test1'
+				,url: '/test/'
+				,method:'post'
+
+				,where: searchObj
+				,page: true //开启分页
+				,cols: {{ code7|safe }}
+				,limits:[10,50,100,500]
+			});
+                    break;
+                case 6:
+                    table.render({
+				elem: '#test1'
+				,url: '{{ url8 }}'
+				,method:'post'
+
+				,where: searchObj
+				,page: true //开启分页
+				,cols: {{ code5|safe }}
+				,limits:[10,50,100,500]
+			});
+                    break;
+                     case 7:
+                    table.render({
+				elem: '#test1'
+				,url: '/test/'
+				,method:'post'
+
+				,where: searchObj
+				,page: true //开启分页
+				,cols: {{ code6|safe }}
+				,limits:[10,50,100,500]
+			});
+                    break;
+                default:
+                    table.render({
+				elem: '#test1'
+				,url: '/test/'
+				,method:'post'
+				,where: searchObj
+				,page: true //开启分页
+				,cols: {{ code1|safe }}
+				,limits:[10,50,100,500]
+			});
+            }
+
+
+
+
+{#          var $ = layui.$, active = {#}
+{#              getCheckData: function () { //获取选中数据#}
+{#                  var checkStatus = table.checkStatus('test1')#}
+{#                  datajson = JSON.stringify(checkStatus.data)#}
+{#                  type = document.getElementById('group').selectedIndex;#}
+{#                  exportfile()#}
+{##}
+{#              }#}
+{#          }#}
+
+
+
+
+
+
+			});
+		}
+
+	getData1();
+})
+
+
+
+            function exportfile() {
+                var table = layui.table;
+                var checkStatus = table.checkStatus('test1')
+                  datajson = JSON.stringify(checkStatus.data)
+                  type = document.getElementById('group').selectedIndex;
+                console.log(datajson,type)
+{#                alert("111")#}
+                $.post("/reportTable/exportfile/", {
+                       datajson:datajson,
+                       type:type,
+                       csrfmiddlewaretoken:document.getElementsByName("csrfmiddlewaretoken")[0].value
+                    },function success(data){
+
+                    if (data.code=="0"){
+                        location.href ="/reportTable/getfiletest/"
+                        }else
+                    {
+                        console.log(data)
+                        alert("到处错误，请重新导出文件!")
+                    }
+                    }
+
+
+
+
+                );
+            }
+
+        </script>
+
+	</body>
+</html>

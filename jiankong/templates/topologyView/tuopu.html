@@ -1,0 +1,914 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+	    <!-- Font Awesome -->
+	    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+	    <!-- NProgress -->
+	    <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+	    <!-- bootstrap-daterangepicker -->
+	    <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+	
+	    <!-- Custom Theme Style -->
+	    <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+	    <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+	    <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+	</head>
+	<body style="background: #;">
+		<div  style="position:relative;">
+			<div class="row" style="margin-top: 20px;">
+				<div class="col-md-4 col-sm-4 col-xs-4 application-data-box">
+					<div style="height: 300px; width: 100%;  margin-bottom: 30px;">
+						<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">应用告警TOP10</h5>
+						<div style="height: 300px;" id="application-data"></div>
+					</div>
+					<div style="height: 300px; width: 100%;  margin-bottom: 30px;">
+						<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">物理机告警TOP10</h5>
+						<div style="height: 300px;" id="physicalMachine-data"></div>
+					</div>
+					<div style="height: 300px; width: 100%;  margin-bottom: 30px;">
+						<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">存储告警TOP10</h5>
+						<div style="height: 300px;" id="storage-data"></div>
+					</div>
+				</div>
+				
+				<div class="col-md-4 col-sm-4 col-xs-4">
+					<div id="main" style="height: 600px"></div>
+				</div>
+				<div class="col-md-4 col-sm-4 col-xs-4 application-data-box">
+					<div style="height: 300px; width: 100%;  margin-bottom: 30px;">
+						<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">设备厂商告警TOP10</h5>
+						<div style="height: 300px;" id="equipment-data"></div>
+					</div>
+					<div style="height: 300px; width: 100%;  margin-bottom: 30px;">
+						<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">云主机告警TOP10</h5>
+						<div style="height: 300px;" id="cloud-data"></div>
+					</div>
+					<div style="height: 300px; width: 100%;  margin-bottom: 30px;">
+						<h5 style="height: 40px; line-height:40px;width:90%; margin:0  auto;background:#E0FFFF;padding-left: 20px;">网络设备告警TOP10</h5>
+						<div style="height: 300px;" id="webEquipment-data"></div>
+					</div>
+				</div>
+				
+				
+			</div>
+		</div>
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'production/build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>  
+    <script type="text/javascript">
+    	require.config({
+			paths: {
+				'echarts': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/'%}",
+				'echarts/chart/line': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/line'%}",
+				'echarts/chart/pie': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/pie'%}",
+				'echarts/chart/bar': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/bar'%}",
+				'echarts/chart/gauge':"{% static 'production/plugins/echarts-2.2.7/build/dist/chart/gauge'%}",
+			}
+		});
+		require(
+            [
+                'echarts',
+                'echarts/chart/bar'
+            ],
+            function (ec) {
+                var myChart1 = ec.init(document.getElementById('application-data'));
+                $('.application-data-box').resize(function () {
+				    myChart.resize();
+				});
+               	option = {
+				    tooltip : {
+				        trigger: 'axis',
+				        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+				            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+				        }
+				    },
+				    legend: {
+				        data:['重大','严重','一般','其他']
+				    },
+				    
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            data : ['应用一','应用二','应用三']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value'
+				        }
+				    ],
+				    series : [
+				       
+				        {
+				            name:'重大',
+				            type:'bar',
+				            barWidth : 5,
+				            stack: '搜索引擎',
+				            data:[620, 732, 701, 734, 1090, 1130]
+				        },
+				        {
+				            name:'严重',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[120, 132, 101, 134, 290, 230]
+				        },
+				        {
+				            name:'一般',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[60, 72, 71, 74, 190, 130]
+				        },
+				        {
+				            name:'其他',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[62, 82, 91, 84, 109, 110]
+				        }
+				    ]
+				};
+                       
+                myChart1.setOption(option);
+            }
+        );
+		require(
+            [
+                'echarts',
+                'echarts/chart/bar'
+            ],
+            function (ec) {
+                var myChart1 = ec.init(document.getElementById('physicalMachine-data'));
+                $('.application-data-box').resize(function () {
+				    myChart.resize();
+				});
+               	option = {
+				    tooltip : {
+				        trigger: 'axis',
+				        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+				            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+				        }
+				    },
+				    legend: {
+				        data:['重大','严重','一般','其他']
+				    },
+				    
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            data : ['host1','host2','host3']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value'
+				        }
+				    ],
+				    series : [
+				       
+				        {
+				            name:'重大',
+				            type:'bar',
+				            barWidth : 5,
+				            stack: '搜索引擎',
+				            data:[620, 732, 701, 734, 1090, 1130]
+				        },
+				        {
+				            name:'严重',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[120, 132, 101, 134, 290, 230]
+				        },
+				        {
+				            name:'一般',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[60, 72, 71, 74, 190, 130]
+				        },
+				        {
+				            name:'其他',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[62, 82, 91, 84, 109, 110]
+				        }
+				    ]
+				};
+                       
+                myChart1.setOption(option);
+            }
+        );
+		require(
+            [
+                'echarts',
+                'echarts/chart/bar'
+            ],
+            function (ec) {
+                var myChart1 = ec.init(document.getElementById('storage-data'));
+                $('.application-data-box').resize(function () {
+				    myChart.resize();
+				});
+               	option = {
+				    tooltip : {
+				        trigger: 'axis',
+				        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+				            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+				        }
+				    },
+				    legend: {
+				        data:['重大','严重','一般','其他']
+				    },
+				    
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            data : ['磁盘1','磁盘2','磁盘3']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value'
+				        }
+				    ],
+				    series : [
+				       
+				        {
+				            name:'重大',
+				            type:'bar',
+				            barWidth : 5,
+				            stack: '搜索引擎',
+				            data:[620, 732, 701, 734, 1090, 1130]
+				        },
+				        {
+				            name:'严重',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[120, 132, 101, 134, 290, 230]
+				        },
+				        {
+				            name:'一般',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[60, 72, 71, 74, 190, 130]
+				        },
+				        {
+				            name:'其他',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[62, 82, 91, 84, 109, 110]
+				        }
+				    ]
+				};
+                       
+                myChart1.setOption(option);
+            }
+        );
+		require(
+            [
+                'echarts',
+                'echarts/chart/bar'
+            ],
+            function (ec) {
+                var myChart1 = ec.init(document.getElementById('equipment-data'));
+                $('.application-data-box').resize(function () {
+				    myChart.resize();
+				});
+               	option = {
+				    tooltip : {
+				        trigger: 'axis',
+				        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+				            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+				        }
+				    },
+				    legend: {
+				        data:['重大','严重','一般','其他']
+				    },
+				    
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            data : ['一期','二期','三期']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value'
+				        }
+				    ],
+				    series : [
+				       
+				        {
+				            name:'重大',
+				            type:'bar',
+				            barWidth : 5,
+				            stack: '搜索引擎',
+				            data:[620, 732, 701, 734, 1090, 1130]
+				        },
+				        {
+				            name:'严重',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[120, 132, 101, 134, 290, 230]
+				        },
+				        {
+				            name:'一般',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[60, 72, 71, 74, 190, 130]
+				        },
+				        {
+				            name:'其他',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[62, 82, 91, 84, 109, 110]
+				        }
+				    ]
+				};
+                       
+                myChart1.setOption(option);
+            }
+        );
+		require(
+            [
+                'echarts',
+                'echarts/chart/bar'
+            ],
+            function (ec) {
+                var myChart1 = ec.init(document.getElementById('cloud-data'));
+                $('.application-data-box').resize(function () {
+				    myChart.resize();
+				});
+               	option = {
+				    tooltip : {
+				        trigger: 'axis',
+				        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+				            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+				        }
+				    },
+				    legend: {
+				        data:['重大','严重','一般','其他']
+				    },
+				    
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            data : ['云1','云2','云3']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value'
+				        }
+				    ],
+				    series : [
+				       
+				        {
+				            name:'重大',
+				            type:'bar',
+				            barWidth : 5,
+				            stack: '搜索引擎',
+				            data:[620, 732, 701, 734, 1090, 1130]
+				        },
+				        {
+				            name:'严重',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[120, 132, 101, 134, 290, 230]
+				        },
+				        {
+				            name:'一般',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[60, 72, 71, 74, 190, 130]
+				        },
+				        {
+				            name:'其他',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[62, 82, 91, 84, 109, 110]
+				        }
+				    ]
+				};
+                       
+                myChart1.setOption(option);
+            }
+        );
+		require(
+            [
+                'echarts',
+                'echarts/chart/bar'
+            ],
+            function (ec) {
+                var myChart1 = ec.init(document.getElementById('webEquipment-data'));
+                $('.application-data-box').resize(function () {
+				    myChart.resize();
+				});
+               	option = {
+				    tooltip : {
+				        trigger: 'axis',
+				        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+				            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+				        }
+				    },
+				    legend: {
+				        data:['重大','严重','一般','其他']
+				    },
+				    
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            data : ['路由1','路由2','路由3']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value'
+				        }
+				    ],
+				    series : [
+				       
+				        {
+				            name:'重大',
+				            type:'bar',
+				            barWidth : 5,
+				            stack: '搜索引擎',
+				            data:[620, 732, 701, 734, 1090, 1130]
+				        },
+				        {
+				            name:'严重',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[120, 132, 101, 134, 290, 230]
+				        },
+				        {
+				            name:'一般',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[60, 72, 71, 74, 190, 130]
+				        },
+				        {
+				            name:'其他',
+				            type:'bar',
+				            stack: '搜索引擎',
+				            data:[62, 82, 91, 84, 109, 110]
+				        }
+				    ]
+				};
+                       
+                myChart1.setOption(option);
+            }
+        );
+	
+		
+    </script>
+	<script>
+		$(function(){
+
+            require.config({
+                paths: {
+                    echarts: 'plugins/echarts-2.2.7/build/dist'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/map' 
+                ],
+                function (ec) {
+
+                    var currLevel = 0;//0全国 1省份 2地市
+                    var currProvince = '', currCity = '';
+
+                    //此对照表为临时写的，请谨慎检查
+                    var provinceMap = {
+                        '北京': 'bei_jing_geo',
+                        '天津': 'tian_jin_geo',
+                        '上海': 'shang_hai_geo',
+                        '重庆': 'chong_qing_geo',
+                        '河北': 'he_bei_geo',
+                        '河南': 'he_nan_geo',
+                        '云南': 'yun_nan_geo',
+                        '辽宁': 'liao_ning_geo',
+                        '黑龙江': 'hei_long_jiang_geo',
+                        '湖南': 'hu_nan_geo',
+                        '安徽': 'an_hui_geo',
+                        '山东': 'shan_dong_geo',
+                        '新疆': 'xin_jiang_geo',
+                        '江苏': 'jiang_su_geo',
+                        '浙江': 'zhe_jiang_geo',
+                        '江西': 'jiang_xi_geo',
+                        '湖北': 'hu_bei_geo',
+                        '广西': 'guang_xi_geo',
+                        '甘肃': 'gan_su_geo',
+                        '山西': 'shan_xi_geo',
+                        '内蒙古': 'nei_meng_gu_geo',
+                        '陕西': 'shan_xi1_geo',
+                        '吉林': 'ji_lin_geo',
+                        '福建': 'fu_jian_geo',
+                        '贵州': 'gui_zhou_geo',
+                        '广东': 'guang_dong_geo',
+                        '青海': 'qing_hai_geo',
+                        '西藏': 'xi_zang_geo',
+                        '四川': 'si_chuan_geo',
+                        '宁夏': 'ning_xia_geo',
+                        '海南': 'hai_nan_geo',
+                        '台湾': 'tai_wan_geo',
+                        '香港': 'xiang_gang_geo',
+                        '澳门': 'ao_men_geo'
+                    }
+
+
+
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    var effect = {
+						show: true,
+						scaleSize: require('zrender/tool/env').canvasSupported ? 1 : 2,
+						period: 30,             // 运动周期，无单位，值越大越慢
+						color: '#fff',
+						shadowColor: 'rgba(220,220,220,0.4)',
+						shadowBlur : 5 
+					};
+					function itemStyle(idx) {
+						return {
+							normal: {
+								color:'#fff',
+								borderWidth:1,
+								borderColor:['rgba(30,144,255,1)','lime'][idx],
+								lineStyle: {
+									//shadowColor : ['rgba(30,144,255,1)','lime'][idx], //默认透明
+									//shadowBlur: 10,
+									//shadowOffsetX: 0,
+									//shadowOffsetY: 0,
+									type: 'solid'
+								}
+							}
+						}
+					};
+
+                    option = {
+                        title: {
+                            text: '全国',
+                            subtext: '点击进入省份'
+                        },
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: '{b}'
+                        },
+
+                        toolbox: {
+                            show: true,
+                            orient: 'vertical',
+                            x: 'right',
+                            y: 'center',
+                            feature: {
+                                myTool1: {
+                                    show: true,
+                                    title: '返回',
+                                    icon: 'image://http://echarts.baidu.com/images/favicon.png',
+                                    onclick: function () {
+                                        if (currLevel == 2) {
+                                            option.series[0].mapType = currProvince;
+                                            option.title = {
+                                                text: currProvince,
+                                                subtext: '点击进入地市'
+                                            }
+                                            myChart.setOption(option, true);
+                                            currProvince = '';
+                                            currLevel = 1;
+                                        } else if (currLevel == 1) {
+                                            option.series[0].mapType = 'china';
+                                            option.title = {
+                                                text: '全国',
+                                                subtext: '点击进入省份'
+                                            }
+                                            myChart.setOption(option, true);
+                                            currProvince = '';
+                                            currLevel = 0;
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        series: [
+                            {
+                                name: '随机数据',
+                                type: 'map',
+                                mapType: 'china',
+                                selectedMode: 'single',
+                                itemStyle: {
+                                    normal: { label: { show: true } },
+                                    emphasis: { label: { show: true } }
+                                },
+                                data: []
+                            },{
+								name: '八纵通道',
+								type: 'map',
+								roam: true,
+								hoverable: false,
+								mapType: 'china',
+								itemStyle:{
+									normal:{
+										borderColor:'rgba(100,149,237,1)',
+										borderWidth:0.5,
+										areaStyle:{
+											color: '#1b1b1b'
+										}
+									}
+								},
+								data:[],
+								markLine : {
+									symbol: ['circle', 'circle'],  
+									symbolSize : 1,
+									effect : effect,
+									itemStyle : itemStyle(0),
+									smooth:true,
+									data : [
+										[{name:'北京'}, {name:'哈尔滨'}],
+										[{name:'哈尔滨'}, {name:'满洲里'}],
+										
+										[{name:'沈阳'}, {name:'大连'}],
+										[{name:'大连'}, {name:'烟台'}],
+										[{name:'烟台'}, {name:'青岛'}],
+										[{name:'青岛'}, {name:'淮安'}],
+										[{name:'淮安'}, {name:'上海'}],
+										[{name:'上海'}, {name:'杭州'}],
+										[{name:'杭州'}, {name:'宁波'}],
+										[{name:'宁波'}, {name:'温州'}],
+										[{name:'温州'}, {name:'福州'}],
+										[{name:'福州'}, {name:'厦门'}],
+										[{name:'厦门'}, {name:'广州'}],
+										[{name:'广州'}, {name:'湛江'}],
+										
+										[{name:'北京'}, {name:'天津'}],
+										[{name:'天津'}, {name:'济南'}],
+										[{name:'济南'}, {name:'南京'}],
+										[{name:'南京'}, {name:'上海'}],
+										
+										[{name:'北京'}, {name:'南昌'}],
+										[{name:'南昌'}, {name:'深圳'}],
+										[{name:'深圳'}, {name:'九龙红磡'}],
+										
+										[{name:'北京'}, {name:'郑州'}],
+										[{name:'郑州'}, {name:'武汉'}],
+										[{name:'武汉'}, {name:'广州'}],
+										
+										[{name:'大同'}, {name:'太原'}],
+										[{name:'太原'}, {name:'焦作'}],
+										[{name:'焦作'}, {name:'洛阳'}],
+										[{name:'洛阳'}, {name:'柳州'}],
+										[{name:'柳州'}, {name:'湛江'}],
+										
+										[{name:'包头'}, {name:'西安'}],
+										[{name:'西安'}, {name:'重庆'}],
+										[{name:'重庆'}, {name:'贵阳'}],
+										[{name:'贵阳'}, {name:'柳州'}],
+										[{name:'柳州'}, {name:'南宁'}],
+										
+										[{name:'兰州'}, {name:'成都'}],
+										[{name:'成都'}, {name:'昆明'}]
+									]
+								}
+							},
+							{
+								name: '八横通道',
+								type: 'map',
+								mapType: 'china',
+								itedmStyle:{
+									normal:{
+										borderColor:'rgba(100,149,237,1)',
+										borderWidth:0.5,
+										areaStyle:{
+											color: '#1b1b1b'
+										}
+									}
+								},
+								data:[],
+								markLine : {
+									symbol: ['circle', 'circle'],  
+									symbolSize : 1,
+									effect : effect,
+									itemStyle : itemStyle(1),
+									smooth:true,
+									data : [
+										[{name:'北京'}, {name:'兰州'}],
+										[{name:'兰州'}, {name:'拉萨'}],
+										
+										[{name:'大同'}, {name:'秦皇岛'}],
+										
+										[{name:'神木'}, {name:'黄骅'}],
+										
+										[{name:'太原'}, {name:'德州'}],
+										[{name:'德州'}, {name:'龙口'}],
+										[{name:'龙口'}, {name:'烟台'}],
+										
+										[{name:'太原'}, {name:'德州'}],
+										[{name:'德州'}, {name:'济南'}],
+										[{name:'济南'}, {name:'青岛'}],
+										
+										[{name:'长治'}, {name:'邯郸'}],
+										[{name:'邯郸'}, {name:'济南'}],
+										[{name:'济南'}, {name:'青岛'}],
+										
+										[{name:'瓦塘'}, {name:'临汾'}],
+										[{name:'临汾'}, {name:'长治'}],
+										[{name:'长治'}, {name:'汤阴'}],
+										[{name:'汤阴'}, {name:'台前'}],
+										[{name:'台前'}, {name:'兖州'}],
+										[{name:'兖州'}, {name:'日照'}],
+										
+										[{name:'侯马'}, {name:'月山'}],
+										[{name:'月山'}, {name:'新乡'}],
+										[{name:'新乡'}, {name:'兖州'}],
+										[{name:'兖州'}, {name:'日照'}],
+										
+										[{name:'连云港'}, {name:'郑州'}],
+										[{name:'郑州'}, {name:'兰州'}],
+										[{name:'兰州'}, {name:'乌鲁木齐'}],
+										[{name:'乌鲁木齐'}, {name:'阿拉山口'}],
+										
+										[{name:'西安'}, {name:'南阳'}],
+										[{name:'南阳'}, {name:'信阳'}],
+										[{name:'信阳'}, {name:'合肥'}],
+										[{name:'合肥'}, {name:'南京'}],
+										[{name:'南京'}, {name:'启东'}],
+										
+										[{name:'重庆'}, {name:'武汉'}],
+										[{name:'武汉'}, {name:'九江'}],
+										[{name:'九江'}, {name:'铜陵'}],
+										[{name:'铜陵'}, {name:'南京'}],
+										[{name:'南京'}, {name:'上海'}],
+										
+										[{name:'上海'}, {name:'怀化'}],
+										[{name:'怀化'}, {name:'重庆'}],
+										[{name:'重庆'}, {name:'成都'}],
+										[{name:'成都'}, {name:'贵阳'}],
+										[{name:'贵阳'}, {name:'昆明'}],
+										
+										[{name:'昆明'}, {name:'南宁'}],
+										[{name:'南宁'}, {name:'黎塘'}],
+										[{name:'黎塘'}, {name:'湛江'}]
+									]
+								},
+								geoCoord: {
+									'阿拉山口':[82.5757,45.1706],
+									'包头':[109.8403,40.6574],
+									'北京':[116.4075,39.9040],
+									'成都':[104.0665,30.5723],
+									'大连':[121.6147,38.9140],
+									'大同':[113.3001,40.0768],
+									'德州':[116.3575,37.4341],
+									'福州':[119.2965,26.0745],
+									'广州':[113.2644,23.1292],
+									'贵阳':[106.6302,26.6477],
+									'哈尔滨':[126.5363,45.8023],
+									'邯郸':[114.5391,36.6256],
+									'杭州':[120.1551,30.2741],
+									'合肥':[117.2272,31.8206],
+									'侯马':[111.3720,35.6191],
+									'怀化':[109.9985,27.5550],
+									'淮安':[119.0153,33.6104],
+									'黄骅':[117.3300,38.3714],
+									'济南':[117.1205,36.6510],
+									'焦作':[113.2418,35.2159],
+									'九江':[116.0019,29.7051],
+									'九龙红磡':[114.1870,22.3076],
+									'昆明':[102.8329,24.8801],
+									'拉萨':[91.1409,29.6456],
+									'兰州':[103.8343,36.0611],
+									'黎塘':[109.1363,23.2066],
+									'连云港':[119.2216,34.5967],
+									'临汾':[111.5190,36.0880],
+									'柳州':[109.4160,24.3255],
+									'龙口':[120.4778,37.6461],
+									'洛阳':[112.4540,34.6197],
+									'满洲里':[117.3787,49.5978],
+									'南昌':[115.8581,28.6832],
+									'南京':[118.7969,32.0603],
+									'南宁':[108.3661,22.8172],
+									'南阳':[112.5283,32.9908],
+									'宁波':[121.5440,29.8683],
+									'启东':[121.6574,31.8082],
+									'秦皇岛':[119.6005,39.9354],
+									'青岛':[120.3826,36.0671],
+									'日照':[119.5269,35.4164],
+									'厦门':[118.0894,24.4798],
+									'上海':[121.4737,31.2304],
+									'深圳':[114.0579,22.5431],
+									'神木':[110.4871,38.8610],
+									'沈阳':[123.4315,41.8057],
+									'台前':[115.8717,35.9701],
+									'太原':[112.5489,37.8706],
+									'汤阴':[114.3572,35.9218],
+									'天津':[117.2010,39.0842],
+									'铜陵':[117.8121,30.9454],
+									'瓦塘':[109.7600,23.3161],
+									'温州':[120.6994,27.9943],
+									'乌鲁木齐':[87.6168,43.8256],
+									'武汉':[114.3054,30.5931],
+									'西安':[108.9402,34.3416],
+									'新乡':[113.9268,35.3030],
+									'信阳':[114.0913,32.1470],
+									'烟台':[121.4479,37.4638],
+									'兖州':[116.7838,35.5531],
+									'月山':[113.0550,35.2104],
+									'湛江':[110.3594,21.2707],
+									'长治':[113.1163,36.1954],
+									'郑州':[113.6254,34.7466],
+									'重庆':[106.5516,29.5630]
+								}
+							}
+                        ]
+                    };
+
+                    
+                    myChart.setOption(option);
+
+                    var ecConfig = require('echarts/config');
+                    myChart.on(ecConfig.EVENT.CLICK, function (param) {
+                        if (currLevel == 0) {
+                            var code = provinceMap[param.name];
+                            var mapTemplate = {
+                                getGeoJson: function (callback) {
+                                    $.getJSON('plugins/echarts-2.2.7/src/util/mapData/rawData/geoJson/' + code+'.json', callback);
+                                }
+                            }
+                            eval(" require('echarts/util/mapData/params').params.Map" + code+" = mapTemplate;");
+                            option.series[0].mapType = "Map" + code ;
+                            option.title = {
+                                text: param.name,
+                                subtext: ''
+                            }
+                            myChart.setOption(option, true);
+                            currProvince = "Map" + code;
+                            currLevel = 1;
+                        } 
+                        else if (currLevel == 1) {
+                            var code = cityMap[param.name];
+                            var mapTemplate = {
+                                getGeoJson: function (callback) {
+                                    $.getJSON('plugins/echarts-2.2.7/doc/example/geoJson/china-main-city/' + code + '.json', callback);
+                                }
+                            }
+                            eval(" require('plugins/echarts/util/mapData/params').params.Map" + code + " = mapTemplate;");
+
+                            option.series[0].mapType = "Map" + code;
+                            option.title = {
+                                text: param.name,
+                                subtext: ''
+                            }
+                            myChart.setOption(option, true);
+                            currCity = "Map" + code;
+                            currLevel = 2;
+                        }
+                        else {
+                            alert(param.name);
+                        }
+                    });
+                }
+            
+            );
+        })
+
+	</script>
+	</body>
+</html>

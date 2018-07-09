@@ -1,0 +1,574 @@
+﻿{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+        <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+        <!-- NProgress -->
+        <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+        <!-- bootstrap-daterangepicker -->
+        <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+    
+        <!-- Custom Theme Style -->
+        <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+        <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+        <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+	</head>
+	<body>
+		<div style="width: 100%; overflow-x: hidden;">
+		<div class="title_left">
+        	<h3 style="margin: 10px auto;">&nbsp;&nbsp;<small>磁盘阵列</small></h3>
+    	</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3 col-sm-3 col-xs-3 col-md-offset-1">
+					<input type="text" placeholder="设备IP" name="country" id="autocomplete-custom-append" class="form-control col-md-10" autocomplete="off">
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2" >
+                	<select class="form-control">
+                        <option value="">主机组</option>
+                        <option value="1">group1</option>
+                        <option value="2">group2</option>
+                        <option value="3">group3</option>
+
+                    </select>
+            	</div>
+				
+				<div class="col-md-1 col-sm-1 col-xs-1">
+					<button type="submit" class="btn btn-success">查询</button>
+				</div>
+				
+				
+			</div>
+			<div class="row">
+				
+			</div>
+			<div class="row">
+				<div style="width: 90%; margin: 0 auto;">
+					<table class="layui-hide" id="test"></table>
+				</div>
+				
+			</div>
+			<div class="row" style="text-align: center;">
+				<div style="width: 100%; margin: 0 auto;">
+					<div class="col-md-1 col-sm-1 col-xs-1 col-md-1">
+						<p  style="width: 100%; text-align: center; line-height: 32px;">性能展示</p>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-2">                        			                     			
+						<input placeholder="发生时间" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="startTime">				                    				
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-2">                        			                     			
+						<input placeholder="结束时间" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" id="endTime">				                    				
+					</div>
+					<div class="col-md-1 col-sm-1 col-xs-1">
+						<div class="checkbox">
+						  <label>
+						    <input type="checkbox" value="">
+						    CPU
+						  </label>
+						</div>
+					</div>
+					<div class="col-md-1 col-sm-1 col-xs-1">
+						<div class="checkbox">
+						  <label>
+						    <input type="checkbox" value="">
+						    内存
+						  </label>
+						</div>
+					</div>
+					<div class="col-md-1 col-sm-1 col-xs-1">
+						<div class="checkbox">
+						  <label>
+						    <input type="checkbox" value="">
+						    磁盘
+						  </label>
+						</div>
+					</div>
+					<div class="col-md-1 col-sm-1 col-xs-1">
+						<div class="checkbox">
+						  <label>
+						    <input type="checkbox" value="">
+						    网络流量
+						  </label>
+						</div>
+					</div>
+					
+					
+					<div class="col-md-2 col-sm-1 col-xs-1">
+						<button type="submit" class="btn btn-success">导出数据报表</button>
+					</div>
+				</div>
+			<div class="row" style="height: 400px;">
+				<div class="col-md-6 col-sm-6 col-xs-6" id="p1" style="height:400px;"></div>
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p2" style="height:400px;"></div>
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p3" style="height:400px;"></div>
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p4" style="height:400px;"></div>
+			</div>	
+			
+        </div>
+			
+            <div class="row" style="height: 400px;">
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p1" style="height:400px;"></div>
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p2" style="height:400px;"></div>
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p3" style="height:400px;"></div>
+                <div class="col-md-6 col-sm-6 col-xs-6" id="p4" style="height:400px;"></div>
+            </div>
+
+		</div>
+		</div>
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'production/build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>  
+    <script type="text/javascript">
+    	layui.use('table', function(){
+		  var table = layui.table;
+		  
+		  table.render({
+		    elem: '#test'
+		    ,url:'/demo/table/user/'
+		    ,cols: [[
+		      {field:'id', title: '设备名', }
+		      ,{field:'username', title: '设备IP'}
+		      ,{field:'sex', title: '所属组',}
+		      ,{field:'sex', title: 'SNMP状态',}
+		      ,{field:'city',  title: '功能'}
+		      
+		    ]]
+		    ,page: true
+		  });
+		});
+    </script>
+        <script type="text/javascript">
+            // 路径配置
+            require.config({
+                paths: {
+                'echarts': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/'%}",
+                'echarts/chart/line': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/line'%}",
+                'echarts/chart/pie': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/pie'%}",
+                'echarts/chart/bar': "{% static 'production/plugins/echarts-2.2.7/build/dist/chart/bar'%}",
+                'echarts/chart/gauge':"{% static 'production/plugins/echarts-2.2.7/build/dist/chart/gauge'%}",
+                }
+            });
+
+            function query() {
+
+                //var time1 = new Date().format("yyyy-MM-dd hh:mm:ss");
+
+                //startTime = $('#startTime').val();
+                //endTime = $('#endTime').val();
+
+                //if (startTime == '' && endTime == '') {
+                //    endTime = new Date()
+                //    a = endTime.valueOf()
+                //    a = a - 2 * 60 * 60 * 1000
+                //    startTime = new Date(a)
+                //}
+
+                //var d = [];
+                //d.push([
+                //        new Date(2014, 9, 1, 0, len * 10000),
+                //        (Math.random() * 30).toFixed(2) - 0,
+                //        (Math.random() * 100).toFixed(2) - 0
+                ////]);
+
+                //var cpuData = [];
+                //for (var i = 0; i + startTime.valueOf() < endTime.valueOf() ; i += 100000) {
+                //    cpuData.push([
+                //            new Date(i + startTime.valueOf()),
+                //            (Math.random() * 100).toFixed(2) - 0
+                //    ]);
+                //}
+
+
+
+                // CPU使用
+                require(
+                    [
+                        'echarts',
+                        'echarts/chart/line'
+                    ],
+                    function (ec) {
+                        // 基于准备好的dom，初始化echarts图表
+                        var myChart = ec.init(document.getElementById('p1'));
+
+                        option = {
+                            title: {
+                                text: 'CPU使用折线图',
+                                padding:30
+                                //subtext: 'dataZoom支持'
+                            },
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: function (params) {
+                                    var date = new Date(params.value[0]);
+                                    data = date.getFullYear() + '-'
+                                           + (date.getMonth() + 1) + '-'
+                                           + date.getDate() + ' '
+                                           + date.getHours() + ':'
+                                           + date.getMinutes();
+                                    return data + '<br/>'
+                                           + params.value[1] + ', '
+                                           + params.value[2];
+                                }
+                            },
+                            //toolbox: {
+                            //    show: true,
+                            //    feature: {
+                            //        mark: { show: true },
+                            //        dataView: { show: true, readOnly: false },
+                            //        restore: { show: true },
+                            //        saveAsImage: { show: true }
+                            //    }
+                            //},
+
+                            //legend: {
+                            //    data: ['series1']
+                            //},
+                            grid: {
+                                y2: 80
+                            },
+                            xAxis: [
+                                {
+                                    type: 'time',
+                                    splitNumber: 10
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                    type: 'value'
+                                }
+                            ],
+                            series: [
+                                {
+                                    name: 'series1',
+                                    type: 'line',
+                                    showAllSymbol: true,
+                                    symbolSize: function (value) {
+                                        return Math.round(value[2] / 10) + 2;
+                                    },
+                                    data: [
+                                        [new Date(new Date().valueOf() - 10000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 20000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 30000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 40000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 50000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 60000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 70000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 80000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 90000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 100000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 110000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 120000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 130000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 140000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 150000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 160000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 170000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 180000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 190000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 200000), (Math.random() * 100).toFixed(2) - 0]
+                                    ]
+                                }
+                            ]
+                        };
+
+
+                        // 为echarts对象加载数据
+                        myChart.setOption(option);
+                    }
+                );
+                // 内存使用
+                require(
+                    [
+                        'echarts',
+                        'echarts/chart/line'
+                    ],
+                    function (ec) {
+                        // 基于准备好的dom，初始化echarts图表
+                        var myChart = ec.init(document.getElementById('p2'));
+
+                        option = {
+                            title: {
+                                text: '内存使用折线图',
+                                padding:30
+                                //subtext: 'dataZoom支持'
+                            },
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: function (params) {
+                                    var date = new Date(params.value[0]);
+                                    data = date.getFullYear() + '-'
+                                           + (date.getMonth() + 1) + '-'
+                                           + date.getDate() + ' '
+                                           + date.getHours() + ':'
+                                           + date.getMinutes();
+                                    return data + '<br/>'
+                                           + params.value[1] + ', '
+                                           + params.value[2];
+                                }
+                            },
+                            grid: {
+                                y2: 80
+                            },
+                            xAxis: [
+                                {
+                                    type: 'time',
+                                    splitNumber: 10
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                    type: 'value'
+                                }
+                            ],
+                            series: [
+                                {
+                                    name: 'series1',
+                                    type: 'line',
+                                    showAllSymbol: true,
+                                    symbolSize: function (value) {
+                                        return Math.round(value[2] / 10) + 2;
+                                    },
+                                    data: [
+                                        [new Date(new Date().valueOf() - 10000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 20000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 30000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 40000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 50000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 60000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 70000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 80000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 90000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 100000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 110000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 120000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 130000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 140000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 150000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 160000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 170000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 180000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 190000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 200000), (Math.random() * 100).toFixed(2) - 0]
+                                    ]
+                                }
+                            ]
+                        };
+
+
+                        // 为echarts对象加载数据
+                        myChart.setOption(option);
+                    }
+                );
+                // 磁盘使用
+                require(
+                    [
+                        'echarts',
+                        'echarts/chart/line'
+                    ],
+                    function (ec) {
+                        // 基于准备好的dom，初始化echarts图表
+                        var myChart = ec.init(document.getElementById('p3'));
+
+                        option = {
+                            title: {
+                                text: '磁盘使用折线图',
+                                padding:30
+                                //subtext: 'dataZoom支持'
+                            },
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: function (params) {
+                                    var date = new Date(params.value[0]);
+                                    data = date.getFullYear() + '-'
+                                           + (date.getMonth() + 1) + '-'
+                                           + date.getDate() + ' '
+                                           + date.getHours() + ':'
+                                           + date.getMinutes();
+                                    return data + '<br/>'
+                                           + params.value[1] + ', '
+                                           + params.value[2];
+                                }
+                            },
+                            grid: {
+                                y2: 80
+                            },
+                            xAxis: [
+                                {
+                                    type: 'time',
+                                    splitNumber: 10
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                    type: 'value'
+                                }
+                            ],
+                            series: [
+                                {
+                                    name: 'series1',
+                                    type: 'line',
+                                    showAllSymbol: true,
+                                    symbolSize: function (value) {
+                                        return Math.round(value[2] / 10) + 2;
+                                    },
+                                    data: [
+                                        [new Date(new Date().valueOf() - 10000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 20000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 30000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 40000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 50000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 60000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 70000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 80000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 90000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 100000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 110000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 120000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 130000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 140000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 150000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 160000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 170000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 180000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 190000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 200000), (Math.random() * 100).toFixed(2) - 0]
+                                    ]
+                                }
+                            ]
+                        };
+
+
+                        // 为echarts对象加载数据
+                        myChart.setOption(option);
+                    }
+                );
+                // 网络流量使用
+                require(
+                    [
+                        'echarts',
+                        'echarts/chart/line'
+                    ],
+                    function (ec) {
+                        // 基于准备好的dom，初始化echarts图表
+                        var myChart = ec.init(document.getElementById('p4'));
+
+                        option = {
+                            title: {
+                                text: '网络流量使用折线图',
+                                padding:30
+                                //subtext: 'dataZoom支持'
+                            },
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: function (params) {
+                                    var date = new Date(params.value[0]);
+                                    data = date.getFullYear() + '-'
+                                           + (date.getMonth() + 1) + '-'
+                                           + date.getDate() + ' '
+                                           + date.getHours() + ':'
+                                           + date.getMinutes();
+                                    return data + '<br/>'
+                                           + params.value[1] + ', '
+                                           + params.value[2];
+                                }
+                            },
+                            grid: {
+                                y2: 80
+                            },
+                            xAxis: [
+                                {
+                                    type: 'time',
+                                    splitNumber: 10
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                    type: 'value'
+                                }
+                            ],
+                            series: [
+                                {
+                                    name: 'series1',
+                                    type: 'line',
+                                    showAllSymbol: true,
+                                    symbolSize: function (value) {
+                                        return Math.round(value[2] / 10) + 2;
+                                    },
+                                    data: [
+                                        [new Date(new Date().valueOf() - 10000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 20000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 30000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 40000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 50000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 60000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 70000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 80000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 90000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 100000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 110000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 120000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 130000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 140000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 150000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 160000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 170000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 180000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 190000), (Math.random() * 100).toFixed(2) - 0],
+                                        [new Date(new Date().valueOf() - 200000), (Math.random() * 100).toFixed(2) - 0]
+                                    ]
+                                }
+                            ]
+                        };
+
+
+                        // 为echarts对象加载数据
+                        myChart.setOption(option);
+                    }
+                );
+            
+            }
+
+            query();
+
+
+
+
+        </script>
+
+
+    </body>
+</html>

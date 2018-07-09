@@ -1,0 +1,223 @@
+# coding:utf-8
+import json
+import time
+
+from django.db.models import Q
+from django.shortcuts import render,HttpResponse
+from dashBoard.models import ServerToZabbix,CloudDeviceToZabbix
+from dashBoard.models import ResourceHostToZabbix,StorageToZabbix,NetworkDeviceToZabbix
+from dashBoard.models import Jk_alert,Jk_App,Jk_alert_lev,Jk_Fault,Jk_Device_Type,Jk_Server
+from dashBoard.models import ServerToZabbix,CloudDeviceToZabbix,ResourceHostToZabbix,StorageToZabbix
+from dashBoard.models import NetworkDeviceToZabbix
+# Create your views here.
+
+user = "Admin"
+
+
+
+#获取用户的资源
+def getips(user):
+    serverip = ServerToZabbix.objects.filter(user=user)
+    cloudip = CloudDeviceToZabbix.objects.filter(user=user)
+    resourceip = ResourceHostToZabbix.objects.filter(user=user)
+    storageip = StorageToZabbix.objects.filter(user=user)
+    networkip = NetworkDeviceToZabbix.objects.filter(user=user)
+    iplist = []
+    for server in serverip:
+        iplist.append((server.host_ip).replace('\t',''))
+    for cloud in cloudip:
+        iplist.append((cloud.host_ip).replace('\t',''))
+    for storage in storageip:
+        iplist.append((storage.host_ip).replace('\t',''))
+    for network in networkip:
+        iplist.append((network.host_ip).replace('\t',''))
+    for resource in resourceip:
+        iplist.append((resource.host_ip).replace('\t',''))
+    return iplist
+
+#获取告警信息
+def getalarm(request):
+    iplist = getips(user)
+    alertlist = []
+    alerts = Jk_alert.objects.all()
+    count = 0
+    for i in alerts:
+
+        if (i.Type_ip).strip() in iplist:
+
+            if i.Status == 0:
+                status = "解决"
+            else:
+                status = "未解决"
+
+            if i.A_time:
+                atime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(i.A_time)))
+            else:
+                atime = ""
+
+            if i.Type == "物理机":
+                print(i.Type_ip)
+                hostnames = ServerToZabbix.objects.filter(host_ip=i.Type_ip)
+                for h in hostnames:
+                    hostname = h
+            elif i.Type == "宿主机":
+                hostnames = ResourceHostToZabbix.objects.filter(host_ip=i.Type_ip)[0].hostname
+                for h in hostnames:
+                    hostname = h
+            elif i.Type == "云主机":
+                hostnames = CloudDeviceToZabbix.objects.filter(host_ip=i.Type_ip)[0].hostname
+                for h in hostnames:
+                    hostname = h
+            elif i.Type == "网络交换机" or i.Type == "负载均衡" or i.Type == "防火墙":
+                hostnames = NetworkDeviceToZabbix.objects.filter(host_ip=i.Type_ip)[0].hostname
+                for h in hostnames:
+                    hostname = h
+
+
+            alertlist.append({"Alert_lev_id":(i.Alert_lev_id).LevName,"Application":"Ucloud_Paas",
+                              "Type":i.Type,"hostname":hostname,"message":i.message,
+                              "Oc_time":time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(i.Oc_time))),
+                              "A_time":atime,
+                              "Sendto":i.Sendto,"Status":status,"item":i.Item})
+            count += 1
+    alertjson = {"code": 0, "msg": "", "count": count, "data":alertlist}
+    return HttpResponse(json.dumps(alertjson))
+
+
+# 告警
+def alarmEvent(request):
+    if request.method == 'GET':
+        alertlist = []
+        alertzd = 0
+        alertyz = 0
+        alertyb = 0
+        alertqt = 0
+        iplist = getips(user)
+        typelist = []
+        alerts = Jk_alert.objects.all()
+        types = Jk_Device_Type.objects.all()
+        TypeList = []
+        for type in types:
+            TypeList.append(type.TypeName)
+        zdlist = []
+        yzlist = []
+        yblist = []
+        qtlist = []
+        for i in TypeList:
+
+            zdlist.append({"value":Jk_alert.objects.filter(Type=i).filter(
+                Type_ip__in=iplist).filter(Alert_lev_id_id=4).count(),"name":i})
+
+            yzlist.append({"value": Jk_alert.objects.filter(Type=i).filter(
+                Type_ip__in=iplist).filter(Alert_lev_id_id=3).count(), "name": i})
+
+            yblist.append({"value": Jk_alert.objects.filter(Type=i).filter(
+                Type_ip__in=iplist).filter(Alert_lev_id_id=2).count(), "name": i})
+
+            qtlist.append({"value": Jk_alert.objects.filter(Type=i).filter(
+                Type_ip__in=iplist).filter(Alert_lev_id_id=1).count(), "name": i})
+
+
+        #告警分类
+        for i in alerts:
+            zd = {"value": 0, "name": ""}
+            if (i.Type_ip).strip() in iplist:
+                alertlist.append(i)
+                if i.Alert_lev_id_id == 4:
+                    typelist.append(i.Type)
+                    alertzd += 1
+                elif i.Alert_lev_id_id == 3:
+                    alertyz += 1
+                elif i.Alert_lev_id_id == 2:
+                    alertyb += 1
+                else:
+                    alertqt += 1
+
+
+        #超时未超时
+        cs = {"value": 0, "name": "超时"}
+        wcs = {"value": 0, "name": "未超时"}
+
+        cszd = {"value": 0, "name": '重大'}
+        csyz = {"value": 0, "name": '严重'}
+        csyb = {"value": 0, "name": '一般'}
+        csqt = {"value": 0, "name": '其它'}
+        wcsyz = {"value": 0, "name": '重大'}
+        wcszd = {"value": 0, "name": '严重'}
+        wcsyb = {"value": 0, "name": '一般'}
+        wcsqt = {"value": 0, "name": '其它'}
+        cslist = []
+        wcslist = []
+        for j in alerts:
+            ctime = time.time()
+
+            if (j.Type_ip).strip() in iplist:
+                if (j.Alert_lev_id).Alert_lev_id == 1:
+                    # cshour = Jk_Fault.objects.filter(Fault_name=((j.Alert_lev_id).LevName))[0].DESC
+                    # print(cshour)
+                    if int(ctime) - int(j.Oc_time) > 2 * 3600:
+                        cs['value'] += 1
+                        cszd["value"] +=1
+                    else:
+                        wcs['value'] += 1
+                        wcszd["value"]+=1
+
+                if (j.Alert_lev_id).Alert_lev_id == 2:
+                    # cshour = Jk_Fault.objects.filter(Fault_name=((j.Alert_lev_id).LevName))[0].DESC
+                    # print(cshour)
+                    if int(ctime) - int(j.Oc_time) > 4 * 3600:
+                        cs['value'] += 1
+                        csyz["value"] += 1
+                    else:
+                        wcs['value'] += 1
+                        wcsyz["value"] += 1
+
+                if (j.Alert_lev_id).Alert_lev_id == 3:
+                    # cshour = Jk_Fault.objects.filter(Fault_name=(j.Alert_lev_id).LevName)[0].DESC
+                    # print(cshour)
+                    if int(ctime) - int(j.Oc_time) > 8 * 3600:
+                        cs['value'] += 1
+                        csyb["value"] += 1
+                    else:
+                        wcs['value'] += 1
+                        wcsyb["value"] += 1
+
+                if (j.Alert_lev_id).Alert_lev_id == 4:
+                    # cshour = Jk_Fault.objects.filter(Fault_name=(j.Alert_lev_id).LevName)[0].DESC
+                    if int(ctime) - int(j.Oc_time) > 48 * 3600:
+                        cs['value'] += 1
+                        csqt["value"] += 1
+                    else:
+                        wcs['value'] += 1
+                        wcsqt["value"] += 1
+
+        alertlevcount = {"alertzd":alertzd, "alertyz": alertyz, "alertyb":alertyb, "alertqt":alertqt,
+                         "alertlist":alertlist,"zdlist":zdlist,"yzlist":yzlist,"yblist":yblist,
+                         "qtlist":qtlist,"cs":cs,"wcs":wcs,"wcszd":wcszd,"wcsyz":wcsyz,"wcsyb":wcsyb,
+                         "wcsqt":wcsqt,"cszd":cszd,"csyz":csyz,"csyb":csyb,"csqt":csqt}
+        return render(request,'alarmEvents/alarmEvent.html',alertlevcount)
+
+
+    elif request.method == 'POST':
+
+        hostname = request.POST.get('hostname')
+        hostip = request.POST.get('hostip')
+        alarmLev = request.POST.get('alarmLev')
+        hosttype = request.POST.get('hosttype')
+        iplist = getips(user)
+        alertlist = []
+        alerts = Jk_alert.objects.all()
+        for i in alerts:
+            if (i.Type_ip).strip() in iplist:
+                alertlist.append(i)
+
+        if hostname != "":
+            pass
+
+        if hostip != "":
+            hostipalerts = []
+            for i in alertlist:
+                if i.Type_ip == hostip:
+                    pass
+
+

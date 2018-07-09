@@ -1,0 +1,1118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block jsorcss %}
+    <title>智能监控</title>
+    <script type="text/javascript" src="{% static '/assets/js/jquery.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static '/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/css/loader-style.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/js/stackable/stacktable.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/js/stackable/responsive-table.css' %}">
+    <link rel="stylesheet" href="{% static '/datetimepicker/bootstrap-datetimepicker.min.css' %}">
+    <link rel="shortcut icon" href="{% static '/assets/ico/minus.png' %}">
+    <!-- MAIN EFFECT -->
+    <script type="text/javascript" src="{% static '/assets/js/preloader.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/app.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/load.js' %}"></script>
+    <!-- /MAIN EFFECT -->
+    <script type="text/javascript" src="{% static '/assets/js/stackable/stacktable.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/commonTool.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/admin.js' %}"></script>
+
+    <script type="text/javascript"
+            src="{% static '/datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static '/datetimepicker/bootstrap-datetimepicker.zh-CN.js' %}"></script>
+    <script language="javascript" type="text/javascript"
+            src="{% static '/My97DatePicker/WdatePicker.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static '/bootstrap-table/bootstrap-table.css' %}">
+    <link rel="stylesheet"
+          href="{% static '/bootstrap-table/bootstrap-table-fixed-columns-master/bootstrap-table-fixed-columns.css' %}">
+    <script type="text/javascript" src="{% static '/bootstrap-table/bootstrap-table.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static '/bootstrap-table/bootstrap-table-fixed-columns-master/bootstrap-table-fixed-columns.js' %}"></script>
+    <script type="text/javascript" src="{% static '/bootstrap-table/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static '/bootstrap-table/export/bootstrap-table-export.js' %}"></script>
+    <script type="text/javascript" src="{% static '/bootstrap-table/export/tableExport.js' %}"></script>
+
+    <script src="{% static 'js/echarts-2.2.7/build/dist/echarts.js' %}"></script>
+    <script src="{% static 'js/echarts-2.2.7/doc/example/geoJson/china-main-city/china-main-city-map.js' %}"></script>
+    <script src="{% static 'js/TableSorterV2.js' %}"></script>
+
+
+    <style>
+        td {
+            text-align: center
+        }
+
+        button {
+            border: none
+        }
+
+        .paper-wrap1 {
+            height: 100%;
+        }
+
+        .bootstrap-table .table thead tr th {
+            color: #e2f0ff
+        }
+
+        #zabbixtable tr td {
+            padding: 8px;
+            line-height: 1.428571429;
+            vertical-align: top;
+            font-weight: normal;
+            border-top: 1px solid #ddd;
+            text-align: left;
+        }
+        #gj, #cpu, #neicun, #cipan {
+            float: left;
+        }
+
+        .tubiao {
+
+        }
+    </style>
+
+
+{% endblock %}
+
+{% block content %}
+
+
+    <div id="preloader">
+        <div id="status">&nbsp;</div>
+    </div>
+    <style>
+        table tr th{
+            text-align: center;
+            border: 1px solid lightgrey;
+        }
+    table tr td{
+        text-align: center;
+        border: 1px solid lightgrey;
+        background: #f5f5f5;
+    }
+    tabe tr th a{
+        text-align: center;
+        text-decoration: none;
+    }
+    </style>
+
+    <div style="margin-top: 10px;">
+
+{#        <div id="" class="panel panel-info">#}
+{#            <div style="background: #DEFDE7" class="panel-body">服务器告警</div>#}
+{#            <div class="panel-footer" id="network-class" style="width:500px;height: 400px;"></div>#}
+{#        </div>#}
+        <div id="yygj1" style="height: 400px;width: 500px;margin-left: 50px">
+            <div style="background: #DEFDE7" class="panel-body">设备厂商告警</div>
+            <div class="panel-heading" style="width: 450px;height: 400px;" id="network-class3"></div>
+        </div>
+
+        <div id="network-performance-top" class="panel panel-info" style="position: absolute;top:0px;left:600px">
+            <div style="background: #DEFDE7;" class="panel-body">设备厂商告警TOP5</div>
+            <div class="panel-footer" style="width: 500px;height: 400px;" id="network-class2"></div>
+        </div>
+
+
+    </div>
+
+    <!--  PAPER WRAP -->
+    <div class="wrap-fluid;" style="margin-top: 100px">
+        <div class="container-fluid paper-wrap1 bevel tlbr">
+            <div class="panel panel-default" style="width: 90%;margin-left: 55px;">
+                <div class="panel-heading">设备厂商故障详情<button style="width: 50px;height: 30px;margin-left: 800px" class="btn btn-info">导出</button></div>
+                <div class="panel-body">
+                    <table style="" class="table">
+                        <tr style="height: 40px;">
+                            <th>设备厂商</th>
+                            <th>重大</th>
+                            <th>严重</th>
+                            <th>一般</th>
+{#                            <th>其它</th>#}
+{#                            <th>DELL故障数</th>#}
+{#                            <th>IBM故障数</th>#}
+                        </tr>
+                        <tr style="width:100%;height:40px;">
+                            <td><a href="/csinfo/"><strong>DELL</strong></a></td>
+                            <td>1</td>
+{#                            <td></td>#}
+{#                            <td>1</td>#}
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+
+                            <tr style="width:100%;height:40px;">
+                                <td><a href="/csinfo/"><strong>IBM</strong></a></td>
+{#                            <td>亦庄</td>#}
+                            <td>1</td>
+                            {#                    <td>1</td>#}
+                            <td>1</td>
+                            <td>1</td>
+{#                            <td>1</td>#}
+                        </tr>
+                    </table>
+                </div>
+            </div>
+       <div>
+{#            <table style="width:90%;margin: 20px 55px" class="table table-striped">#}
+{#                <tr style="width: 100%;height: 40px;">#}
+{#                    <th>应用名称</th>#}
+{#                    <th>应用级别</th>#}
+{#                    <th>告警级别</th>#}
+{#                    <th>告警数目</th>#}
+{#                </tr>#}
+{#                <tr style="width:100%;height:40px;">#}
+{#                    <td><a href="/yyinfo/">应用一</a></td>#}
+{#                    <td>1</td>#}
+{#                    <td>1</td>#}
+{#                    <td>1</td>#}
+{#                    <td>1</td>#}
+{#                </tr>#}
+{#            </table>#}
+       </div>
+        </div>
+    </div>
+    <!-- 引入 ECharts 文件 -->
+{#    <script src="{% static '/Echarts/echarts.min.js' %}"></script>#}
+    <script>
+
+        $("#test1Table").bootstrapTable({
+            columns: [{
+                field: 'hostid',
+                title: '',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'host',
+                title: '主机IP',
+                align: 'center',
+                formatter: cputubiao
+            }, {
+                field: 'hostname',
+                title: '主机名称',
+                align: 'center'
+            }, {
+                field: 'cpu_avg',
+                title: 'CPU平均<br>使用率(%)',
+                align: 'center',
+                formatter: cpubfs
+            }, {
+                field: 'cpu_max',
+                title: 'CPU最大<br>使用率(%)',
+                align: 'center',
+                formatter: cpubfs
+            },
+                {
+                field: 'memory_usage_min_per',
+                title: 'CPU最小<br>使用率(%)',
+                align: 'center',
+                formatter: bfs
+            }]
+        });
+
+
+        $("#test2Table").bootstrapTable({
+            columns: [{
+                field: 'hostid',
+                title: '',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'hostname',
+                title: '主机',
+                align: 'center'
+            }, {
+                field: 'cpu_avg',
+                title: '内存平均<br>使用率(%)',
+                align: 'center',
+                formatter: cpubfs
+            }, {
+                field: 'cpu_max',
+                title: '内存最大<br>使用率(%)',
+                align: 'center',
+                formatter: cpubfs
+            },
+                {
+                field: 'memory_usage_min_per',
+                title: '内存最小<br>使用率(%)',
+                align: 'center',
+                formatter: bfs
+            }]
+        });
+
+
+
+        $("#test3Table").bootstrapTable({
+            columns: [{
+                field: 'hostid',
+                title: '',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'hostname',
+                title: '主机',
+                align: 'center'
+            }, {
+                field: 'cpu_avg',
+                title: '最大延时(ns)',
+                align: 'center',
+                formatter: cpubfs
+            }, {
+                field: 'cpu_max',
+                title: '最小延时(ns)',
+                align: 'center',
+                formatter: cpubfs
+            },
+                {
+                field: 'memory_usage_min_per',
+                title: '平均延时(ns)',
+                align: 'center',
+                formatter: bfs
+            }]
+        });
+
+        $("#test4Table").bootstrapTable({
+            columns: [{
+                field: 'hostid',
+                title: '',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'host',
+                title: '主机IP',
+                align: 'center',
+{#                formatter: cputubiao#}
+            }, {
+                field: 'hostname',
+                title: '主机名称',
+                align: 'center'
+            }, {
+                field: 'cpu_avg',
+                title: '最大会话数',
+                align: 'center',
+{#                formatter: cpubfs#}
+            }, {
+                field: 'cpu_max',
+                title: '最小会话数',
+                align: 'center',
+{#                formatter: cpubfs#}
+            },
+                {
+                field: 'memory_usage_min_per',
+                title: '平均会话数',
+                align: 'center',
+{#                formatter: bfs#}
+            }]
+        });
+        $("#test5Table").bootstrapTable({
+            columns: [{
+                field: 'hostid',
+                title: '',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'host',
+                title: '主机IP',
+                align: 'center',
+                formatter: cputubiao
+            }, {
+                field: 'hostname',
+                title: '主机名称',
+                align: 'center'
+            }, {
+                field: 'cpu_avg',
+                title: '最大丢包数',
+                align: 'center',
+                formatter: cpubfs
+            }, {
+                field: 'cpu_max',
+                title: '最小丢包数',
+                align: 'center',
+                formatter: cpubfs
+            },
+                {
+                field: 'memory_usage_min_per',
+                title: '平均丢包数',
+                align: 'center',
+{#                formatter: bfs#}
+            }]
+        });
+
+
+         $("#test6Table").bootstrapTable({
+            columns: [{
+                field: 'hostid',
+                title: '',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'host',
+                title: '主机IP',
+                align: 'center',
+                formatter: cputubiao
+            }, {
+                field: 'hostname',
+                title: '主机名称',
+                align: 'center'
+            }, {
+                field: 'cpu_avg',
+                title: '链路流速',
+                align: 'center',
+                formatter: cpubfs
+            }, {
+                field: 'cpu_max',
+                title: '链路错包',
+                align: 'center',
+                formatter: cpubfs
+            },
+                {
+                field: 'memory_usage_min_per',
+                title: '端口包数',
+                align: 'center',
+                formatter: bfs
+            }]
+        });
+         $("#test7Table").bootstrapTable({
+            columns: [{
+                field: 'hostid',
+                title: '',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'hostname',
+                title: '主机',
+                align: 'center'
+            }, {
+                field: 'cpu_avg',
+                title: '磁盘最大使用率',
+                align: 'center',
+                formatter: cpubfs
+            }, {
+                field: 'cpu_max',
+                title: '磁盘最小使用率',
+                align: 'center',
+                formatter: cpubfs
+            }]
+        });
+          $("#test8Table").bootstrapTable({
+            columns: [{
+                field: 'hostid',
+                title: '',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            },{
+                field: 'hostname',
+                title: '主机',
+                align: 'center'
+            }, {
+                field: 'cpu_avg',
+                title: '出流量',
+                align: 'center',
+                formatter: cpubfs
+            }, {
+                field: 'cpu_max',
+                title: '入流量',
+                align: 'center',
+                formatter: cpubfs
+            }, {
+                field: 'memory_usage_min_per',
+                title: '入总流量',
+                align: 'center',
+                formatter: bfs
+            },
+                {
+                field: 'memory_usage_min_per',
+                title: '出总流量',
+                align: 'center',
+                formatter: bfs
+            }]
+        });
+
+        $(function () {
+            $("#query").click(query);
+               $(".table-yanshi").hide()
+                $(".table-huihua").hide()
+                $(".table-diubao").hide()
+                $(".table-lianlu").hide()
+                $(".table-cpu").hide()
+                $(".table-mem").hide()
+                $(".table-cipan").hide()
+                $(".table-liuliang").hide()
+            $("#query_start_date").val(getNowFormatDate1());
+            $("#query_end_date").val(getNowFormatDates());
+        });
+
+        function getNowFormatDate1() {
+            var date = new Date(new Date().getTime());
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate() - 1;
+            var strHour = date.getHours();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + strHour + ":00:00"
+                + " ";
+            return currentdate;
+        }
+
+        function getNowFormatDates() {
+            var date = new Date(new Date().getTime());
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            var strHour = date.getHours();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + strHour + ":00:00"
+                + " ";
+            return currentdate;
+        }
+
+        function query() {
+// 获取某个时间格式的时间戳
+{#            var query_start_date = $("#query_start_date").val().replace("-", "/").replace("-", "/");#}
+{#            query_start_date = Date.parse(new Date(query_start_date));#}
+{#            query_start_date = query_start_date / 1000;#}
+{#            var query_end_date = $("#query_end_date").val().replace("-", "/").replace("-", "/");#}
+{#            query_end_date = Date.parse(new Date(query_end_date));#}
+{##}
+{#            query_end_date = query_end_date / 1000;#}
+{##}
+{#            if ($("#query_start_date").val() == '') {#}
+{#                alert("请填写统计开始时间！");#}
+{#                return false;#}
+{#            } else if ($("#query_end_date").val() == '') {#}
+{#                alert("请填写统计结束时间！");#}
+{#                return false;#}
+{#            } else {#}
+{#                $('#test1Table').bootstrapTable('refreshOptions', {#}
+{#                    url: "/showdata/",#}
+{#                    queryParams: function (params) {#}
+{#                        return $.extend({}, params, {#}
+{#                            query_start_date: query_start_date,#}
+{#                            query_end_date: query_end_date,#}
+{#                            query_host: $("#query_host").val()#}
+{#                        });#}
+{#                    }#}
+{#                });#}
+{#            }#}
+            var va = $("#app").val()
+            if(va == 1){
+                $(".table-mem").hide()
+                $(".table-yanshi").hide()
+                $(".table-huihua").hide()
+                $(".table-diubao").hide()
+                $(".table-lianlu").hide()
+                 $(".table-cipan").hide()
+                $(".table-liuliang").hide()
+                $(".table-cpu").show()
+            }else if(va == 2){
+
+                $(".table-yanshi").hide()
+                $(".table-huihua").hide()
+                $(".table-diubao").hide()
+                $(".table-lianlu").hide()
+                $(".table-cpu").hide()
+                 $(".table-cipan").hide()
+                $(".table-liuliang").hide()
+                $(".table-mem").show()
+            }else if(va == 3){
+                $(".table-mem").hide()
+                $(".table-huihua").hide()
+                $(".table-diubao").hide()
+                $(".table-lianlu").hide()
+                $(".table-cpu").hide()
+                 $(".table-cipan").hide()
+                $(".table-liuliang").hide()
+                $(".table-yanshi").show()
+            }else if(va ==4){
+                $(".table-yanshi").hide()
+                $(".table-mem").hide()
+                $(".table-diubao").hide()
+                $(".table-lianlu").hide()
+                $(".table-cpu").hide()
+                 $(".table-cipan").hide()
+                $(".table-liuliang").hide()
+                $(".table-huihua").show()
+            }else if(va == 5){
+                   $(".table-yanshi").hide()
+                $(".table-huihua").hide()
+                $(".table-lianlu").hide()
+                $(".table-mem").hide()
+                $(".table-cpu").hide()
+                 $(".table-cipan").hide()
+                $(".table-liuliang").hide()
+                $(".table-diubao").show()
+            }else if(va == 6){
+                  $(".table-yanshi").hide()
+                $(".table-huihua").hide()
+                $(".table-diubao").hide()
+                $(".table-mem").hide()
+                $(".table-cpu").hide()
+                 $(".table-cipan").hide()
+                $(".table-liuliang").hide()
+                $(".table-lianlu").show()
+            }else if(va == 7){
+                 $(".table-yanshi").hide()
+                $(".table-huihua").hide()
+                $(".table-diubao").hide()
+                $(".table-mem").hide()
+                $(".table-cpu").hide()
+                 $(".table-lianlu").hide()
+                $(".table-liuliang").hide()
+                $(".table-cipan").show()
+            }else if(va == 8){
+                 $(".table-yanshi").hide()
+                $(".table-huihua").hide()
+                $(".table-diubao").hide()
+                $(".table-mem").hide()
+                $(".table-cpu").hide()
+                 $(".table-cipan").hide()
+                $(".table-lianlu").hide()
+                $(".table-liuliang").show()
+            }
+            console.log(va)
+        }
+
+        function cpubfs(value) {
+            return [
+                value + '%'
+            ].join('');
+        }
+
+        function bfsg(value) {
+            return [
+                value + ''
+            ].join('');
+        }
+
+        function bfs(value) {
+            return [
+                (value * 100).toFixed(2) + '%'
+            ].join('');
+        }
+
+        function CurentTime() {
+            var now = new Date();
+
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+
+            var hh = now.getHours();
+//        var mm = now.getMinutes();
+            var mm = 0;
+
+            var clock = year + "-";
+
+            if (month < 10)
+                clock += "0";
+
+            clock += month + "-";
+
+            if (day < 10)
+                clock += "0";
+
+            clock += day + " ";
+
+            if (hh < 10)
+                clock += "0";
+
+            clock += hh + ":";
+            if (mm < 10) clock += '0';
+            clock += mm;
+            clock += mm + ":";
+            clock += '0';
+            return (clock);
+        }
+
+        function changeJg() {
+            var jg = $("#jg").val();
+            if (jg != '') {
+                var startTime = getJgTime(jg);
+                var endTime = getNowFormatDate();
+                $("#query_start_date").val(startTime);
+                $("#query_end_date").val(endTime);
+
+            }
+        }
+
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + '00' + seperator2 + '00'
+                + seperator2 + '00';
+            return currentdate;
+        }
+
+        function getJgTime(mi) {
+            var now = new Date();
+            var date = new Date(now.getTime() - mi * 60 * 1000);
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+//        var time=year + '-' + month + '-' + day  + ' ' + hour + ':' + minute + ':' + second;
+            var time = year + '-' + month + '-' + day + ' ' + hour + ':' + '00' + ':' + '00';
+            return time;
+        }
+
+
+        $("#hosttable").bootstrapTable({
+            columns: [{
+                field: 'hostid',
+                title: '序号',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'host',
+                title: '主机IP',
+                align: 'center'
+            }, {
+                field: 'flags',
+                title: '选择',
+                align: 'center',
+                checkbox: true
+            }]
+        });
+
+        function queryHost() {
+            $('#hosttable').bootstrapTable('refreshOptions', {
+                url: "/host/",
+                queryParams: function (params) {
+                    return $.extend({}, params, {});
+                }
+            });
+
+            $("#hostModalTable").modal();
+        }
+
+        function qrHost() {
+            var Selections = $('#hosttable').bootstrapTable('getAllSelections');
+            console.log(Selections);
+            var host = "";
+            var hostid = "";
+            $.each(Selections, function (idx, item) {
+                if (item.flags == true) {
+                    host += item.host + ",";
+                    hostid += item.hostid + ",";
+                }
+
+            });
+            {% comment %}  for (var i = 0; i < selectionIds.length; i++) {
+                  host += selectionIds[i] + ",";
+              }{% endcomment %}
+            $("#query_host").val(host.substring(0, host.length - 1));
+            $("#query_hostid").val(hostid.substring(0, hostid.length - 1));
+            $("#hostModalTable").modal('hide');
+        }
+
+        function onDblClickRow_host(row) {
+            $("#query_host").val(row.host);
+            $('#hostModalTable').modal('hide');
+        }
+
+        function queryHostget() {
+            $('#hosttable').bootstrapTable('refreshOptions', {
+                url: "/host/",
+                queryParams: function (params) {
+                    return $.extend({}, params, {
+                        query_hostbip: document.getElementById("query_hostbip").value,
+                        query_hostbname: document.getElementById("query_hostbname").value
+                    });
+                }
+            });
+        }
+
+        function exportExcel() {
+
+            var query_start_date = $("#query_start_date").val().replace("-", "/").replace("-", "/");
+            query_start_date = Date.parse(new Date(query_start_date));
+            query_start_date = query_start_date / 1000;
+            var query_end_date = $("#query_end_date").val().replace("-", "/").replace("-", "/");
+            query_end_date = Date.parse(new Date(query_end_date));
+            query_end_date = query_end_date / 1000;
+            if ($("#query_start_date").val() == '') {
+                alert("请填写统计开始时间！");
+                return false;
+            } else if ($("#query_end_date").val() == '') {
+                alert("请填写统计结束时间！");
+                return false;
+            }
+            var data = {
+                start: query_start_date,
+                end: query_end_date,
+                query_host: $("#query_host").val()
+
+            };
+            location.href = "/file_down?start=" + query_start_date + "&end=" + query_end_date + "&query_host=" + $("#query_host").val();
+        }
+
+        function cputubiao(value, row) {
+            return [
+                '<a href="javascript:queryHis(' + row.hostid + ',1,\'' + row.host + '\',\'' + row.hostname + '\')">' + value + '</a>'
+            ].join('');
+        }
+    </script>
+
+    <script>
+
+
+        cpuxz = [];//cpu  x轴数据
+        cpuctzy = [];//系统占用百分比1
+        cpuyhzh = [];//用户占用百分比2
+        cpulyl = [];//利用率3
+        function queryHis(hostid, va, host, hostname) {
+
+            if (va == 1) {
+                document.getElementById("htxianshi").innerHTML = "查看历史数据" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + hostname +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + host;
+                document.getElementById("jg").options[0].selected = "selected";
+                var jg = $("#jg").val();
+                if (jg != '') {
+                    var startTime = getJgTime(jg);
+                    var endTime = getNowFormatDate();
+                    $("#query_start_date").val(startTime);
+                    $("#query_end_date").val(endTime);
+                }
+            }
+
+            var query_start_date = $("#query_start_date").val().replace("-", "/").replace("-", "/");
+            query_start_date = Date.parse(new Date(query_start_date));
+            query_start_date = query_start_date / 1000;
+            var query_end_date = $("#query_end_date").val().replace("-", "/").replace("-", "/");
+            query_end_date = Date.parse(new Date(query_end_date));
+            query_end_date = query_end_date / 1000;
+            //定义cpu X轴与数据数组
+
+
+            if (cpuxz.length > 0) {
+                //cpu
+                cpuxz.splice(0, cpuxz.length);
+                cpuctzy.splice(0, cpuctzy.length);
+                cpuyhzh.splice(0, cpuyhzh.length);
+                cpulyl.splice(0, cpulyl.length);
+            }
+
+            var url = '/reportfrom/';
+            var data = {
+                hostid: hostid,
+                query_start_date: query_start_date,
+                query_end_date: query_end_date
+            }
+            $.getJSON(url, data, function (result) {
+                $.each(result, function (idx, item) {
+                    cpuxz.push(item.datef);
+                    cpuctzy.push(item.cpuctzy);
+                    cpuyhzh.push(item.cpuyhzh);
+                    cpulyl.push(item.cpulyl);
+                    echarts1(host);
+                });
+            });
+
+            $('#HistorymodalTable').modal('show');
+        }
+
+        var myChart1 = echarts.init($('#main1')[0]);
+
+        function echarts1(host) {
+            var option = {
+                title: {
+                    text: 'cpu历史数据（%）-' + host,
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['CPU 系统占用时间百分比（%）', 'CPU 用户占用时间百分比（%）', 'CPU利用率（%）'],
+                    top: 30
+                }, toolbox: {
+                    show: true,
+                    feature: {
+                        saveAsImage: {pixelRatio: 2}
+                    }
+                },
+                dataZoom: [{
+                    startValue: cpuxz[cpuxz.length - 20]
+                }, {
+                    type: 'slider'
+                }],
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: cpuxz
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: 'CPU 系统占用时间百分比（%）',
+                        type: 'line',
+                        itemStyle: {normal: {}},
+                        data: cpuctzy
+                    }, {
+                        name: 'CPU 用户占用时间百分比（%）',
+                        type: 'line',
+                        itemStyle: {normal: {}},
+                        data: cpuyhzh
+                    }, {
+                        name: 'CPU利用率（%）',
+                        type: 'line',
+                        itemStyle: {normal: {}},
+                        data: cpulyl
+                    }
+                ]
+            };
+            myChart1.setOption(option);
+        }
+    </script>
+
+    <script>
+         $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('network-class2'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['重大','严重','一般','其它','正常'],
+                        y:'bottom'
+
+                    },
+                    toolbox: {
+                        show : true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['DELL','IBM']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'重大',
+                            type:'bar',
+                            stack: '广告',
+                            data:[1, 1, 1, 1, 1, 1, 1],
+                            itemStyle:{
+                                normal:{
+                                    color:'red'
+                                }
+                            }
+                        },
+                        {
+                            name:'严重',
+                            type:'bar',
+                            stack: '广告',
+                            data:[1, 1, 1, 1, 1, 1, 1],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FF7F50'
+                                }
+                            }
+                        },
+                        {
+                            name:'一般',
+                            type:'bar',
+                            stack: '广告',
+                            data:[1, 1, 1, 1, 1, 1, 1],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFA500'
+                                }
+                            }
+                        },
+{#                        {#}
+{#                            name:'正常',#}
+{#                            type:'bar',#}
+{#                            stack: '广告',#}
+{#                            data:[150, 232, 201, 154, 190, 330, 410],#}
+{#                              itemStyle:{#}
+{#                                normal:{#}
+{#                                    color:'#FFFF00'#}
+{#                                }#}
+{#                            }#}
+{#                        },#}
+                        {
+                            name:'其他',
+                            type:'bar',
+                            stack: '广告',
+                            data:[1, 1, 1, 1, 1, 1, 1],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFD700'
+                                }
+                            }
+                        },
+
+
+                    ]
+                };
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+    </script>
+
+    <script>
+         $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('network-class3'));
+                    var option = {
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+{#                        legend: {#}
+{#                            orient : 'vertical',#}
+{#                            x : 'left',#}
+{#                            data:['直达','营销广告','搜索引擎','邮件营销','联盟广告','视频广告','MySql','Redis','Mongodb','Oracle','infomix','Sybase ']#}
+{#                        },#}
+                        toolbox: {
+                            show : true,
+                        },
+                        calculable : false,
+                        series : [
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                selectedMode: 'single',
+                                radius : [0, 70],
+
+                                // for funnel
+                                x: '20%',
+                                width: '40%',
+                                funnelAlign: 'right',
+                                max: 1548,
+
+                                itemStyle : {
+                                    normal : {
+                                        label : {
+                                            position : 'inner'
+                                        },
+                                        labelLine : {
+                                            show : false
+                                        }
+                                    }
+                                },
+                                data:[
+                                    {value:2, name:'重大'},
+                                    {value:2, name:'严重'},
+                                    {value:4, name:'一般', selected:true},
+                                    {value:4, name:'其它'}
+                                ]
+                            },
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                radius : [100, 140],
+
+                                // for funnel
+                                x: '60%',
+                                width: '35%',
+                                funnelAlign: 'left',
+                                max: 1048,
+
+                                data:[
+                                    {value:1, name:"DELL"},
+                                    {value:1, name:'IBM'},
+                                       {value:1, name:"DELL"},
+                                    {value:1, name:'IBM'},
+                                       {value:2, name:"DELL"},
+                                    {value:2, name:'IBM'},
+                                       {value:2, name:"DELL"},
+                                    {value:2, name:'IBM'},
+
+                                ]
+                            }
+                        ]
+                    };
+
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+    </script>
+{% endblock %}

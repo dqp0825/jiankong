@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<!-- Font Awesome -->
+	    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	    <!-- NProgress -->
+	    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+	    <!-- bootstrap-daterangepicker -->
+	    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+	
+	    <!-- Custom Theme Style -->
+	    <link href="../build/css/custom.css" rel="stylesheet">
+	    <link href="plugins/layui-v2.2.5/layui/css/layui.css" rel="stylesheet">
+		<script src="../docs/js/jquery-1.11.3.min.js"></script>
+		<style>
+			.hide{
+				display: none;
+			}
+			
+			caption{
+				font-size: 30px;
+				font-weight: bold;
+				margin-bottom: 20px;
+			}
+		</style>
+		<script>
+			$(function(){
+				var $div_li = $(".tab_menu input");
+				$div_li.click(function(){
+					$(this).addClass("selected").siblings().removeClass("selected");
+					var index = $div_li.index(this);
+					$(".tab_box > div").eq(index).show().siblings().hide();
+				}).hover(function(){
+				$(this).addClass("hover");
+			},function(){
+				$(this).removeClass("hover");
+			})
+			})
+		</script>
+	</head>
+	<body>
+		<div class="layui-row" style="margin: 40px;">
+   			<div class="layui-col-xs6">
+				<select style="height: 40px;width:500px;">
+	                <option value="">选择群组</option>
+	                <option value="1">ALL</option>
+	                <option value="2">CBSS1</option>
+					<option value="3">CBSS2</option>          
+                </select>
+   			</div>
+   			<div class="layui-col-xs6">
+				<input type="text" placeholder="请输入主机，用顿号隔开" name="country" id="autocomplete-custom-append" class="form-control col-md-10" autocomplete="off" style="height: 40px;width: 500px;">
+   			</div>
+   		</div>
+   		<div class="layui-row" style="height: 40px;text-align: center;line-height: 50px;">
+   			<div class="tab_menu layui-col-xs5" style="font-size: 12px;">
+				<input type="radio" id="btn1" name="radio" value="1" style="width: 18px;height: 18px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;">交换机
+				<input type="radio" id="btn2" name="radio" value="2" style="width: 18px;height: 18px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">路由器
+				<input type="radio" id="btn3" name="radio" value="3" style="width: 18px;height: 18px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">负载均衡
+				<input type="radio" id="btn4" name="radio" value="4" style="width: 18px;height: 18px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">防火墙
+				<input type="radio" id="btn4" name="radio" value="5" style="width: 18px;height: 18px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">物理机
+				<input type="radio" id="btn4" name="radio" value="6" style="width: 18px;height: 18px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">宿主机
+				<input type="radio" id="btn4" name="radio" value="7" style="width: 18px;height: 18px;vertical-align:middle; margin-top:-2px; margin-bottom:1px;margin: 0px 0px 0px 10px;">云主机
+			</div>
+			<div class="layui-col-xs3">
+				<select class="form-control" style="display: inline;height: 40px;">
+	                <option value="1">日报</option>
+	                <option value="2">月报</option>
+	                <option value="3">周报</option>
+					<option value="4">季报</option>
+					<option value="5">年报</option>
+                </select>
+   			</div>
+   			<div class="layui-col-xs2">
+                <button type="submit" class="btn btn-success" style="height: 39px;width: 60px; padding: 0 10px; color: #fff;">查询</button>
+            </div>
+            <div class="layui-col-xs2">
+                <button type="submit" class="btn btn-success" style="height: 40px;width: 60px; padding: 0 10px; color: #fff;">导出</button>
+            </div>
+   		</div>
+		<div class="tab layui-row" style="margin: 20px;">
+			<div class="tab_box">
+				<div class="hide">
+					<table class="layui-table" cellspacing="0" cellpadding="10px">
+						<caption>交换机</caption>
+						<tr class="top">
+							<th>设备IP</th>
+							<th>设备名称</th>
+							<th>所属应用</th>
+							<th>CPU最大利用率</th>
+							<th>CPU最小利用率</th>
+							<th>CPU平均利用率</th>
+							<th>内存最小利用率</th>
+							<th>内存最大利用率</th>
+							<th>内存平均利用率</th>
+							<th>平均时延</th>
+							<th>最大时延</th>
+							<th>最小时延</th>
+							<th>最大丢包</th>
+							<th>最小丢包</th>
+							<th>平均丢包</th>
+							<th>最大错包数</th>
+							<th>平均错报数</th>
+							<th>最小错报数</th>
+							<th>ping</th>
+							<th>最大带宽利用率</th>
+							<th>平均带宽利用率</th>
+							<th>最小带宽利用率</th>
+						</tr>
+						<tr class="bluerow">
+							<td>1</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							
+						</tr>
+					</table>
+				</div>
+				<div class='hide'>
+					<table class="layui-table" cellspacing="0" cellpadding="10px">
+						<caption>路由器</caption>
+						<tr class="top">
+							<th>设备IP</th>
+							<th>设备名称</th>
+							<th>所属应用</th>
+							<th>CPU最大利用率</th>
+							<th>CPU最小利用率</th>
+							<th>CPU平均利用率</th>
+							<th>内存最小利用率</th>
+							<th>内存最大利用率</th>
+							<th>内存平均利用率</th>
+							<th>平均时延</th>
+							<th>最大时延</th>
+							<th>最小时延</th>
+							<th>最大丢包</th>
+							<th>最小丢包</th>
+							<th>平均丢包</th>
+							<th>最大错包数</th>
+							<th>平均错报数</th>
+							<th>最小错报数</th>
+							<th>ping</th>
+							<th>最大带宽利用率</th>
+							<th>平均带宽利用率</th>
+							<th>最小带宽利用率</th>
+						</tr>
+						<tr class="bluerow">
+							<td>1</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							
+						</tr>
+					</table>
+				</div>				
+				<div class='hide'>
+					<table class="layui-table" cellspacing="0" cellpadding="10px">
+						<caption>负载均衡</caption>
+						<tr class="top">
+							<th>设备IP</th>
+							<th>设备名称</th>
+							<th>所属应用</th>
+							<th>CPU最大利用率</th>
+							<th>CPU最小利用率</th>
+							<th>CPU平均利用率</th>
+							<th>内存最小利用率</th>
+							<th>内存最大利用率</th>
+							<th>内存平均利用率</th>
+							<th>ping</th>
+							<th>实连接数</th>
+							<th>平均虚连接数</th>
+							<th>最大虚连接数</th>
+							<th>最小虚连接数</th>
+						</tr>
+						<tr class="bluerow">
+							<td>1</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+						
+			
+							
+						</tr>
+					</table>
+				</div>				
+				<div class='hide'>
+					<table class="layui-table" cellspacing="0" cellpadding="10px">
+						<caption>防火墙</caption>
+						<tr class="top">
+							<th>设备IP</th>
+							<th>设备名称</th>
+							<th>所属应用</th>
+							<th>CPU最大利用率</th>
+							<th>CPU最小利用率</th>
+							<th>CPU平均利用率</th>
+							<th>内存最小利用率</th>
+							<th>内存最大利用率</th>
+							<th>内存平均利用率</th>
+							<th>ping</th>
+							<th>会话数</th>
+			
+						</tr>
+						<tr class="bluerow">
+							<td>1</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+						
+
+						</tr>
+					</table>
+				</div>
+				<div class='hide'>
+					<table class="layui-table" cellspacing="0" cellpadding="10px">
+						<caption>物理机</caption>
+						<tr class="top">
+							<th>设备IP</th>
+							<th>设备名称</th>
+							<th>所属应用</th>
+							<th>CPU最大利用率</th>
+							<th>CPU最小利用率</th>
+							<th>CPU平均利用率</th>
+							<th>内存最小利用率</th>
+							<th>内存最大利用率</th>
+							<th>内存平均利用率</th>
+				
+						</tr>
+						<tr class="bluerow">
+							<td>1</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+						
+						</tr>
+					</table>
+				</div>
+				<div class='hide'>
+					<table class="layui-table" cellspacing="0" cellpadding="10px">
+						<caption>宿主机</caption>
+						<tr class="top">
+							<th>设备IP</th>
+							<th>设备名称</th>
+							<th>数据中心</th>
+							<th>所属集群</th>
+							<th>所属应用</th>
+							<th>CPU最大利用率</th>
+							<th>CPU最小利用率</th>
+							<th>CPU平均利用率</th>
+							<th>内存最小利用率</th>
+							<th>内存最大利用率</th>
+							<th>内存平均利用率</th>
+				
+						</tr>
+						<tr class="bluerow">
+							<td>1</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							
+						
+						</tr>
+					</table>
+				</div>
+				<div class='hide'>
+					<table class="layui-table" cellspacing="0" cellpadding="10px">
+						<caption>云主机</caption>
+						<tr class="top">
+							<th>设备IP</th>
+							<th>设备名称</th>
+							<th>数据中心</th>
+							<th>所属集群</th>
+							<th>所属应用</th>
+							<th>CPU最大利用率</th>
+							<th>CPU最小利用率</th>
+							<th>CPU平均利用率</th>
+							<th>内存最小利用率</th>
+							<th>内存最大利用率</th>
+							<th>内存平均利用率</th>
+				
+						</tr>
+						<tr class="bluerow">
+							<td>1</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							<td>1111</td>
+							<td>11111</td>
+							<td>11111</td>
+							
+						
+						</tr>
+					</table>
+				</div>
+				
+			</div>
+		</div>
+		
+		
+		
+	<!-- jQuery -->
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="../vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="../vendors/Chart.js/dist/Chart.min.js"></script>
+    <!-- jQuery Sparklines -->
+    <script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <!-- Flot -->
+    <script src="../vendors/Flot/jquery.flot.js"></script>
+    <script src="../vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="../vendors/Flot/jquery.flot.time.js"></script>
+    <script src="../vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="../vendors/Flot/jquery.flot.resize.js"></script>
+    <!-- Flot plugins -->
+    <script src="../vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="../vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="../vendors/flot.curvedlines/curvedLines.js"></script>
+    <!-- DateJS -->
+    <script src="../vendors/DateJS/build/date.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="../vendors/moment/min/moment.min.js"></script>
+    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="../build/js/custom.min.js"></script>
+
+    
+	</body>
+</html>

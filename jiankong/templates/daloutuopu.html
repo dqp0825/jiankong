@@ -1,0 +1,1760 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block jsorcss %}
+    <title>智能监控</title>
+    <script type="text/javascript" src="{% static '/assets/js/jquery.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static '/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/css/loader-style.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/js/stackable/stacktable.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/js/stackable/responsive-table.css' %}">
+    <link rel="stylesheet" href="{% static '/datetimepicker/bootstrap-datetimepicker.min.css' %}">
+    <link rel="shortcut icon" href="{% static '/assets/ico/minus.png' %}">
+    <!-- MAIN EFFECT -->
+    <script type="text/javascript" src="{% static '/assets/js/preloader.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/app.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/load.js' %}"></script>
+    <!-- /MAIN EFFECT -->
+    <script type="text/javascript" src="{% static '/assets/js/stackable/stacktable.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/commonTool.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/admin.js' %}"></script>
+
+    <script type="text/javascript"
+            src="{% static '/datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static '/datetimepicker/bootstrap-datetimepicker.zh-CN.js' %}"></script>
+    <script language="javascript" type="text/javascript"
+            src="{% static '/My97DatePicker/WdatePicker.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static '/bootstrap-table/bootstrap-table.css' %}">
+    <link rel="stylesheet"
+          href="{% static '/bootstrap-table/bootstrap-table-fixed-columns-master/bootstrap-table-fixed-columns.css' %}">
+    <script type="text/javascript" src="{% static '/bootstrap-table/bootstrap-table.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static '/bootstrap-table/bootstrap-table-fixed-columns-master/bootstrap-table-fixed-columns.js' %}"></script>
+    <script type="text/javascript" src="{% static '/bootstrap-table/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static '/bootstrap-table/export/bootstrap-table-export.js' %}"></script>
+    <script type="text/javascript" src="{% static '/bootstrap-table/export/tableExport.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'EasyUI/easyui.css' %}"/>
+    <script type="text/javascript" src="{% static 'EasyUI/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'EasyUI/jquery.easyui.min.js' %}"></script>
+
+     <link rel="stylesheet" href="{% static 'css/map.css' %}"/>
+    <link rel="stylesheet" href="{% static 'js/zTree_v3/css/metroStyle/metroStyle.css' %}"/>
+    {#    <script src="js/echarts-2.2.7/doc/asset/js/jquery.js"></script>#}
+    <script src="{% static 'js/echarts-2.2.7/build/dist/echarts.js' %}"></script>
+    <script src="{% static 'js/echarts-2.2.7/doc/example/geoJson/china-main-city/china-main-city-map.js' %}"></script>
+    <script src="{% static 'js/TableSorterV2.js' %}"></script>
+
+
+    <style>
+        td {
+            text-align: center
+        }
+
+        button {
+            border: none
+        }
+
+        .paper-wrap1 {
+            height: 100%;
+        }
+
+        .gongneng {
+            float: right;
+            padding-left: 50px;
+        }
+
+
+        .img-box {
+            position: relative;
+            margin: 0 auto;
+            width: 100%;
+            height: 800px;
+        }
+
+        .main {
+            position: absolute;
+            left: 50%;
+            top: 49%;
+            margin-left: -330px;
+            margin-top: -350px;
+        }
+
+        .line1 {
+            position: absolute;
+            left: 20px;
+            top: 30px
+        }
+
+        .line2 {
+            position: absolute;
+            left: 20px;
+            bottom: 30px
+        }
+
+        .line3 {
+            position: absolute;
+            right: 20px;
+            top: 30px
+        }
+
+        .line4 {
+            position: absolute;
+            right: 20px;
+            bottom: 30px
+        }
+
+        .map-box {
+            width: 1100px;
+            height: 1300px;
+            position: relative;
+        }
+
+        .map {
+            width: 1300px;
+            height: 1300px;
+            margin: 30px 200px;
+        }
+
+        .content {
+            padding: 20px 20px;
+            margin-left: -127px;
+        }
+
+        #network-class {
+            width: 450px;
+            height: 300px;
+        {#            background: red;#} float: left;
+            position: absolute;
+            top: 70px;
+            right: -20px;
+        }
+
+        #network-performance-top {
+            width: 300px;
+            height: 250px;
+            background: blue;
+            float: left;
+            position: absolute;
+            top: 365px;
+            right: 55px;
+        }
+
+        #network-speed-top {
+            width: 300px;
+            height: 250px;
+            background: green;
+            float: left;
+            position: absolute;
+            top: 660px;
+            right: 55px;
+        }
+
+        #latest-warning {
+            width: 1030px;
+            height: 250px;
+{#            background: orange;#}
+            margin-left: 20px;
+            margin-top: 40px;
+
+        }
+        #latest-warning-class{
+            position: absolute;
+            left: 420px;
+            top: 660px;
+        }
+       #performance-table{
+           width: 100%;
+           height:100%;
+       }
+    th{
+        text-align: center;
+        font-size: 14px;
+        font-family: "Adobe 宋体 Std L";
+        font-style: normal;
+    }
+    #speed td,#speed th{
+        border: none;
+    }
+    table th{
+        text-shadow: none;
+    }
+
+
+
+
+
+
+
+        #blockCity{ position:absolute;font-size:9pt;  background-color:#FFFFCC; padding:5px; border:1px solid #F5C66B;line-height:160%; width:300px; display:none;}
+        #blockCity a
+        {
+            color:#000000;
+            font-size:9pt;
+            text-decoration:none;
+        }
+        #blockCity a:hover
+        {
+            font-size:10pt;
+            border-bottom:dashed 1px #000000;
+        }
+        #blockCity table
+        {
+        border:1px dotted #F5C66B;
+        }
+        #blockCity table td
+        {
+           width:40px;
+           text-algin:center;
+        }
+
+
+
+
+
+
+
+
+    </style>
+
+
+
+
+     <script language="javascript" type="text/javascript">
+        window.onload = function () {
+            new TableSorter("tb1");
+
+            /*{
+             alert("table is sorted by " + c.innerHTML + " " + (t ? "Asc" : "Desc"));
+             }*/
+        }
+    </script>
+
+
+{% endblock %}
+
+{% block content %}
+{#     <div class="page-title-container ng-scope">#}
+{#        <h3 class="page-title">拓扑图</h3>#}
+{#        <div class="page-btns">#}
+{#            <a class="btn btn-page-title" ui-sref="monitor.alarm.list({st: &#39;-3d&#39;})"#}
+{#               href="/wltp/">#}
+{#                <i class="fa fa-list-alt"></i> 物理拓扑#}
+{#            </a>#}
+{#        </div>#}
+{#         <div class="page-btns">#}
+{#             <a class="btn btn-page-title" ui-sref="monitor.alarm.list({st: &#39;-3d&#39;})"#}
+{#                href="">#}
+{#                 <i class="fa fa-list-alt"></i> 机柜拓扑#}
+{#             </a>#}
+{#         </div>#}
+{#    </div>#}
+
+    <div id="preloader">
+        <div id="status">&nbsp;</div>
+    </div>
+    {#    首页展示#}
+    <div class="map-box">
+        <div id="" style="height:300px; width:400px;position: absolute;top: 100px;" class="map">
+            <ul>
+                <li style="float: left;margin-left: 100px"><a href="/topologyView/jftps/"><img src="{% static 'img/data_canter.png' %}" alt=""></a><span>一期</span></li>
+
+                <li style="margin-left: 300px"><a href=""><img src="{% static 'img/data_canter.png' %}" alt=""></a><span>&nbsp;二期</span></li>
+{#                <li style="float: left;margin-left: 100px"><a href=""><img src="{% static 'img/data_canter.png' %}" alt=""></a><span>集团园区</span></li>#}
+{#                <li style="margin-left: 300px"><a href=""><img src="{% static 'img/data_canter.png' %}" alt=""></a><span>&nbsp;硅谷园区</span></li>#}
+
+            </ul>
+        </div>
+
+         <div id="" style="height: 300px;width: 300px;position: absolute;top: 120px;left: 10px">
+              <div class="panel-heading" style="background: blue;text-align: center">应用告警Top10</div>
+             <div id="yytop" style="width: 300px;height: 200px"></div>
+        </div>
+
+        <div id="latest-warning-class" style="height: 300px;width: 300px;position: absolute;top: 120px;left: 800px">
+            <div class="panel-heading" style="background: blue;text-align: center">机房告警Top10</div>
+            <div id="jftop" class="" style="width: 300px;height: 200px;"></div>
+        </div>
+
+        <div id="" style="height: 300px;width: 300px;position: absolute;top: 450px;left: 10px">
+              <div class="panel-heading" style="background: blue;text-align: center">物理机告警Top10</div>
+             <div id="wljtop" style="width: 300px;height: 200px;"></div>
+        </div>
+
+         <div id="" style="height: 300px;width: 300px;position: absolute;top: 450px;left: 800px">
+              <div class="panel-heading" style="background: blue;text-align: center">云主机告警Top10</div>
+             <div id="yzjtop" style="width: 300px;height: 200px;"></div>
+        </div>
+
+         <div id="" style="height: 300px;width: 300px;position: absolute;top: 770px;left: 10px">
+              <div class="panel-heading" style="background: blue;text-align: center">存储告警Top10</div>
+             <div id="cctop" style="width: 300px;height: 200px;"></div>
+        </div>
+
+         <div id="" style="height: 300px;width: 300px;position: absolute;top: 770px;left: 800px">
+              <div class="panel-heading" style="background: blue;text-align: center">网络设备告警Top10</div>
+             <div id="wlsbtop" style="width: 300px;height: 200px"></div>
+        </div>
+
+
+
+        <div id="blockCity"></div>
+    <script>
+     $(function(){
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/map'
+                ],
+                function (ec) {
+
+                    var currLevel = 0;//0全国 1省份 2地市
+                    var currProvince = '', currCity = '';
+
+                    //此对照表为临时写的，请谨慎检查
+                    var provinceMap = {
+                        '北京': 'bei_jing_geo',
+                        '天津': 'tian_jin_geo',
+                        '上海': 'shang_hai_geo',
+                        '重庆': 'chong_qing_geo',
+                        '河北': 'he_bei_geo',
+                        '河南': 'he_nan_geo',
+                        '云南': 'yun_nan_geo',
+                        '辽宁': 'liao_ning_geo',
+                        '黑龙江': 'hei_long_jiang_geo',
+                        '湖南': 'hu_nan_geo',
+                        '安徽': 'an_hui_geo',
+                        '山东': 'shan_dong_geo',
+                        '新疆': 'xin_jiang_geo',
+                        '江苏': 'jiang_su_geo',
+                        '浙江': 'zhe_jiang_geo',
+                        '江西': 'jiang_xi_geo',
+                        '湖北': 'hu_bei_geo',
+                        '广西': 'guang_xi_geo',
+                        '甘肃': 'gan_su_geo',
+                        '山西': 'shan_xi_geo',
+                        '内蒙古': 'nei_meng_gu_geo',
+                        '陕西': 'shan_xi1_geo',
+                        '吉林': 'ji_lin_geo',
+                        '福建': 'fu_jian_geo',
+                        '贵州': 'gui_zhou_geo',
+                        '广东': 'guang_dong_geo',
+                        '青海': 'qing_hai_geo',
+                        '西藏': 'xi_zang_geo',
+                        '四川': 'si_chuan_geo',
+                        '宁夏': 'ning_xia_geo',
+                        '海南': 'hai_nan_geo',
+                        '台湾': 'tai_wan_geo',
+                        '香港': 'xiang_gang_geo',
+                        '澳门': 'ao_men_geo'
+                    }
+
+
+
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('map'));
+
+
+
+                    option = {
+{#                        title: {#}
+{#                            text: '全国',#}
+{#                            subtext: '点击进入省份'#}
+{#                        },#}
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: '{b}'
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            x: 'right',
+                            data: ['随机数据']
+                        },
+                        toolbox: {
+                            show: true,
+                            orient: 'vertical',
+                            x: 'right',
+                            y: 'center',
+                            feature: {
+                                myTool1: {
+                                    show: true,
+                                    title: '返回',
+                                    icon: 'image://http://echarts.baidu.com/images/favicon.png',
+                                    onclick: function () {
+                                        if (currLevel == 2) {
+                                            option.series[0].mapType = currProvince;
+                                            option.title = {
+                                                text: currProvince,
+                                                subtext: '点击进入地市'
+                                            }
+                                            myChart.setOption(option, true);
+                                            currProvince = '';
+                                            currLevel = 1;
+                                        } else if (currLevel == 1) {
+                                            option.series[0].mapType = 'china';
+                                            option.title = {
+                                                text: '全国',
+                                                subtext: '点击进入省份'
+                                            }
+                                            myChart.setOption(option, true);
+                                            currProvince = '';
+                                            currLevel = 0;
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        series: [
+                            {
+                                name: '随机数据',
+                                type: 'map',
+                                mapType: 'china',
+                                selectedMode: 'single',
+                                itemStyle: {
+                                    normal: { label: { show: true } },
+                                    emphasis: { label: { show: true } }
+                                },
+                                 geoCoord: {
+				                '上海': [121.4648,31.2891],
+				                '东莞': [113.8953,22.901],
+				                '东营': [118.7073,37.5513],
+				                '中山': [113.4229,22.478],
+				                '临汾': [111.4783,36.1615],
+				                '临沂': [118.3118,35.2936],
+				                '丹东': [124.541,40.4242],
+				                '丽水': [119.5642,28.1854],
+				                '乌鲁木齐': [87.9236,43.5883],
+				                '佛山': [112.8955,23.1097],
+				                '保定': [115.0488,39.0948],
+				                '兰州': [103.5901,36.3043],
+				                '包头': [110.3467,41.4899],
+				                '北京': [116.4551,40.2539],
+				                '北海': [109.314,21.6211],
+				                '南京': [118.8062,31.9208],
+				                '南宁': [108.479,23.1152],
+				                '南昌': [116.0046,28.6633],
+				                '南通': [121.1023,32.1625],
+				                '厦门': [118.1689,24.6478],
+				                '台州': [121.1353,28.6688],
+				                '合肥': [117.29,32.0581],
+				                '呼和浩特': [111.4124,40.4901],
+				                '咸阳': [108.4131,34.8706],
+				                '哈尔滨': [127.9688,45.368],
+				                '唐山': [118.4766,39.6826],
+				                '嘉兴': [120.9155,30.6354],
+				                '大同': [113.7854,39.8035],
+				                '大连': [122.2229,39.4409],
+				                '天津': [117.4219,39.4189],
+				                '太原': [112.3352,37.9413],
+				                '威海': [121.9482,37.1393],
+				                '宁波': [121.5967,29.6466],
+				                '宝鸡': [107.1826,34.3433],
+				                '宿迁': [118.5535,33.7775],
+				                '常州': [119.4543,31.5582],
+				                '广州': [113.5107,23.2196],
+				                '廊坊': [116.521,39.0509],
+				                '延安': [109.1052,36.4252],
+				                '张家口': [115.1477,40.8527],
+				                '徐州': [117.5208,34.3268],
+				                '德州': [116.6858,37.2107],
+				                '惠州': [114.6204,23.1647],
+				                '成都': [103.9526,30.7617],
+				                '扬州': [119.4653,32.8162],
+				                '承德': [117.5757,41.4075],
+				                '拉萨': [91.1865,30.1465],
+				                '无锡': [120.3442,31.5527],
+				                '日照': [119.2786,35.5023],
+				                '昆明': [102.9199,25.4663],
+				                '杭州': [119.5313,29.8773],
+				                '枣庄': [117.323,34.8926],
+				                '柳州': [109.3799,24.9774],
+				                '株洲': [113.5327,27.0319],
+				                '武汉': [114.3896,30.6628],
+				                '汕头': [117.1692,23.3405],
+				                '江门': [112.6318,22.1484],
+				                '沈阳': [123.1238,42.1216],
+				                '沧州': [116.8286,38.2104],
+				                '河源': [114.917,23.9722],
+				                '泉州': [118.3228,25.1147],
+				                '泰安': [117.0264,36.0516],
+				                '泰州': [120.0586,32.5525],
+				                '济南': [117.1582,36.8701],
+				                '济宁': [116.8286,35.3375],
+				                '海口': [110.3893,19.8516],
+				                '淄博': [118.0371,36.6064],
+				                '淮安': [118.927,33.4039],
+				                '深圳': [114.5435,22.5439],
+				                '清远': [112.9175,24.3292],
+				                '温州': [120.498,27.8119],
+				                '渭南': [109.7864,35.0299],
+				                '湖州': [119.8608,30.7782],
+				                '湘潭': [112.5439,27.7075],
+				                '滨州': [117.8174,37.4963],
+				                '潍坊': [119.0918,36.524],
+				                '烟台': [120.7397,37.5128],
+				                '玉溪': [101.9312,23.8898],
+				                '珠海': [113.7305,22.1155],
+				                '盐城': [120.2234,33.5577],
+				                '盘锦': [121.9482,41.0449],
+				                '石家庄': [114.4995,38.1006],
+				                '福州': [119.4543,25.9222],
+				                '秦皇岛': [119.2126,40.0232],
+				                '绍兴': [120.564,29.7565],
+				                '聊城': [115.9167,36.4032],
+				                '肇庆': [112.1265,23.5822],
+				                '舟山': [122.2559,30.2234],
+				                '苏州': [120.6519,31.3989],
+				                '莱芜': [117.6526,36.2714],
+				                '菏泽': [115.6201,35.2057],
+				                '营口': [122.4316,40.4297],
+				                '葫芦岛': [120.1575,40.578],
+				                '衡水': [115.8838,37.7161],
+				                '衢州': [118.6853,28.8666],
+				                '西宁': [101.4038,36.8207],
+				                '西安': [109.1162,34.2004],
+				                '贵阳': [106.6992,26.7682],
+				                '连云港': [119.1248,34.552],
+				                '邢台': [114.8071,37.2821],
+				                '邯郸': [114.4775,36.535],
+				                '郑州': [113.4668,34.6234],
+				                '鄂尔多斯': [108.9734,39.2487],
+				                '重庆': [107.7539,30.1904],
+				                '金华': [120.0037,29.1028],
+				                '铜川': [109.0393,35.1947],
+				                '银川': [106.3586,38.1775],
+				                '镇江': [119.4763,31.9702],
+				                '长春': [125.8154,44.2584],
+				                '长沙': [113.0823,28.2568],
+				                '长治': [112.8625,36.4746],
+				                '阳泉': [113.4778,38.0951],
+				                '青岛': [120.4651,36.3373],
+				                '韶关': [113.7964,24.7028],
+				                '西宁': [101.4038, 36.8207],
+                                '硅谷': [116.20, 40.10],
+                                '亦庄': [116.45, 39.73],
+                                '西红门': [116.28, 39.73]
+				            },
+                            markLine:{
+                            	smooth:true,
+				                effect : {
+				                    show: true,
+				                    scaleSize: 1,
+				                    period: 30,
+				                    color: '#fff',
+				                    shadowBlur: 5
+				                },
+				                itemStyle : {
+				                    normal: {
+				                        borderWidth:1,
+				                        lineStyle: {
+				                            type: 'solid',
+				                            shadowBlur: 10
+				                        }
+				                    }
+				                },
+				                data:[
+				                    [{name:'北京'}, {name:'呼和浩特',value:95,tooltip:{
+                            				trigger: 'item',
+                            				formatter: '{b}:{c}TB/s'
+                        				}
+				                    }],
+				                    [{name:'北京'}, {name:'哈尔滨',value:90,tooltip:{
+                            				trigger: 'item',
+                            				formatter: '{b}:{c}TB/s'
+                        				}}],
+				                    [{name:'北京'}, {name:'长春',value:80,tooltip:{
+                            				trigger: 'item',
+                            				formatter: '{b}:{c}TB/s'
+                        				}}],
+				                    [{name:'北京'}, {name:'西宁',value:70,tooltip:{
+                            				trigger: 'item',
+                            				formatter: '{b}:{c}TB/s'
+                        				}}],
+				                    [{name:'北京'}, {name:'上海',value:60,tooltip:{
+                            				trigger: 'item',
+                            				formatter: '{b}:{c}TB/s'
+                        				}}],
+				                    [{name:'西宁'}, {name:'广州',value:50,tooltip:{
+                            				trigger: 'item',
+                            				formatter: '{b}:{c}TB/s'
+                        				}}],
+				                    [{name:'广州'}, {name:'上海',value:40,tooltip:{
+                            				trigger: 'item',
+                            				formatter: '{b}:{c}TB/s'
+                        				}}],
+				                ]
+                            },
+                                data: []
+                            }
+                        ]
+                    };
+
+
+                    myChart.setOption(option);
+
+                    var ecConfig = require('echarts/config');
+                    myChart.on(ecConfig.EVENT.CLICK, function (param) {
+                        if (currLevel == 0) {
+                            var code = provinceMap[param.name];
+                            var mapTemplate = {
+                                getGeoJson: function (callback) {
+                                    $.getJSON('echarts-2.2.7/src/util/mapData/rawData/geoJson/' + code+'.json', callback);
+                                }
+                            }
+//                          alert(code);
+                            eval(" require('echarts/util/mapData/params').params.Map" + code+" = mapTemplate;");
+                            option.series[0].mapType = "Map" + code ;
+                            option.title = {
+                                text: param.name,
+                                subtext: ''
+                            }
+                            if(code != "bei_jing_geo"){
+//                          	option.series[0].data = '';
+                            	option.series[0].markLine = '';
+                            }else {
+
+                                window.location.href = "/bjsj/"
+                            }
+{#								option.series[0].markLine.data = [#}
+{#				                    [{name:'硅谷'}, {name:'亦庄',value:95,tooltip:{#}
+{#                            				trigger: 'item',#}
+{#                            				formatter: '{b}{c}TB/s'#}
+{#                        				}}],#}
+{#				                    [{name:'亦庄'}, {name:'硅谷',value:90,tooltip:{#}
+{#                            				trigger: 'item',#}
+{#                            				formatter: '{b}:{c}TB/s'#}
+{#                        				}}],#}
+{#				                    [{name:'西红门'}, {name:'亦庄',value:80,tooltip:{#}
+{#                            				trigger: 'item',#}
+{#                            				formatter: '{b}:{c}TB/s'#}
+{#                        				}}],#}
+{#				                    [{name:'亦庄'}, {name:'西红门',value:70,tooltip:{#}
+{#                            				trigger: 'item',#}
+{#                            				formatter: '{b}:{c}TB/s'#}
+{#                        				}}],#}
+{#				                    [{name:'西红门'}, {name:'硅谷',value:60,tooltip:{#}
+{#                            				trigger: 'item',#}
+{#                            				formatter: '{b}:{c}TB/s'#}
+{#                        				}}],#}
+{#				                    [{name:'硅谷'}, {name:'西红门',value:50,tooltip:{#}
+{#                            				trigger: 'item',#}
+{#                            				formatter: '{b}:{c}TB/s'#}
+{#                        				}}],#}
+{#				                ]#}
+{##}
+{#                            }#}
+
+{#                            myChart.setOption(option, true);#}
+                            currProvince = "Map" + code;
+                            currLevel = 1;
+                        }
+                        else if (currLevel == 1) {
+
+                            var code = cityMap[param.name];
+                            var mapTemplate = {
+                                getGeoJson: function (callback) {
+                                    $.getJSON('echarts-2.2.7/doc/example/geoJson/china-main-city/' + code + '.json', callback);
+                                }
+                            }
+                            eval(" require('echarts/util/mapData/params').params.Map" + code + " = mapTemplate;");
+
+                            option.series[0].mapType = "Map" + code;
+                            option.series[0].data ='';
+                            option.title = {
+                                text: param.name,
+                                subtext: ''
+                            }
+
+                            myChart.setOption(option, true);
+                            currCity = "Map" + code;
+                            currLevel = 2;
+                        } else {
+                            alert(param.name);
+                        }
+                    });
+                }
+            );
+        })
+
+    </script>
+    {#        网络设备#}
+    {#    <script src="{% static 'js/echarts.min.js' %}"></script>#}
+
+    <script>
+
+        $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/line'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('connect-count'));
+                    var option = option = {
+{#    title : {#}
+{#        text: '连接数',#}
+{#        subtext: ''#}
+{#    },#}
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['host1','host2','host3','host4','host5'],
+        x:"center",
+        y:"top"
+    },
+{#    toolbox: {#}
+{#        show : true,#}
+{#        feature : {#}
+{#            mark : {show: true},#}
+{#            dataView : {show: true, readOnly: false},#}
+{#            magicType : {show: true, type: ['line', 'bar']},#}
+{#            restore : {show: true},#}
+{#            saveAsImage : {show: true}#}
+{#        }#}
+{#    },#}
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : ['08:00','08:10','08:20','08:30','08:40','08:50','09:00']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value',
+            axisLabel : {
+                formatter: '{value}'
+            }
+        }
+    ],
+    series : [
+        {
+            name:'host1',
+            type:'line',
+            data:[1000, 2000, 3000, 1500, 1300, 1100, 1000],
+{#            markPoint : {#}
+{#                data : [#}
+{#                    {type : 'max', name: '最大值'},#}
+{#                    {type : 'min', name: '最小值'}#}
+{#                ]#}
+{#            },#}
+{#            markLine : {#}
+{#                data : [#}
+{#                    {type : 'average', name: '平均值'}#}
+{#                ]#}
+{#            }#}
+        },
+        {
+            name:'host2',
+            type:'line',
+            data:[1000, 800, 2000, 3000, 500, 4000, 1000],
+{#            markPoint : {#}
+{#                data : [#}
+{#                    {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}#}
+{#                ]#}
+{#            },#}
+{#            markLine : {#}
+{#                data : [#}
+{#                    {type : 'average', name : '平均值'}#}
+{#                ]#}
+{#            }#}
+        },
+        {
+            name:'host3',
+            type:'line',
+            data:[800, 4000, 3000, 2000, 1000, 2000, 3000],
+{#            markPoint : {#}
+{#                data : [#}
+{#                    {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}#}
+{#                ]#}
+{#            },#}
+{#            markLine : {#}
+{#                data : [#}
+{#                    {type : 'average', name : '平均值'}#}
+{#                ]#}
+{#            }#}
+        },
+        {
+            name:'host4',
+            type:'line',
+            data:[900, 800, 2000, 3000, 700, 4000, 1200],
+{#            markPoint : {#}
+{#                data : [#}
+{#                    {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}#}
+{#                ]#}
+{#            },#}
+{#            markLine : {#}
+{#                data : [#}
+{#                    {type : 'average', name : '平均值'}#}
+{#                ]#}
+{#            }#}
+        },
+        {
+            name:'host5',
+            type:'line',
+            data:[4000, 800, 2000, 1000, 500, 3500, 1000],
+{#            markPoint : {#}
+{#                data : [#}
+{#                    {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}#}
+{#                ]#}
+{#            },#}
+{#            markLine : {#}
+{#                data : [#}
+{#                    {type : 'average', name : '平均值'}#}
+{#                ]#}
+{#            }#}
+        }
+    ]
+};
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+
+    </script>
+
+
+
+
+    <script>
+
+        $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('network-class'));
+                    var option = {
+                        title: {
+                              text: '网络设备分类数量',
+                              left: 'right'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: ['防火墙', '路由器', '交换机', '负载均衡', '其他']
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [{
+                            data: [120, 200, 150, 80, 70],
+                            type: 'bar'
+                        }]
+                    };
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+
+    </script>
+     <script>
+
+        $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    {#                    'echarts/chart/bar'#}
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('glclass'));
+                    var option = {
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b}: {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            x: 'left',
+                            data: ['灾难', '严重', '一般', '警告', '信息', '显示']
+                        },
+                        series: [
+                            {
+                                name: '访问来源',
+                                type: 'pie',
+                                radius: ['50%', '70%'],
+                                avoidLabelOverlap: false,
+                                label: {
+                                    normal: {
+                                        show: false,
+                                        position: 'center'
+                                    },
+                                    emphasis: {
+                                        show: true,
+                                        textStyle: {
+                                            fontSize: '30',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                },
+                                labelLine: {
+                                    normal: {
+                                        show: false
+                                    }
+                                },
+                                data: [
+                                    {value: 335, name: '灾难'},
+                                    {value: 310, name: '严重'},
+                                    {value: 310, name: '一般'},
+                                    {value: 234, name: '警告'},
+                                    {value: 135, name: '信息'},
+                                    {value: 1548, name: '显示'}
+                                ]
+                            }
+                        ]
+                    };
+
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+
+    </script>
+{#    鼠标滑过弹出#}
+    <script type=text/javascript>
+var onecount;
+onecount=0;
+subcat = new Array();
+subcat[0]=new Array('你要显示的内容','类似ID，通过这个变量来进行查找');
+onecount=1;
+</script>
+    <script type="text/javascript">
+    function selStation(event) {
+        var locationid = 0
+        console.log(event.clientX, event.clientY)
+                var Obj = document.getElementById("blockCity");
+        document.getElementById("blockCity").innerHTML = "";
+{#        for (var i = 0; i < onecount; i++) {#}
+{#            if (subcat[i][1] == locationid) {#}
+
+                document.getElementById("blockCity").innerHTML += "你好啊" + "<br />";
+                document.getElementById("blockCity").style.left = event.clientX;
+                document.getElementById("blockCity").style.top = event.clientY + document.documentElement.scrollTop - 40;
+                console.log(event.clientX, event.clientY)
+                document.getElementById("blockCity").style.display = "block";
+    }
+    function cshow(){
+        document.getElementById("blockCity").style.display="block";
+    }
+    function chide(){
+        document.getElementById("blockCity").style.display="none";
+    }
+    </script>
+
+
+      <script>
+         $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('yytop'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['重大','严重','一般','其它','正常'],
+                        y:'bottom'
+
+                    },
+                    toolbox: {
+                        show : true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['应用一','应用二','应用三']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'重大',
+                            type:'bar',
+                            stack: '应用',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                            itemStyle:{
+                                normal:{
+                                    color:'red'
+                                }
+                            }
+                        },
+                        {
+                            name:'严重',
+                            type:'bar',
+                            stack: '应用',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FF7F50'
+                                }
+                            }
+                        },
+                        {
+                            name:'一般',
+                            type:'bar',
+                            stack: '应用',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFA500'
+                                }
+                            }
+                        },
+                        {
+                            name:'正常',
+                            type:'bar',
+                            stack: '应用',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFFF00'
+                                }
+                            }
+                        },
+                        {
+                            name:'其他',
+                            type:'bar',
+                            stack: '应用',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFD700'
+                                }
+                            }
+                        },
+
+
+                    ]
+                };
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+    </script>
+
+
+      <script>
+         $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('jftop'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['重大','严重','一般','其它','正常'],
+                        y:'bottom'
+
+                    },
+                    toolbox: {
+                        show : true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['1期102','1期103','2期402']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'重大',
+                            type:'bar',
+                            stack: '机房',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                            itemStyle:{
+                                normal:{
+                                    color:'red'
+                                }
+                            }
+                        },
+                        {
+                            name:'严重',
+                            type:'bar',
+                            stack: '机房',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FF7F50'
+                                }
+                            }
+                        },
+                        {
+                            name:'一般',
+                            type:'bar',
+                            stack: '机房',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFA500'
+                                }
+                            }
+                        },
+                        {
+                            name:'正常',
+                            type:'bar',
+                            stack: '机房',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFFF00'
+                                }
+                            }
+                        },
+                        {
+                            name:'其他',
+                            type:'bar',
+                            stack: '机房',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFD700'
+                                }
+                            }
+                        },
+
+
+                    ]
+                };
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+    </script>
+ <script>
+         $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('wljtop'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['重大','严重','一般','其它','正常'],
+                        y:'bottom'
+
+                    },
+                    toolbox: {
+                        show : true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['host1','host2','host3']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'重大',
+                            type:'bar',
+                            stack: '物理机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                            itemStyle:{
+                                normal:{
+                                    color:'red'
+                                }
+                            }
+                        },
+                        {
+                            name:'严重',
+                            type:'bar',
+                            stack: '物理机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FF7F50'
+                                }
+                            }
+                        },
+                        {
+                            name:'一般',
+                            type:'bar',
+                            stack: '物理机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFA500'
+                                }
+                            }
+                        },
+                        {
+                            name:'正常',
+                            type:'bar',
+                            stack: '物理机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFFF00'
+                                }
+                            }
+                        },
+                        {
+                            name:'其他',
+                            type:'bar',
+                            stack: '物理机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFD700'
+                                }
+                            }
+                        },
+
+
+                    ]
+                };
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+    </script>
+     <script>
+         $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('yzjtop'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['重大','严重','一般','其它','正常'],
+                        y:'bottom'
+
+                    },
+                    toolbox: {
+                        show : true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['云1','云2','云三']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'重大',
+                            type:'bar',
+                            stack: '云主机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                            itemStyle:{
+                                normal:{
+                                    color:'red'
+                                }
+                            }
+                        },
+                        {
+                            name:'严重',
+                            type:'bar',
+                            stack: '云主机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FF7F50'
+                                }
+                            }
+                        },
+                        {
+                            name:'一般',
+                            type:'bar',
+                            stack: '云主机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFA500'
+                                }
+                            }
+                        },
+                        {
+                            name:'正常',
+                            type:'bar',
+                            stack: '云主机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFFF00'
+                                }
+                            }
+                        },
+                        {
+                            name:'其他',
+                            type:'bar',
+                            stack: '云主机',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFD700'
+                                }
+                            }
+                        },
+
+
+                    ]
+                };
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+    </script>
+     <script>
+         $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('cctop'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['重大','严重','一般','其它','正常'],
+                        y:'bottom'
+
+                    },
+                    toolbox: {
+                        show : true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['磁盘一','磁盘二','磁盘三']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'重大',
+                            type:'bar',
+                            stack: '存储',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                            itemStyle:{
+                                normal:{
+                                    color:'red'
+                                }
+                            }
+                        },
+                        {
+                            name:'严重',
+                            type:'bar',
+                            stack: '存储',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FF7F50'
+                                }
+                            }
+                        },
+                        {
+                            name:'一般',
+                            type:'bar',
+                            stack: '存储',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFA500'
+                                }
+                            }
+                        },
+                        {
+                            name:'正常',
+                            type:'bar',
+                            stack: '存储',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFFF00'
+                                }
+                            }
+                        },
+                        {
+                            name:'其他',
+                            type:'bar',
+                            stack: '存储',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFD700'
+                                }
+                            }
+                        },
+
+
+                    ]
+                };
+{#                    var option = {#}
+{#    tooltip : {#}
+{#        trigger: 'axis',#}
+{#        axisPointer : {            // 坐标轴指示器，坐标轴触发有效#}
+{#            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'#}
+{#        }#}
+{#    },#}
+{#    legend: {#}
+{#        data:['直接访问', '邮件营销','联盟广告','视频广告','搜索引擎']#}
+{#    },#}
+{#    toolbox: {#}
+{#        show : true,#}
+{#        feature : {#}
+{#            mark : {show: true},#}
+{#            dataView : {show: true, readOnly: false},#}
+{#            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},#}
+{#            restore : {show: true},#}
+{#            saveAsImage : {show: true}#}
+{#        }#}
+{#    },#}
+{#    calculable : true,#}
+{#    xAxis : [#}
+{#        {#}
+{#            type : 'value'#}
+{#        }#}
+{#    ],#}
+{#    yAxis : [#}
+{#        {#}
+{#            type : 'category',#}
+{#            data : ['周一','周二','周三','周四','周五','周六','周日']#}
+{#        }#}
+{#    ],#}
+{#    series : [#}
+{#        {#}
+{#            name:'直接访问',#}
+{#            type:'bar',#}
+{#            stack: '总量',#}
+{#            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},#}
+{#            data:[320, 302, 301, 334, 390, 330, 320]#}
+{#        },#}
+{#        {#}
+{#            name:'邮件营销',#}
+{#            type:'bar',#}
+{#            stack: '总量',#}
+{#            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},#}
+{#            data:[120, 132, 101, 134, 90, 230, 210]#}
+{#        },#}
+{#        {#}
+{#            name:'联盟广告',#}
+{#            type:'bar',#}
+{#            stack: '总量',#}
+{#            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},#}
+{#            data:[220, 182, 191, 234, 290, 330, 310]#}
+{#        },#}
+{#        {#}
+{#            name:'视频广告',#}
+{#            type:'bar',#}
+{#            stack: '总量',#}
+{#            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},#}
+{#            data:[150, 212, 201, 154, 190, 330, 410]#}
+{#        },#}
+{#        {#}
+{#            name:'搜索引擎',#}
+{#            type:'bar',#}
+{#            stack: '总量',#}
+{#            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},#}
+{#            data:[820, 832, 901, 934, 1290, 1330, 1320]#}
+{#        }#}
+{#    ]#}
+{#};#}
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+    </script>
+     <script>
+         $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('wlsbtop'));
+                    var option = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+{#                    legend: {#}
+{#                        data:['重大','严重','一般','其它','正常'],#}
+{#                        y:'bottom'#}
+{##}
+{#                    },#}
+                    toolbox: {
+                        show : true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['路由器1','交换机1','路由器2','路由器2','路由器2','路由器2','路由器2'],
+
+                                                }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'重大',
+                            type:'bar',
+                            stack: '网络设备',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                            itemStyle:{
+                                normal:{
+                                    color:'red'
+                                }
+                            }
+                        },
+                        {
+                            name:'严重',
+                            type:'bar',
+                            stack: '网络设备',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FF7F50'
+                                }
+                            }
+                        },
+                        {
+                            name:'一般',
+                            type:'bar',
+                            stack: '网络设备',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFA500'
+                                }
+                            }
+                        },
+                        {
+                            name:'正常',
+                            type:'bar',
+                            stack: '网络设备',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFFF00'
+                                }
+                            }
+                        },
+                        {
+                            name:'其他',
+                            type:'bar',
+                            stack: '网络设备',
+                            barWidth : 10,
+                            data:[1, 2, 1, 0, 0, 0, 0],
+                              itemStyle:{
+                                normal:{
+                                    color:'#FFD700'
+                                }
+                            }
+                        },
+
+
+                    ]
+                };
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+    </script>
+{% endblock %}

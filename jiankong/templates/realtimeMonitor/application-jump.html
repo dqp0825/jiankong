@@ -1,0 +1,128 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+	    <!-- Font Awesome -->
+	    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+	    <!-- NProgress -->
+	    <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+	    <!-- bootstrap-daterangepicker -->
+	    <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+	
+	    <!-- Custom Theme Style -->
+	    <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+	    <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+	    <!--<link rel="stylesheet" href="plugins/calendar/laydate.css" />-->
+	    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+	</head>
+	<body style="background: #ecf0f5">
+	<div class="title_left">
+    	<h3 style="margin: 10px auto;">&nbsp;&nbsp;<small>应用详情</small></h3>
+	</div>
+	<div class="row" style="margin-top: 30px;">
+		<div class="col-md-10 col-ls-10 col-xs-10 col-md-offset-1">				  
+		  <div style="height: 40px; line-height:40px;width:100%; margin:0  auto;background:#E0FFFF;padding-left: 20px; margin-top: 20px;">
+				<h5 style="line-height: 40px; display: inline-block;">{{ appname }}</h5>
+		  </div>
+		  <div class="row" style="margin-bottom: 20px; padding-top: 10px;">
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px 5px">应用名称:{{ appname }}</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用级别:{{ applev }}</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用管理部门:{{ appmedm }}</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用维护部门:{{ appmtdm }}</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">数据中心:{{ datacent }}</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">机房:{{ approom }}</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用管理人:{{ appadmin }}</div>
+		  	<div class="col-md-3 col-ls-3 col-xs-3" style="padding:7px 30px">应用维护人:{{ appperson }}</div>
+		  </div>
+		  
+		</div>
+	</div>
+{#	<div class="row">#}
+{#		<div class="col-md-10 col-ls-10 col-xs-10 col-md-offset-1">				  #}
+{#		  <div style="height: 40px; line-height:40px;width:100%; margin:0  auto;background:#E0FFFF;padding-left: 20px; margin-top: 20px;">#}
+{#				<h5 style="line-height: 40px; display: inline-block;">应用进程</h5>#}
+{#		  </div>#}
+{#		  <table class="layui-hide" id="test"></table>#}
+{#		</div>#}
+{#	</div>#}
+	<div class="row" style="margin-top: 30px;">
+		<div class="col-md-10 col-ls-10 col-xs-10 col-md-offset-1">				  
+		  <div style="height: 40px; line-height:40px;width:100%; margin:0  auto;background:#E0FFFF;padding-left: 20px; margin-top: 20px;">
+				<h5 style="line-height: 40px; display: inline-block;">告警详情</h5>
+{#				<button type="submit" class="btn btn-success" style="float: right;  display: inline-block; margin-top: 3px;">导出</button>#}
+		  </div>
+		  <table class="layui-hide" id="test2"></table>
+		</div>
+	</div>
+              
+          
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'production/build/js/custom.min.js'%}"></script>
+    <script src="{% static 'production/plugins/echarts-2.2.7/build/dist/echarts.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>  
+	
+	<table class="layui-hide" id="test"></table>	 
+	<script>
+    var searchObj = {
+			appname:"{{ appname }}"
+		};
+	layui.use('table', function(){
+	  var table = layui.table;
+	  
+	  table.render({
+	    elem: '#test2'
+	    ,url:'/realtimeMonitor/getappinfo/'
+        ,method:'post'
+        ,where: searchObj
+	    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+	    ,cols: [[
+	      {field:'Alert_lev_id',title: '告警等级',width:"10%"}
+	      ,{field:'hostname',title: '告警设备',width:"15%"}
+	      ,{field:'ip',title: '设备ip',width:"15%"}
+	      ,{field:'message',title: '告警内容',width:"30%"}
+	      ,{field:'Oc_time',title: '发生时间',width:"20%"}
+{#	      ,{field:'id',title: '告警时长'}#}
+	      	,{field:'Alert_id',  title: '功能', width:'10%', minWidth:10,templet: function (d) {
+                  return '<div>' +
+                      '<a href="/alarmEvents/alarmEvent/?ip=' + d.ip + '" class="layui-btn layui-btn-sm">告警详情</a>'
+                  '</div>'
+              }}
+	    ]]
+       ,page: true
+	  });
+	});
+	</script>
+
+	</body>
+</html>

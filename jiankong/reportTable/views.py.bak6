@@ -1,0 +1,202 @@
+# coding:utf-8
+import json
+
+
+from django.shortcuts import render,HttpResponse
+
+# Create your views here.
+from django.views.decorators.csrf import csrf_exempt
+
+from dashBoard.models import ServerToZabbix, CloudDeviceToZabbix, ResourceHostToZabbix
+from dashBoard.models import StorageToZabbix,NetworkDeviceToZabbix,ServerToZabbix
+from dashBoard.models import Jk_Server,Jk_Fcpu,Jk_Fmem,Jk_Fdisk
+from dashBoard.models import JK_Shebei_Group,Jk_User
+
+
+user = "Admin"
+
+
+
+#获取用户的资源
+def getips(user):
+    serverip = ServerToZabbix.objects.filter(user=user)
+    cloudip = CloudDeviceToZabbix.objects.filter(user=user)
+    resourceip = ResourceHostToZabbix.objects.filter(user=user)
+    storageip = StorageToZabbix.objects.filter(user=user)
+    networkip = NetworkDeviceToZabbix.objects.filter(user=user)
+    iplist = []
+    for server in serverip:
+        iplist.append((server.host_ip).replace('\t',''))
+    for cloud in cloudip:
+        iplist.append((cloud.host_ip).replace('\t',''))
+    for storage in storageip:
+        iplist.append((storage.host_ip).replace('\t',''))
+    for network in networkip:
+        iplist.append((network.host_ip).replace('\t',''))
+    for resource in resourceip:
+        iplist.append((resource.host_ip).replace('\t',''))
+    return iplist
+
+#获取所管理主机组
+def getgroup():
+    grouplist = []
+
+    if user == "Admin" or user == "admin":
+        groups = JK_Shebei_Group.objects.all()
+        for group in groups:
+            groupdict = {}
+            groupdict['id'] = group.id
+            groupdict['text'] = group.Group_Name
+            grouplist.append(groupdict)
+    else:
+        userid = Jk_User.objects.filter(name=user)
+        for user_id in userid:
+            groups = JK_Shebei_Group.objects.filter(User_id_id=user_id)
+            for group in groups:
+                groupdict = {}
+                groupdict['id'] = group.id
+                groupdict['text'] = group.Group_Name
+                grouplist.append(groupdict)
+    return grouplist
+
+
+# 报表
+def reportTable(request):
+    if request.method == 'GET':
+        grouplist = getgroup()
+        url = "/reportTable/serverrpt/"
+        data = '''[[
+                                        {checkbox: true, fixed: true}
+                                        , {field: 'host_ip', title: '设备ip',width:100}
+                                        , {field: 'hostname', title: '设备名',width:100}
+                                        , {field: 'app_name', title: '所属应用',width:120}
+                                        , {field: 'max_cpu', title: 'CPU最大利用率',width:150}
+                                        , {field: 'min_cpu', title: 'CPU最小利用率',width:150}
+                                        , {field: 'avg_cpu', title: 'CPU平均利用率',width:150}
+                                        , {field: 'max_mem', title: '内存最大利用率',width:150}
+                                        , {field: 'min_mem', title: '内存最小利用率',width:150}
+                                        , {field: 'avg_mem', title: '内存平均利用率',width:150}
+                                        , {field: 'now_disk', title: '磁盘使用率',width:150}
+                                    ]]'''
+        return render(request,'reportTable/report.html',{"grouplist": grouplist, "url": url, "data": data})
+    elif request.method == 'POST':
+        groups = request.POST.get("groups", '')
+        hostip = request.POST.get('hostip', '')
+        ips = []
+        if groups:
+            for group in groups:
+                pass
+        pass
+
+
+'''
+    设备IP	设备名称	所属应用	CPU最大利用率	CPU最小利用率	CPU平均利用率	内存最小利用率	内存最大利用率	内存平均利用率	磁盘空间使用率
+
+'''
+'''
+[{'id': '23297', 'text': 'CBSS1'}, {'id': '23296', 'text': 'CBSS2'}, {
+                        'id': '23295',
+                        'text': 'CBSS3'
+                    }, {'id': '23294', 'text': 'CBSS4'}]
+'''
+
+
+
+
+#物理机报表
+@csrf_exempt
+def serverrpt(request):
+    if request.method == "POST":
+        rpt = []
+        hosts = ServerToZabbix.objects.filter(user=user)
+        mincpu = []
+        maxcpu = []
+        avgcpu = []
+        minmem = []
+        maxmem = []
+        avgmem = []
+        mindisk = []
+        maxdisk = []
+        avgdisk = []
+        count = 0
+        for i in hosts:
+            rptdict = {}
+            rptdict['host_ip'] = (i.host_ip).replace('\t','')
+            rptdict['hostname'] = (i.hostname).replace('\t','')
+            rptdict['app_name'] = i.app_name
+
+            #获取主机信息
+            host = Jk_Server.objects.filter(IP=(i.host_ip).replace('\t','')).first()
+
+            #获取CPU信息
+            for cpu in Jk_Fcpu.objects.filter(Server_Id_id=host.Server_id):
+                maxcpu.append(cpu.Max_Cpu)
+                mincpu.append(cpu.Min_Cpu)
+                avgcpu.append(float(cpu.AVG_Cpu))
+            if maxcpu and maxcpu and avgcpu:
+                rptdict['min_cpu'] = min(mincpu)
+                rptdict['max_cpu'] = max(maxcpu)
+                rptdict['avg_cpu'] = float('%.4f' % (sum(avgcpu)/len(avgcpu)))
+
+            #获取内存信息
+            for mem in Jk_Fmem.objects.filter(Server_Id_id=host.Server_id):
+                maxmem.append(mem.Max_Mem)
+                minmem.append(mem.Min_Mem)
+                avgmem.append(float(mem.AVG_Mem))
+            rptdict['min_mem'] = min(minmem)
+            rptdict['max_mem'] = max(maxmem)
+            rptdict['avg_mem'] = float('%.4f' % (sum(avgmem)/len(avgmem)))
+
+            # 获取磁盘信息
+            for disk in Jk_Fdisk.objects.filter(Server_Id_id=host.Server_id):
+                maxdisk.append(disk.Max_Disk)
+                mindisk.append(disk.Min_Disk)
+                avgdisk.append(float(disk.AVG_Disk))
+            rptdict['min_disk'] = min(mindisk)
+            rptdict['now_disk'] = max(maxdisk)
+            rptdict['avg_disk'] = float('%.4f' % (sum(avgdisk) / len(avgdisk)))
+            rpt.append(rptdict)
+            count += 1
+        # rpt = '''[[
+        #                                     {checkbox: true, fixed: true}
+        #                                     , {field: 'host_ip', title: '设备ip1',width:100}
+        #                                     , {field: 'hostname', title: '设备名',width:100}
+        #                                     , {field: 'app_name', title: '所属应用',width:120}
+        #                                     , {field: 'max_cpu', title: 'CPU最大利用率',width:150}
+        #                                     , {field: 'min_cpu', title: 'CPU最小利用率',width:150}
+        #                                     , {field: 'avg_cpu', title: 'CPU平均利用率',width:150}
+        #                                     , {field: 'max_mem', title: '内存最大利用率',width:150}
+        #                                     , {field: 'min_mem', title: '内存最小利用率',width:150}
+        #                                     , {field: 'avg_mem', title: '内存平均利用率',width:150}
+        #                                     , {field: 'now_disk', title: '磁盘使用率',width:150}
+        #                                 ]]'''
+        datajson = {"code": 0, "msg": "", "count": count, "data": rpt}
+        return HttpResponse(json.dumps(datajson))
+    return HttpResponse({})
+
+#获取报表信息
+def get_report(request):
+    group = request.POST.get("group", '')
+    host = request.POST.get("host", '')
+    code = '''[[
+                                        {checkbox: true, fixed: true}
+                                        , {field: 'host_ip', title: '设备ip',width:100}
+                                        , {field: 'hostname', title: '设备名',width:100}
+                                        , {field: 'app_name', title: '所属应用',width:120}
+                                        , {field: 'max_cpu', title: 'CPU最大利用率',width:150}
+                                        , {field: 'min_cpu', title: 'CPU最小利用率',width:150}
+                                        , {field: 'avg_cpu', title: 'CPU平均利用率',width:150}
+                                        , {field: 'max_mem', title: '内存最大利用率',width:150}
+                                        , {field: 'min_mem', title: '内存最小利用率',width:150}
+                                        , {field: 'avg_mem', title: '内存平均利用率',width:150}
+                                        , {field: 'now_disk', title: '磁盘使用率',width:150}
+                                    ]]'''
+    data = {"code":code}
+    return HttpResponse(data)
+    # if group and host:
+    #     pass
+    # if group:
+    #     pass
+    # if host:
+    #     pass
+    # pass

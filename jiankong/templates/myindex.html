@@ -1,0 +1,365 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" style="height:auto;overflow-y: hidden">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>智能监控 </title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css'%}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{% static 'vendors/nprogress/nprogress.css'%}" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.css'%}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'production/plugins/layui-v2.2.5/layui/css/layui.css'%}"  media="all">
+
+    <!-- Custom Theme Style -->
+    <link href="{% static 'build/css/custom.css'%}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'production/plugins/calendar/laydate.css'%}" />
+  </head>
+
+<body class="nav-md" style="height:auto">
+{#		<div id="box" style="display: none;"style="overflow-x: hidden;">#}
+{#			<div class="row">#}
+{#				<div class="col-md-5 col-sm5 col-xs-5 col-md-offset-1" style="margin-top: 20px;">#}
+{#					<input placeholder="发生时间" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" >#}
+{#				</div>#}
+{#				<div class="col-md-5 col-sm5 col-xs-5 col-md-offset-1" style="margin-top: 20px;">#}
+{#					<input placeholder="结束时间" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" >#}
+{#				</div>#}
+{#				<div class="col-md-11 col-sm-11 col-xs-11 col-md-offset-1" style="margin-top: 20px;" >#}
+{#					<textarea name="" required lay-verify="required" placeholder="请输入" class="layui-textarea" style="width: 300px;"></textarea>#}
+{#				</div>#}
+{#			</div>#}
+{#		</div>#}
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col menu_fixed">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a href="index.html" class="site_title">
+                            <!--<i class="fa fa-paw"></i>-->
+                            <span>智能监控</span></a>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <!-- menu profile quick info -->
+                    <!--<div class="profile clearfix">-->
+                        <!--<div class="profile_pic">-->
+                            <!--<img src="images/img.jpg" alt="..." class="img-circle profile_img">-->
+                        <!--</div>-->
+                        <!--<div class="profile_info">-->
+                            <!--<span>Welcome,</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!-- /menu profile quick info -->
+
+                    <br />
+
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <!--<h3>菜单</h3>-->
+                            <ul class="nav side-menu">
+                                <li><a targethref="{% url 'dashBoard:dashBoard'%}"><i class="fa fa-home"></i> 仪表盘 <span></span></a></li>
+                                <li><a targethref="{% url 'alarmEvents:alarmEvent'%}"><i class="fa fa-edit"></i> 告警事件 <span></span></a></li>
+                                <li>
+                                    <a targethref=""><i class="fa fa-desktop"></i> 实时监控 <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a targethref="{% url 'realtimeMonitor:application'%}">应用</a></li>
+
+                                        <li>
+                                            <a targethref="">服务器</a>
+                                            <ul class="nav child_menu">
+                                                <li><a targethref="{% url 'realtimeMonitor:physicalMachine'%}">物理机</a></li>
+                                                <li><a targethref="{% url 'realtimeMonitor:hosMachine'%}">宿主机</a></li>
+                                                <li><a targethref="{% url 'realtimeMonitor:cloudHost'%}">云主机</a></li>
+                                            </ul>
+                                        </li>
+                                        <!--<li>-->
+                                            <!--<a targethref="">存储</a>-->
+                                            <!--<ul class="nav child_menu">-->
+                                                <!--<li><a targethref="{% url 'realtimeMonitor:diskArray'%}">磁盘阵列</a></li>-->
+                                                <!--<li><a targethref="{% url 'realtimeMonitor:fiberOpticSwitch'%}">光纤交换机</a></li>-->
+                                            <!--</ul>-->
+                                        <!--</li>-->
+                                        <li>
+                                            <a targethref="">网络设备</a>
+                                            <ul class="nav child_menu">
+                                                <li><a targethref="{% url 'realtimeMonitor:switches'%}">交换机</a></li>
+                                                <li><a targethref="{% url 'realtimeMonitor:router'%}">路由器</a></li>
+                                                <li><a targethref="{% url 'realtimeMonitor:loadBalancing'%}">负载均衡</a></li>
+                                                <li><a targethref="{% url 'realtimeMonitor:firewall'%}">防火墙</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a targethref="http://10.192.200.32/zabbix/sysmaps.php" id="tp"><i class="fa fa-table"></i> 拓扑显示 <span></span></a></li>
+                                <li><a targethref="{% url 'signbackInformation:signbackInformation'%}"><i class="fa fa-bar-chart-o"></i> 签退信息 <span></span></a></li>
+                                <!--<li><a targethref="{% url 'autoDiscovery:autoDiscovery'%}"><i class="fa fa-clone"></i>自动发现 <span></span></a></li>-->
+                                <li><a targethref="{% url 'monitorItems:monitorItems'%}"><i class="fa fa-bug"></i>监控指标 <span></span></a></li>
+                                <li><a targethref="{% url 'reportTable:reportTable'%}"><i class="fa fa-laptop"></i>报表 <span></span></a></li>
+                                <!--<li><a targethref="{% url 'realtimeMonitor:equipmentManufacturers'%}"><i class="fa fa-laptop"></i>分析类比<span></span></a></li>-->
+                            </ul>
+                        </div>
+
+                    </div>
+                    <!-- /sidebar menu -->
+                    <!-- /menu footer buttons -->
+                    <div class="sidebar-footer hidden-small">
+                        <!--<a data-toggle="tooltip" data-placement="top" title="Settings">-->
+                        <!--    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>-->
+                       <!-- </a>-->
+                       <!-- <a data-toggle="tooltip" data-placement="top" title="FullScreen">-->
+                           <!-- <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>-->
+                       <!-- </a>-->
+                       <!-- <a data-toggle="tooltip" data-placement="top" title="Lock">-->
+                        <!--    <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>-->
+                        <!--</a>-->
+                        <!--<a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">-->
+                        <!--    <span class="glyphicon glyphicon-off" aria-hidden="true"></span>-->
+                        <!--</a>-->
+                    </div>
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <!--<div class="top_nav">-->
+                <!--<div class="nav_menu">-->
+                    <!--<nav>-->
+                        <!--<div class="nav toggle">-->
+                            <!--<a id="menu_toggle"><i class="fa fa-bars"></i></a>-->
+                        <!--</div>-->
+
+                        <!--<ul class="nav navbar-nav navbar-right">-->
+                            <!--<li class="">-->
+                                <!--<a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">-->
+                                    <!--<img src="images/img.jpg" alt="">John Doe-->
+                                    <!--<span class=" fa fa-angle-down"></span>-->
+                                <!--</a>-->
+                                <!--<ul class="dropdown-menu dropdown-usermenu pull-right">-->
+                                    <!--<li><a href="javascript:;"> Profile</a></li>-->
+                                    <!--<li>-->
+                                        <!--<a href="javascript:;">-->
+                                            <!--<span class="badge bg-red pull-right">50%</span>-->
+                                            <!--<span>Settings</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
+                                    <!--<li><a href="javascript:;">Help</a></li>-->
+                                    <!--<li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>-->
+                                <!--</ul>-->
+                            <!--</li>-->
+
+                            <!--<li role="presentation" class="dropdown">-->
+                                <!--<a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">-->
+                                    <!--<i class="fa fa-envelope-o"></i>-->
+                                    <!--<span class="badge bg-green">6</span>-->
+                                <!--</a>-->
+                                <!--<ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">-->
+                                    <!--<li>-->
+                                        <!--<a>-->
+                                            <!--<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>-->
+                                            <!--<span>-->
+                                                <!--<span>John Smith</span>-->
+                                                <!--<span class="time">3 mins ago</span>-->
+                                            <!--</span>-->
+                                            <!--<span class="message">-->
+                                                <!--Film festivals used to be do-or-die moments for movie makers. They were where...-->
+                                            <!--</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<a>-->
+                                            <!--<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>-->
+                                            <!--<span>-->
+                                                <!--<span>John Smith</span>-->
+                                                <!--<span class="time">3 mins ago</span>-->
+                                            <!--</span>-->
+                                            <!--<span class="message">-->
+                                                <!--Film festivals used to be do-or-die moments for movie makers. They were where...-->
+                                            <!--</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<a>-->
+                                            <!--<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>-->
+                                            <!--<span>-->
+                                                <!--<span>John Smith</span>-->
+                                                <!--<span class="time">3 mins ago</span>-->
+                                            <!--</span>-->
+                                            <!--<span class="message">-->
+                                                <!--Film festivals used to be do-or-die moments for movie makers. They were where...-->
+                                            <!--</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<a>-->
+                                            <!--<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>-->
+                                            <!--<span>-->
+                                                <!--<span>John Smith</span>-->
+                                                <!--<span class="time">3 mins ago</span>-->
+                                            <!--</span>-->
+                                            <!--<span class="message">-->
+                                                <!--Film festivals used to be do-or-die moments for movie makers. They were where...-->
+                                            <!--</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<div class="text-center">-->
+                                            <!--<a>-->
+                                                <!--<strong>See All Alerts</strong>-->
+                                                <!--<i class="fa fa-angle-right"></i>-->
+                                            <!--</a>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</nav>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col" role="main">
+                <iframe id="ifContent" style="border: 0px; width: 100%; height:130%; overflow: hidden" src="{% url 'dashBoard:dashBoard'%}" scrolling="auto"></iframe>
+            </div>
+            <!-- /page content -->
+            <!-- footer content -->
+            <footer>
+                <div class="pull-right">
+                    Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js'%}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js'%}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js'%}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js'%}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js'%}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js'%}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js'%}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js'%}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js'%}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js'%}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'vendors/moment/min/moment.min.js'%}"></script>
+    <script src="{% static 'vendors/bootstrap-daterangepicker/daterangepicker.js'%}"></script>
+    <script src="{% static 'build/js/custom.js'%}"></script>
+    <script src="{% static 'production/plugins/layui-v2.2.5/layui/layui.js'%}" charset="utf-8"></script>
+    <script src="{% static 'production/plugins/calendar/laydate.js'%}"></script>
+
+    <script>
+            $.ajax({
+                type: "get",
+                url: "http://10.192.200.32/zabbix/login.php?sessionid="+"{{ auth }}",
+                dataType: "jsonp",
+                jsonp: "jsoncallback",
+                success: function (data) {
+                    ///  alert("auth："+ data.auth );
+                    {#window.location.href = "http://10.192.200.32/zabbix/zabbix.php?action=map.view&sysmapid=1"#}
+                    $("#tp").attr("targethref", "http://10.192.200.32/zabbix/sysmaps.php?")
+                    {#console.log("111111111111111")#}
+                },
+                error: function () {
+                    alert('fail');
+                }
+            }
+        );
+            console.log(document.getElementsByTagName("header"))
+            document.getElementsByTagName("header")[0].style.display = "none"
+    </script>
+
+    <script>
+        function resizeIframe() {
+            var height = $(window).height() - 150;
+//          var width = $(window).width() + 10;
+            $("#ifContent").height('' + height + 'px')
+//          $("#ifContent").width('' + width + 'px')
+        }
+
+        function autohtml(){
+        	layui.use('layer', function(){
+						  var layer = layui.layer;
+		        	 layer.open({
+			            title: '选择Agent版本',
+
+			            btn:["安装","关闭"]
+			          , content: '<select name="city" lay-verify="">        '
+			                     + ' <option value="">Linux 1.0(适用于Linux,Centos6以上)</option> '
+			                     + ' <option value="010">Linux 2.0(适用于Linux,Centos7以上)</option>        '
+			                     + ' <option value="021">Windows 1.0(适用于Winserver2008以上)</option>        '
+			                     + ' <option value="0571">Windows 2.0(适用于Winserver2012)</option>       '
+			                     + '</select> '
+			        });
+			      })
+        }
+        function alarmhtml() {
+            layui.use('layer', function(){
+						  var layer = layui.layer;
+
+						  layer.open({
+										type:1,
+				            title: '主机维护',
+				            area: ['600px'],
+				            btn:["安装","关闭"]
+				          , content: $('#box')
+			        });
+						});
+
+
+        }
+        $(window).resize(function () {
+            resizeIframe();
+        });
+
+
+        $(function () {
+            resizeIframe();
+        })
+
+
+
+
+        $('#ifContent').load(function() { //方法1
+    var iframeHeight = Math.min(iframe.contentWindow.window.document.documentElement.scrollHeight, iframe.contentWindow.window.document.body.scrollHeight);
+    var h=$(this).contents().height();
+    $(this).height(h+'px');
+});
+
+    </script>
+    <style>
+        /*.side-menu>li>ul>li>ul>li.active {
+                background-color: rgba(255, 255, 255, 0.06);
+        }*/
+    </style>
+
+
+</body>
+</html>

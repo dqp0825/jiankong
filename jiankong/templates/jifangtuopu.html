@@ -1,0 +1,868 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block jsorcss %}
+    <title>智能监控</title>
+    <script type="text/javascript" src="{% static '/assets/js/jquery.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static '/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/css/loader-style.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/js/stackable/stacktable.css' %}">
+    <link rel="stylesheet" href="{% static '/assets/js/stackable/responsive-table.css' %}">
+    <link rel="stylesheet" href="{% static '/datetimepicker/bootstrap-datetimepicker.min.css' %}">
+    <link rel="shortcut icon" href="{% static '/assets/ico/minus.png' %}">
+    <!-- MAIN EFFECT -->
+    <script type="text/javascript" src="{% static '/assets/js/preloader.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/app.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/load.js' %}"></script>
+    <!-- /MAIN EFFECT -->
+    <script type="text/javascript" src="{% static '/assets/js/stackable/stacktable.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/commonTool.js' %}"></script>
+    <script type="text/javascript" src="{% static '/assets/js/admin.js' %}"></script>
+
+    <script type="text/javascript"
+            src="{% static '/datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static '/datetimepicker/bootstrap-datetimepicker.zh-CN.js' %}"></script>
+    <script language="javascript" type="text/javascript"
+            src="{% static '/My97DatePicker/WdatePicker.js' %}"></script>
+
+{#    	<script src="{% static 'js/jquery.js' %}"></script>#}
+		<!--<script src="./echarts-2.2.7/build/dist/echarts.js"></script>-->
+		    <script src="{% static 'js/echarts.min.js' %}"></script>
+
+
+    {#    首页#}
+    <link rel="stylesheet" href="{% static 'css/map.css' %}"/>
+    <link rel="stylesheet" href="{% static 'js/zTree_v3/css/metroStyle/metroStyle.css' %}"/>
+    {#    <script src="js/echarts-2.2.7/doc/asset/js/jquery.js"></script>#}
+    <script src="{% static 'js/echarts-2.2.7/build/dist/echarts.js' %}"></script>
+    <script src="{% static 'js/echarts-2.2.7/doc/example/geoJson/china-main-city/china-main-city-map.js' %}"></script>
+
+    <script src="{% static 'js/TableSorterV2.js' %}"></script>
+    <style>
+        td {
+            text-align: center
+        }
+
+        button {
+            border: none
+        }
+
+        .paper-wrap1 {
+            height: 100%;
+        }
+
+        .gongneng {
+            float: right;
+            padding-left: 50px;
+        }
+
+        {#     body {#}
+        {#            background: url(img/sky.jpg);#}
+        {#        }#}
+
+        .img-box {
+            position: relative;
+            margin: 0 auto;
+            width: 100%;
+            height: 800px;
+        }
+
+        .main {
+            position: absolute;
+            left: 345px;;
+            top: -300px;
+{#            margin-left: 100px;#}
+{#            margin-top: -350px;#}
+        }
+
+        .line1 {
+            position: absolute;
+            left: 20px;
+            top: 30px
+        }
+
+        .line2 {
+            position: absolute;
+            left: 20px;
+            bottom: 30px
+        }
+
+        .line3 {
+            position: absolute;
+            right: 20px;
+            top: 30px
+        }
+
+        .line4 {
+            position: absolute;
+            right: 20px;
+            bottom: 30px
+        }
+
+        .map-box {
+            width: 1100px;
+            height: 1000px;
+            position: relative;
+        }
+
+        .map {
+            width: 1100px;
+            height: 1000px;
+            margin: 10px 0;
+        }
+        #right{
+            position: relative;
+            top: 100px;
+        }
+        #right li{
+            float: left;
+            margin:20px 30px;
+        }
+
+
+        .content {
+            padding: 20px 20px;
+            margin-left: -127px;
+        }
+
+        #network-class {
+            width: 450px;
+            height: 300px;
+        {#            background: red;#} float: left;
+            position: absolute;
+            top: 70px;
+            right: 5px;
+        }
+
+        #network-performance-top {
+            width: 300px;
+            height: 250px;
+            background: blue;
+            float: left;
+            position: absolute;
+            top: 365px;
+            right: 75px;
+        }
+
+        #network-speed-top {
+            width: 300px;
+            height: 250px;
+            background: green;
+            float: left;
+            position: absolute;
+            top: 660px;
+            right: 75px;
+        }
+
+        #latest-warning {
+            width: 650px;
+            height: 250px;
+            background: orange;
+            margin-left: 20px;
+        }
+
+        #performance-table {
+            width: 100%;
+            height: 100%;
+        }
+
+        th {
+            text-align: center;
+            font-size: 14px;
+            font-family: "Adobe 宋体 Std L";
+            font-style: normal;
+        }
+
+        #speed td, #speed th {
+            border: none;
+        }
+
+        table th {
+            text-shadow: none;
+        }
+    </style>
+
+    <script language="javascript" type="text/javascript">
+        window.onload = function () {
+            new TableSorter("tb1");
+
+            /*{
+             alert("table is sorted by " + c.innerHTML + " " + (t ? "Asc" : "Desc"));
+             }*/
+        }
+    </script>
+
+{% endblock %}
+{% block  tree %}
+     <ul class="nav nav-second-level active" style="margin-left:30px;display: none" id="xingnenginfo">
+         <li id="yy"><a href="/yingyong/"><img src="{% static 'images/yingyong.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px;">应用</a></li>
+                            <li id="jf"><a href="/jf/" ><img src="{% static 'images/jifang.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">设备厂商</a></li>
+                            <li id="fuwuqi"><a href="#"><img src="{% static 'images/fuwuqi.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">服务器</a>
+                                <ul style="margin-left: 10px;display: none;" id="fuwuqiinfo">
+                                    <li><a href="/wlj/"><img src="{% static 'images/wuliji.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">物理机</a></li>
+                                    <li><a href="/suzhuji/"><img src="{% static 'images/suzhuji.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">宿主机</a></li>
+                                    <li><a href="/yunzhuji/"><img src="{% static 'images/yunzhuji.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">云主机</a></li>
+                                </ul>
+                            </li>
+                            <li id="cunchu1"><a href="#"><img src="{% static 'images/cunchu.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">存储</a>
+                                <ul style="margin-left: 10px;display: none" id="cunchuinfo">
+                                    <li><a href="/cpzl/"><img src="{% static 'images/cipanzhenlie.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">磁盘阵列</a></li>
+                                    <li><a href="/gqjhjj/"><img src="{% static 'images/cipanzhenlie.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">光纤交换机</a></li>
+                                </ul>
+                            </li>
+                            <li id="wlsb"><a href="#"><img src="{% static 'images/wangluoshebei.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">网络设备</a>
+                                <ul style="margin-left: 10px;display: none;" id="wlsbinfo">
+                                    <li><a href="/jiaohuanji/"><img src="{% static 'images/jiaohuanji.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">交换机</a></li>
+                                    <li><a href="/luyouqi/"><img src="{% static 'images/luyouqi.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">路由器</a></li>
+                                     <li><a href="/fzjh/"><img src="{% static 'images/luyouqi.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">负载均衡</a></li>
+                                    <li><a href="/fhq/"><img src="{% static 'images/luyouqi.png' %}" alt="" style="width: 16px;height: 16px;margin-right: 10px">防火墙</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+{% endblock %}
+{% block content %}
+{#    <div class="page-title-container ng-scope">#}
+{#        <h3 class="page-title">101机房拓扑信息</h3>#}
+{#        <div class="page-btns">#}
+{#            <a class="btn btn-page-title" ui-sref="monitor.alarm.list({st: &#39;-3d&#39;})"#}
+{#               href="/jf/">#}
+{#                <i class="fa fa-list-alt"></i>数据中心机房#}
+{#            </a>#}
+{#        </div>#}
+{#      <div class="page-btns">#}
+{#            <a class="btn btn-page-title" ui-sref="monitor.alarm.list({st: &#39;-3d&#39;})"#}
+{#               href="/index/">#}
+{#                <i class="fa fa-list-alt"></i>首页#}
+{#            </a>#}
+{#        </div>#}
+{#    </div>#}
+
+
+
+    <div class="map-box">
+        <div id="map" style="height:800px; width:1200px;" class="map">
+           <div id="main" style="width:800px; height: 1200px"></div>
+
+        </div>
+
+
+    </div>
+
+    <div style="display: none;background: aliceblue;position: absolute;top: 500px;left: 200px" id="tankuang">
+        <ul>
+            <li>设备名:<span>设备一</span></li>
+            <li>设备IP:<span>10.0.0.1</span></li>
+            <li>设备类型:<span>设备类型</span></li>
+            <li>状态:<span>告警</span></li>
+        </ul>
+    </div>
+
+      <div style="display: none;background: aliceblue;position: absolute;top: 650px;left: 200px" id="duankou">
+        <ul>
+            <li>设备名:<span>设备一</span></li>
+            <li>设备IP:<span>10.0.0.1</span></li>
+            <li>设备类型:<span>设备类型</span></li>
+            <li>状态:<span>正常</span></li>
+            <li>端口1:<span>10.0.0.2</span></li>
+            <li>端口2:<span>10.0.0.3</span></li>
+        </ul>
+    </div>
+
+
+
+
+    <script>
+
+        $(function () {
+
+            require.config({
+                paths: {
+                    echarts: '{% static 'js/echarts-2.2.7/build/dist' %}'
+                }
+            });
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/bar'
+                ],
+                function (ec) {
+                    var myChart1 = ec.init(document.getElementById('network-class'));
+                    var option = {
+                        title: {
+                            text: '网络设备分类数量',
+                            left: 'right'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: ['防火墙', '路由器', '交换机', '负载均衡', '其他']
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [{
+                            data: [120, 200, 150, 80, 70],
+                            type: 'bar'
+                        }]
+                    };
+                    myChart1.setOption(option);
+                }
+            );
+        })
+
+
+    </script>
+
+     <script>
+        $(function(){
+
+					var myChart = echarts.init(document.getElementById('main'));
+					option = {
+{#    title: {#}
+{#        text: 'Graph 简单示例'#}
+{#    },#}
+{#    tooltip: {#}
+{#    	    trigger: 'item',#}
+{#            formatter: '{c}'#}
+{#    },#}
+    animationDurationUpdate: 1500,
+    animationEasingUpdate: 'quinticInOut',
+    series : [
+        {
+            type: 'graph',
+            layout: 'none',
+            symbolSize: 50,
+            roam: true,
+            label: {
+                normal: {
+                    show: true
+                }
+            },
+            edgeSymbol: ['circle', 'arrow'],
+            edgeSymbolSize: [4, 10],
+            edgeLabel: {
+                normal: {
+                    textStyle: {
+                       fontSize: 20
+                    }
+                }
+            },
+            data: [
+
+                {
+
+              name:'园区核心',
+              value: 0.5,
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'img/luyouqi.png' %}',
+              symbolSize: [40, 40],
+              x:300,
+              y:50
+            },
+                {
+
+              name:'1期大楼核心',
+              value: 0.5,
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'img/luyouqi.png' %}',
+              symbolSize: [40, 40],
+              x:200,
+              y:100
+            },
+            {
+
+              name:'2期大楼核心',
+              value: 0.1,
+
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'img/luyouqi.png' %}',
+              symbolSize: [40, 40],
+              x:400,
+              y:100
+            },
+                {
+
+              name:'.',
+              value: 0.2,
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'images/alert1.png' %}',
+              symbolSize: [40, 40],
+              x:150,
+              y:140
+            },
+            {
+
+              name:'机房汇聚1',
+              value: 0.2,
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'img/jiaohuanji.png' %}',
+              symbolSize: [40, 40],
+              x:150,
+              y:170
+            },
+             {
+
+              name:'机房汇聚2',
+              value: 0.3,
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'img/jiaohuanji.png' %}',
+              symbolSize: [40, 40],
+              x:250,
+              y:170
+            },
+             {
+
+              name:'机房汇聚3',
+              value: 0.5,
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'img/jiaohuanji.png' %}',
+              symbolSize: [40, 40],
+              x:350,
+              y:170
+            },
+             {
+
+              name:'机房汇聚4',
+              value: 0.6,
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'img/jiaohuanji.png' %}',
+              symbolSize: [40, 40],
+              x:450,
+              y:170
+            },
+             {
+
+              name:'接入交换机1',
+              value: 0.7,
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'images/jrjhj.png' %}',
+              symbolSize: [40, 40],
+              x:50,
+              y:240
+            },
+             {
+
+              name:'服务器一',
+              value: 0.8,
+              label: {
+                    normal: {
+                          show: true,
+                          position: 'bottom',
+                          fontSize: '12'
+                   }
+              },
+              symbol: 'image://{% static 'images/fwq.png' %}',
+              symbolSize: [40, 40],
+              x:0,
+              y:340
+            },
+{#             {#}
+{##}
+{#              name:'B-M2',#}
+{#              value: 0.1,#}
+{#              label: {#}
+{#                    normal: {#}
+{#                          show: true,#}
+{#                          position: 'bottom',#}
+{#                          fontSize: '12'#}
+{#                   }#}
+{#              },#}
+{#              symbol: 'image://http://oow60tecr.bkt.clouddn.com/firewall.png',#}
+{#              symbolSize: [40, 40],#}
+{#              x:450,#}
+{#              y:240#}
+{#            }#}
+            ],
+            // links: [],
+            links: [{
+                source: '园区核心',
+                target: '1期大楼核心',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+//                      show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: '园区核心',
+                target: '2期大楼核心',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+//                      show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: '1期大楼核心',
+                target: '机房汇聚1',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+//                      show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: '1期大楼核心',
+                target: '机房汇聚3',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+//                      show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: '机房汇聚1',
+                target: '接入交换机1',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+//                      show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: '接入交换机1',
+                target: '服务器一',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+//                      show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: '1期大楼核心',
+                target: '园区核心',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+//                      show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: '2期大楼核心',
+                target: '园区核心',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+//                      show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: '机房汇聚1',
+                target: '1期大楼核心',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+//                      show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: 'CE-2',
+                target: 'CE-1',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+                        // show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+             {
+                source: 'CE-3',
+                target: 'CE-4',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+                        // show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+             {
+                source: 'CE-4',
+                target: 'CE-3',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+                        // show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+             {
+                source: 'CE-1',
+                target: 'TO-ZENGZHI-FH',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+                        // show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+             {
+                source: 'TO-ZENGZHI-FH',
+                target: 'CE-1',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+                        // show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: 'CE-3',
+                target: 'B-M1',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+                        // show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: 'B-M1',
+                target: 'CE-3',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+                        // show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: 'CE-4',
+                target: 'B-M2',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+                        // show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            },
+            {
+                source: 'B-M2',
+                target: 'CE-4',
+                value:60,
+                tooltip: {
+    	    		trigger: 'item',
+            		formatter: '{c}'
+    				},
+                label: {
+                    normal: {
+                        // show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            }
+            ],
+            lineStyle: {
+                normal: {
+                    opacity: 0.9,
+                    width: 2,
+                    curveness: 0
+                }
+            }
+        }
+    ]
+};
+            myChart.on('mousemove', function (params) {
+{#                console.log(params.name);#}
+                if(params.name == "接入交换机1"){
+                     $('#duankou').css('display','block');
+                }else {
+                    $('#tankuang').css('display', 'block');
+                }
+            });
+                myChart.on('mouseout', function (params) {
+                console.log(params.name);
+                $('#tankuang').css('display','none');
+                $('#duankou').css('display','none');
+            });
+myChart.setOption(option, true);
+                 })
+    </script>
+{% endblock %}
