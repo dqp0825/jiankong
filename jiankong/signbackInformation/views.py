@@ -5,7 +5,6 @@ import time
 import uuid
 import xlwt
 import pickle
-from functools import reduce
 
 from io import StringIO, BytesIO
 from pyzabbix import ZabbixAPI
@@ -284,7 +283,7 @@ def signbackInformation(request):
             res.append({"name": p.name, "IP": p.ip, "Oc_time": to_strtime(p.oc_time), "End_time": to_strtime(p.end_time),
                         "Zabbix_id": p.group.zabbix_id, "groupid": p.group.id,
                         "groupname": p.group.name, 'maintenanceid': p.maintenanceid,
-                        "DESC": p.desc, 'type': m_type(p.oc_time, p.end_time), 'id': '111', 'hostid': p.hostid})
+                        "DESC": p.desc, 'type': m_type(p.oc_time, p.end_time), 'id': p.id, 'hostid': p.hostid})
 
         res_content = {
             "code": 0,
@@ -292,7 +291,7 @@ def signbackInformation(request):
             "count": len(information_list),
             "data": res
         }
-        print(res_content, '111')
+
         return HttpResponse(json.dumps(res_content), content_type='application/json')
 
 

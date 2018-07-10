@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5e31c1a2-d4ba-4eb1-9921-264087456844" name="Default" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/alarmEvents/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-110">
+              <caret line="374" column="30" lean-forward="true" selection-start-line="374" selection-start-column="30" selection-end-line="374" selection-end-column="30" />
+              <folding>
+                <element signature="e#15#26#0" expanded="true" />
+                <element signature="e#519#637#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/signbackInformation/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="339">
+              <caret line="38" column="53" lean-forward="true" selection-start-line="38" selection-start-column="53" selection-end-line="38" selection-end-column="53" />
+              <folding>
+                <element signature="e#15#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="user.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/users/models/user.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="208">
+              <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dashBoard/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="229">
+              <caret line="267" column="6" selection-start-line="267" selection-start-column="6" selection-end-line="267" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>Jk_App</find>
+      <find>JK_Shebei_Group</find>
+      <find>设备组表</find>
+      <find>Jk_Device_Type</find>
+      <find>设备类型表</find>
+      <find>Jk_Mt_Information</find>
+      <find>维护</find>
+      <find>Jk_Fzxconn_Pf_Ids</find>
+      <find>Jk_App_lev</find>
+      <find>应用级别表</find>
+      <find>主机名</find>
+      <find>Type_ip</find>
+      <find>ServerToZabbix</find>
+      <find>物理机</find>
+      <find>当前</find>
+      <find>home-tab</find>
+      <find>当前告警</find>
+      <find>Type</find>
+      <find>所有设备</find>
+      <find>Device_Type_list</find>
+      <find>全部告警等级</find>
+      <find>alert_lev_list</find>
+      <find>告警等级</find>
+      <find>Device_Type1</find>
+      <find>Server</find>
+      <find>Alert_lev</find>
+      <find>print(p.id,p.lev_id.name)</find>
+      <find>int</find>
+      <find>Alert</find>
+      <find>*******pppp*******</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>ip</replace>
+    </replaceStrings>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/jiankong/urls.py" />
+        <option value="$PROJECT_DIR$/jiankong/settings.py" />
+        <option value="$PROJECT_DIR$/dashBoard/models.py.bak" />
+        <option value="$PROJECT_DIR$/realtimeMonitor/views.py" />
+        <option value="$PROJECT_DIR$/reportTable/views.py" />
+        <option value="$PROJECT_DIR$/monitorItems/views.py" />
+        <option value="$PROJECT_DIR$/templates/alarmEvents/alarmEvent.html" />
+        <option value="$PROJECT_DIR$/templates/alarmEvents/alarm_his.html" />
+        <option value="$PROJECT_DIR$/dashBoard/views.py" />
+        <option value="$PROJECT_DIR$/dashBoard/models.py" />
+        <option value="$PROJECT_DIR$/signbackInformation/views.py" />
+        <option value="$PROJECT_DIR$/alarmEvents/views.py" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$PROJECT_DIR$/static/bootstrap-table/package.json" />
+      <path value="$PROJECT_DIR$/static/js/echarts-2.2.7/package.json" />
+      <path value="$PROJECT_DIR$/static/production/plugins/echarts-2.2.7/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/Chart.js/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/DateJS/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/Flot/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/animate.css/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/autosize/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/bootstrap-daterangepicker/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/bootstrap-datetimepicker/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/bootstrap-progressbar/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/bootstrap-wysiwyg/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/bootstrap/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/cropper/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/devbridge-autocomplete/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/echarts/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/eve/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/flot-spline/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/ion.rangeSlider/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/jquery-knob/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/jquery.easy-pie-chart/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/jqvmap/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/jszip/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/morris.js/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/select2/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/starrr/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/switchery/package.json" />
+      <path value="$PROJECT_DIR$/static/vendors/transitionize/package.json" />
+    </packageJsonPaths>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="jiankong" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jiankong" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jiankong" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jiankong" type="462c0819:PsiDirectoryNode" />
+              <item name="alarmEvents" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5e31c1a2-d4ba-4eb1-9921-264087456844" name="Default" comment="" />
+      <created>1530177621077</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1530177621077</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <layout>
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.58536583" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17287917" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="right" id="Database" order="4" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
+    </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17287917" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" id="Database" order="4" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.2601626" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/alarmEvents/views.py</url>
+          <line>114</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="3" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/alarmEvents/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="9" column="18" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/models.py.bak">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="61020">
+          <caret line="2260" column="12" selection-start-line="2260" selection-start-column="9" selection-end-line="2260" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/signbackInformation/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
+          <folding>
+            <element signature="e#15#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11286">
+          <caret line="419" column="40" lean-forward="true" selection-start-line="419" selection-start-column="40" selection-end-line="419" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alarmEvents/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16956">
+          <caret line="660" column="46" selection-start-line="660" selection-start-column="46" selection-end-line="660" selection-end-column="46" />
+          <folding>
+            <element signature="e#15#26#0" expanded="true" />
+            <element signature="e#519#637#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/autoDiscovery/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/models.py.bak">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1566">
+          <caret line="58" column="15" selection-start-line="58" selection-start-column="10" selection-end-line="58" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="999">
+          <caret line="38" column="16" selection-start-line="38" selection-start-column="6" selection-end-line="38" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10935">
+          <caret line="435" lean-forward="true" selection-start-line="435" selection-end-line="435" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alarmEvents/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/monitorItems/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="14" column="11" lean-forward="true" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="12" column="55" lean-forward="true" selection-start-line="12" selection-start-column="55" selection-end-line="12" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/signbackInformation/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="594">
+          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jiankong/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2403">
+          <caret line="91" column="28" lean-forward="true" selection-start-line="91" selection-start-column="28" selection-end-line="91" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reportTable/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25083">
+          <caret line="929" column="46" lean-forward="true" selection-start-line="929" selection-start-column="46" selection-end-line="929" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alarmEvents/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6210">
+          <caret line="230" column="33" selection-start-line="230" selection-start-column="33" selection-end-line="230" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jiankong/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4563">
+          <caret line="171" column="22" selection-start-line="171" selection-start-column="22" selection-end-line="171" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2430">
+          <caret line="90" column="63" lean-forward="true" selection-start-line="90" selection-start-column="63" selection-end-line="90" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alarmEvents/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6210">
+          <caret line="230" column="33" selection-start-line="230" selection-start-column="33" selection-end-line="230" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/models/group.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-392" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/models/utils.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jiankong/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alarmEvents/models.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login/models.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/topologyView/models.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jiankong/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="91" column="28" selection-start-line="91" selection-start-column="28" selection-end-line="91" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/realtimeMonitor/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="363">
+          <caret line="909" lean-forward="true" selection-start-line="909" selection-end-line="909" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login/views.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/autoDiscovery/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/topologyView/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="497">
+          <caret line="45" column="19" lean-forward="true" selection-start-line="45" selection-start-column="19" selection-end-line="45" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reportTable/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="918" column="84" selection-start-line="918" selection-start-column="84" selection-end-line="918" selection-end-column="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jiankong/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="21" column="22" selection-start-line="21" selection-start-column="11" selection-end-line="21" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/views/login.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="73" column="26" selection-start-line="73" selection-start-column="21" selection-end-line="73" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="13" column="20" selection-start-line="13" selection-start-column="20" selection-end-line="13" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/apps.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="22" selection-start-line="22" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/hands.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/wsgiref/simple_server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="34" selection-start-line="34" selection-end-line="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/monitorItems/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="12" column="4" lean-forward="true" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/alarmEvents/alarm_his.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="92" column="57" lean-forward="true" selection-start-line="92" selection-start-column="57" selection-end-line="92" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/alarmEvents/alarmEvent.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-511">
+          <caret line="132" column="45" selection-start-line="132" selection-start-column="45" selection-end-line="132" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alarmEvents/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="9" column="18" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/migrations/0001_initial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2570">
+          <caret line="437" column="30" selection-start-line="437" selection-start-column="30" selection-end-line="437" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8478">
+          <caret line="344" column="13" selection-start-line="344" selection-start-column="13" selection-end-line="344" selection-end-column="13" />
+          <folding>
+            <element signature="e#15#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/models.py.bak">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="325" column="16" selection-start-line="325" selection-start-column="11" selection-end-line="325" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashBoard/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="267" column="6" selection-start-line="267" selection-start-column="6" selection-end-line="267" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/models/user.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/signbackInformation/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="339">
+          <caret line="38" column="53" lean-forward="true" selection-start-line="38" selection-start-column="53" selection-end-line="38" selection-end-column="53" />
+          <folding>
+            <element signature="e#15#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alarmEvents/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-110">
+          <caret line="374" column="30" lean-forward="true" selection-start-line="374" selection-start-column="30" selection-end-line="374" selection-end-column="30" />
+          <folding>
+            <element signature="e#15#26#0" expanded="true" />
+            <element signature="e#519#637#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
